@@ -2,6 +2,7 @@
 target/
 spark/
 ald-statistics/
+HELP.md
 
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**
