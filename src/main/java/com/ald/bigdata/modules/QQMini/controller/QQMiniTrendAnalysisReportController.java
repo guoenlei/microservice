@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
+
+import static com.ald.bigdata.common.util.ChooseUDataSource.chooseYourDataSource;
 
 /**
  * QQ小程序趋势分析模块controller
@@ -32,6 +35,8 @@ public class QQMiniTrendAnalysisReportController {
     @Autowired
     QQMiniTrendService trendService;
 
+    private static final String PLATFORM = "qq";
+    private static final String TYPE = "mini";
     /**
      * 趋势分析汇总
      *
@@ -40,6 +45,12 @@ public class QQMiniTrendAnalysisReportController {
     @ResponseBody
     @RequestMapping(value = "head", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public JsonResult findAldstatTrendAnalysisTotal(@RequestBody JSONObject json) {
+        // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
+        String app_key = json.get("app_key").toString();
+        String te = json.get("te").toString();
+        JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te, PLATFORM, TYPE);
+        trendService.setJdbcTemplate(jdbcTemplate);
+
         TrendQueryVo vo = constructQueryObject(json);
         Map result = trendService.getTotalData(vo);
         JsonResult jsonResult = new JsonResult(result);
@@ -58,6 +69,12 @@ public class QQMiniTrendAnalysisReportController {
     @ResponseBody
     @RequestMapping(value = "table", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public JSONObject findAldstatTrendAnalysisTable(@RequestBody JSONObject json) {
+        // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
+        String app_key = json.get("app_key").toString();
+        String te = json.get("te").toString();
+        JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te, PLATFORM, TYPE);
+        trendService.setJdbcTemplate(jdbcTemplate);
+
         TrendQueryVo vo = constructQueryObject(json);
         Pair<List, List> pair = trendService.tableData(vo);
         //JsonResult jsonResult = new JsonResult(pair);
@@ -88,6 +105,12 @@ public class QQMiniTrendAnalysisReportController {
     @ResponseBody
     @RequestMapping(value = "chart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public JsonResult findAldstatTrendAnalysisChart(@RequestBody JSONObject json) {
+        // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
+        String app_key = json.get("app_key").toString();
+        String te = json.get("te").toString();
+        JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te, PLATFORM, TYPE);
+        trendService.setJdbcTemplate(jdbcTemplate);
+
         TrendQueryVo vo = constructQueryObject(json);
         Pair<Map, Map> result = trendService.chartData(vo);
         JsonResult jsonResult = new JsonResult(result);

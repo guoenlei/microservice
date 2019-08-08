@@ -25,9 +25,11 @@ import java.util.Map;
 public class QQGameTrendService extends TrendService{
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     @Autowired
-    @Qualifier("qqGameJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
-
+    @Override
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
     /**
      * 获取总和
      *
@@ -172,6 +174,7 @@ public class QQGameTrendService extends TrendService{
         //存放最终结果
         Map map1 =null;
         Map map2 =null;
+        // **********if else待優化**********
         if(trendQueryVo.getDataType().equals("1")) {//hour
             Pair<List,List> pair = getHourData(trendQueryVo);
             List leftData= null;
