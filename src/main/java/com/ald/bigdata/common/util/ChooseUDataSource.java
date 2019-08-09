@@ -29,7 +29,7 @@ public class ChooseUDataSource {
             result = defaultJdbcTemplate.queryForMap(dbInfoSQL);
         } catch (DataAccessException e) {
             // TODO delete sout
-            System.out.println("从分库索引表查询结果为:" + result);
+            logger.debug("从分库索引表查询结果为:" + result);
             logger.debug(dbInfoSQL + "`````````这条SQL的结果是：" + result);
         }
 
@@ -48,7 +48,7 @@ public class ChooseUDataSource {
             for (String olddbname : oldConnMessage.keySet()) {
                 if (StringUtils.equals(dbname, olddbname)) {
                     // TODO delete assist info
-                    System.out.println("正在使用已經存在的數據源：" + olddbname + "！！！！");
+                    logger.debug("正在使用已經存在的數據源：" + olddbname + "！！！！");
                     return oldConnMessage.get(olddbname);
                 }
             }
@@ -61,7 +61,7 @@ public class ChooseUDataSource {
             newDataSource.setPassword(password);
             newJdbcTemplate.setDataSource(newDataSource);
             oldConnMessage.put(dbname, newJdbcTemplate);
-            System.out.println("new 了新的數據源啊："+dbname);
+            logger.debug("new 了新的數據源啊："+dbname);
             return newJdbcTemplate;
 
         } else {
@@ -69,18 +69,18 @@ public class ChooseUDataSource {
             if (StringUtils.equals(platform, "qq")) {
                 if (StringUtils.equals(type, "mini")) {
                     // TODO delete assist info
-                    System.out.println("正在使用qqMini默认库："+oldConnMessage.get("qqMini"));
+                    logger.debug("正在使用qqMini默认库："+oldConnMessage.get("qqMini"));
                     return oldConnMessage.get("qqMini");
                 } else {
-                    System.out.println("正在使用qqGame默认库："+oldConnMessage.get("qqGame"));
+                    logger.debug("正在使用qqGame默认库："+oldConnMessage.get("qqGame"));
                     return oldConnMessage.get("qqGame");
                 }
             } else {
                 if (StringUtils.equals(type, "mini")) {
-                    System.out.println("正在使用wxMini默认库");
+                    logger.debug("正在使用wxMini默认库");
                     return oldConnMessage.get("wxMini");
                 } else {
-                    System.out.println("正在使用wxGame默认库");
+                    logger.debug("正在使用wxGame默认库");
                     return oldConnMessage.get("wxGame");
                 }
             }

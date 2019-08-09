@@ -53,20 +53,25 @@
                 <master.datasource.username>tongjitest</master.datasource.username>
                 <master.datasource.password>ookun7Ee</master.datasource.password>
 
-                <!--                QQ小程序未定义-->
+                <!--                未定义QQ小程序生产-->
                 <QQmaster.datasource.url>
                     jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/tongji_test?useUnicode=true&amp;characterEncoding=utf-8
                 </QQmaster.datasource.url>
                 <QQmaster.datasource.username>tongjitest</QQmaster.datasource.username>
                 <QQmaster.datasource.password>ookun7Ee</QQmaster.datasource.password>
 
-                <!--              wx小游戏生产-->
+                <!--              wx小游戏测试-->
                 <game.datasource.url>jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/ald_game_test?useUnicode=true&amp;characterEncoding=utf-8
                 </game.datasource.url>
                 <game.datasource.username>gametest</game.datasource.username>
                 <game.datasource.password>ookun7Ee</game.datasource.password>
+<!--                &lt;!&ndash;              wx小游戏联调测试用&ndash;&gt;-->
+<!--                <game.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/game_test?useUnicode=true&amp;characterEncoding=utf-8-->
+<!--                </game.datasource.url>-->
+<!--                <game.datasource.username>tongjitest</game.datasource.username>-->
+<!--                <game.datasource.password>ookun7Ee</game.datasource.password>-->
 
-                <!--                QQ小游戏未定义-->
+                <!--                QQ小游戏生产未定义-->
                 <QQgame.datasource.url>jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/ald_game_test?useUnicode=true&amp;characterEncoding=utf-8
                 </QQgame.datasource.url>
                 <QQgame.datasource.username>gametest</QQgame.datasource.username>

@@ -8,8 +8,6 @@ import com.ald.bigdata.common.util.StringUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -22,11 +20,15 @@ import java.util.Map;
  * WX小游戏
  */
 @Service
-public class WXGameTrendService extends TrendService{
+public class WXGameTrendService extends TrendService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    @Autowired
-    @Qualifier("wxGameJdbcTemplate")
     private JdbcTemplate jdbcTemplate;
+
+    @Override
+    public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
+    // **********业务逻辑if else待優化**********
 
     /**
      * 获取总和
@@ -38,7 +40,7 @@ public class WXGameTrendService extends TrendService{
     public Map getTotalData(TrendQueryVo trendQueryVo) {
         String sql = TrendSQLHelper.totalSQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());
         Map map = new HashMap();
-        Map map2=new HashMap();
+        Map map2 = new HashMap();
         log.debug("sql:" + sql);
         Map result = null;
         try {
@@ -47,15 +49,15 @@ public class WXGameTrendService extends TrendService{
 
         }
         if (result == null) {
-           map2.put("new_count", "0");
-           map2.put("visit_count", "0");
-           map2.put("open_count", "0");
-           map2.put("secondary_avg_stay_time", "00:00:00");
+            map2.put("new_count", "0");
+            map2.put("visit_count", "0");
+            map2.put("open_count", "0");
+            map2.put("secondary_avg_stay_time", "00:00:00");
         } else {
             map2.put("new_count", StringUtil.formatThousand((BigDecimal) result.get("new_count")));
             map2.put("visit_count", StringUtil.formatThousand((BigDecimal) result.get("visit_count")));
             map2.put("open_count", StringUtil.formatThousand((BigDecimal) result.get("open_count")));
-            map2.put("secondary_avg_stay_time", StringUtil.formatTime((Double.parseDouble(result.get("secondary_avg_stay_time").toString())) ));
+            map2.put("secondary_avg_stay_time", StringUtil.formatTime((Double.parseDouble(result.get("secondary_avg_stay_time").toString()))));
         }
         map.put("data", map2);
         Map map1 = null;
@@ -71,9 +73,9 @@ public class WXGameTrendService extends TrendService{
                 map1.put("new_count", StringUtil.formatThousand((BigDecimal) map1.get("new_count")));
                 map1.put("visit_count", StringUtil.formatThousand((BigDecimal) map1.get("visit_count")));
                 map1.put("open_count", StringUtil.formatThousand((BigDecimal) map1.get("open_count")));
-                map1.put("secondary_avg_stay_time", StringUtil.formatTime((Double.parseDouble(map1.get("secondary_avg_stay_time").toString())) ));
+                map1.put("secondary_avg_stay_time", StringUtil.formatTime((Double.parseDouble(map1.get("secondary_avg_stay_time").toString()))));
             } else {
-                map1=new HashMap();
+                map1 = new HashMap();
                 map1.put("new_count", "0");
                 map1.put("visit_count", "0");
                 map1.put("open_count", "0");
@@ -91,76 +93,72 @@ public class WXGameTrendService extends TrendService{
      * @return
      */
     @Override
-    public Pair<List, List> tableData(TrendQueryVo trendQueryVo){
+    public Pair<List, List> tableData(TrendQueryVo trendQueryVo) {
         //存放最终结果
-        List<Map<String,String>> listRes1 =null;
-        List<Map<String,String>> listRes2 =null;
-        if(trendQueryVo.getDataType().equals("1")) {//hour
-            Pair<List,List> pair = getHourData(trendQueryVo);
-            List leftData= null;
-            List rightData= null;
-            if (pair.getRight()!=null&&pair.getRight().size()>0){
-                rightData= pair.getRight();
+        List<Map<String, String>> listRes1 = null;
+        List<Map<String, String>> listRes2 = null;
+        if (trendQueryVo.getDataType().equals("1")) {//hour
+            Pair<List, List> pair = getHourData(trendQueryVo);
+            List leftData = null;
+            List rightData = null;
+            if (pair.getRight() != null && pair.getRight().size() > 0) {
+                rightData = pair.getRight();
             }
-            if (pair.getLeft()!=null&&pair.getLeft().size()>0){
-                leftData= pair.getLeft();
+            if (pair.getLeft() != null && pair.getLeft().size() > 0) {
+                leftData = pair.getLeft();
             }
-             /*listRes1 =new ArrayList<>();
-             listRes2 =new ArrayList<>();*/
-             listRes1= MapResult.GetTableMap(leftData,trendQueryVo,"1");
-             if (trendQueryVo.isCompare()){
-                 listRes2= MapResult.GetTableMap(rightData,trendQueryVo,"2");
-             }
-
-        }
-        else if(trendQueryVo.getDataType().equals("2")){
-            Pair<List,List> pair = getDayData(trendQueryVo);
-            List leftData= null;
-            List rightData= null;
-            if (pair.getRight()!=null&&pair.getRight().size()>0){
-                rightData= pair.getRight();
-            }
-            if (pair.getLeft()!=null&&pair.getLeft().size()>0){
-                leftData= pair.getLeft();
-            }
-            listRes1= MapResult.GetTableMap(leftData,trendQueryVo,"1");
-            if (trendQueryVo.isCompare()){
-                listRes2= MapResult.GetTableMap(rightData,trendQueryVo,"2");
+            listRes1 = MapResult.GetTableMap(leftData, trendQueryVo, "1");
+            if (trendQueryVo.isCompare()) {
+                listRes2 = MapResult.GetTableMap(rightData, trendQueryVo, "2");
             }
 
+        } else if (trendQueryVo.getDataType().equals("2")) {
+            Pair<List, List> pair = getDayData(trendQueryVo);
+            List leftData = null;
+            List rightData = null;
+            if (pair.getRight() != null && pair.getRight().size() > 0) {
+                rightData = pair.getRight();
+            }
+            if (pair.getLeft() != null && pair.getLeft().size() > 0) {
+                leftData = pair.getLeft();
+            }
+            listRes1 = MapResult.GetTableMap(leftData, trendQueryVo, "1");
+            if (trendQueryVo.isCompare()) {
+                listRes2 = MapResult.GetTableMap(rightData, trendQueryVo, "2");
+            }
+
+        } else if (trendQueryVo.getDataType().equals("3")) {
+            Pair<List, List> pair = getWeekData(trendQueryVo);
+            List leftData = null;
+            List rightData = null;
+            if (pair.getRight() != null && pair.getRight().size() > 0) {
+                rightData = pair.getRight();
+            }
+            if (pair.getLeft() != null && pair.getLeft().size() > 0) {
+                leftData = pair.getLeft();
+            }
+            listRes1 = MapResult.GetTableMap(leftData, trendQueryVo, "1");
+            if (trendQueryVo.isCompare()) {
+                listRes2 = MapResult.GetTableMap(rightData, trendQueryVo, "2");
+            }
+        } else if (trendQueryVo.getDataType().equals("4")) {
+            Pair<List, List> pair = getMonthData(trendQueryVo);
+            List leftData = null;
+            List rightData = null;
+            if (pair.getRight() != null && pair.getRight().size() > 0) {
+                rightData = pair.getRight();
+            }
+            if (pair.getLeft() != null && pair.getLeft().size() > 0) {
+                leftData = pair.getLeft();
+            }
+            listRes1 = MapResult.GetTableMap(leftData, trendQueryVo, "1");
+            if (trendQueryVo.isCompare()) {
+                listRes2 = MapResult.GetTableMap(rightData, trendQueryVo, "2");
+            }
         }
-        else if(trendQueryVo.getDataType().equals("3")){
-            Pair<List,List> pair = getWeekData(trendQueryVo);
-            List leftData= null;
-            List rightData= null;
-            if (pair.getRight()!=null&&pair.getRight().size()>0){
-                rightData= pair.getRight();
-            }
-            if (pair.getLeft()!=null&&pair.getLeft().size()>0){
-                leftData= pair.getLeft();
-            }
-            listRes1= MapResult.GetTableMap(leftData,trendQueryVo,"1");
-            if (trendQueryVo.isCompare()){
-                listRes2= MapResult.GetTableMap(rightData,trendQueryVo,"2");
-            }
-        }
-        else if(trendQueryVo.getDataType().equals("4")) {
-            Pair<List,List> pair = getMonthData(trendQueryVo);
-            List leftData= null;
-            List rightData= null;
-            if (pair.getRight()!=null&&pair.getRight().size()>0){
-                rightData= pair.getRight();
-            }
-            if (pair.getLeft()!=null&&pair.getLeft().size()>0){
-                leftData= pair.getLeft();
-            }
-            listRes1= MapResult.GetTableMap(leftData,trendQueryVo,"1");
-            if (trendQueryVo.isCompare()){
-                listRes2= MapResult.GetTableMap(rightData,trendQueryVo,"2");
-            }
-        }
-        return  Pair.of(listRes1, listRes2);
+        return Pair.of(listRes1, listRes2);
     }
+
     /**
      * 折线图
      *
@@ -168,72 +166,69 @@ public class WXGameTrendService extends TrendService{
      * @return
      */
     @Override
-    public Pair<Map, Map> chartData(TrendQueryVo trendQueryVo){
+    public Pair<Map, Map> chartData(TrendQueryVo trendQueryVo) {
         //存放最终结果
-        Map map1 =null;
-        Map map2 =null;
-        if(trendQueryVo.getDataType().equals("1")) {//hour
-            Pair<List,List> pair = getHourData(trendQueryVo);
-            List leftData= null;
-            List rightData= null;
-            if (pair.getRight()!=null&&pair.getRight().size()>0){
-                rightData= pair.getRight();
+        Map map1 = null;
+        Map map2 = null;
+        if (trendQueryVo.getDataType().equals("1")) {//hour
+            Pair<List, List> pair = getHourData(trendQueryVo);
+            List leftData = null;
+            List rightData = null;
+            if (pair.getRight() != null && pair.getRight().size() > 0) {
+                rightData = pair.getRight();
             }
-            if (pair.getLeft()!=null&&pair.getLeft().size()>0){
-                leftData= pair.getLeft();
+            if (pair.getLeft() != null && pair.getLeft().size() > 0) {
+                leftData = pair.getLeft();
             }
-            map1= MapResult.GetChartMap(leftData,trendQueryVo,"1");
-            if (trendQueryVo.isCompare()){
-                map2= MapResult.GetChartMap(rightData,trendQueryVo,"2");
+            map1 = MapResult.GetChartMap(leftData, trendQueryVo, "1");
+            if (trendQueryVo.isCompare()) {
+                map2 = MapResult.GetChartMap(rightData, trendQueryVo, "2");
             }
 
-        }
-        else if(trendQueryVo.getDataType().equals("2")){
-            Pair<List,List> pair = getDayData(trendQueryVo);
-            List leftData= null;
-            List rightData= null;
-            if (pair.getRight()!=null&&pair.getRight().size()>0){
-                rightData= pair.getRight();
+        } else if (trendQueryVo.getDataType().equals("2")) {
+            Pair<List, List> pair = getDayData(trendQueryVo);
+            List leftData = null;
+            List rightData = null;
+            if (pair.getRight() != null && pair.getRight().size() > 0) {
+                rightData = pair.getRight();
             }
-            if (pair.getLeft()!=null&&pair.getLeft().size()>0){
-                leftData= pair.getLeft();
+            if (pair.getLeft() != null && pair.getLeft().size() > 0) {
+                leftData = pair.getLeft();
             }
-            map1= MapResult.GetChartMap(leftData,trendQueryVo,"1");
-            if (trendQueryVo.isCompare()){
-                map2= MapResult.GetChartMap(rightData,trendQueryVo,"2");
+            map1 = MapResult.GetChartMap(leftData, trendQueryVo, "1");
+            if (trendQueryVo.isCompare()) {
+                map2 = MapResult.GetChartMap(rightData, trendQueryVo, "2");
             }
-        }
-        else if(trendQueryVo.getDataType().equals("3")){
-            Pair<List,List> pair = getWeekData(trendQueryVo);
-            List leftData= null;
-            List rightData= null;
-            if (pair.getRight()!=null&&pair.getRight().size()>0){
-                rightData= pair.getRight();
+        } else if (trendQueryVo.getDataType().equals("3")) {
+            Pair<List, List> pair = getWeekData(trendQueryVo);
+            List leftData = null;
+            List rightData = null;
+            if (pair.getRight() != null && pair.getRight().size() > 0) {
+                rightData = pair.getRight();
             }
-            if (pair.getLeft()!=null&&pair.getLeft().size()>0){
-                leftData= pair.getLeft();
+            if (pair.getLeft() != null && pair.getLeft().size() > 0) {
+                leftData = pair.getLeft();
             }
-            map1= MapResult.GetChartMap(leftData,trendQueryVo,"1");
-            if (trendQueryVo.isCompare()){
-                map2= MapResult.GetChartMap(rightData,trendQueryVo,"2");
+            map1 = MapResult.GetChartMap(leftData, trendQueryVo, "1");
+            if (trendQueryVo.isCompare()) {
+                map2 = MapResult.GetChartMap(rightData, trendQueryVo, "2");
             }
-        }
-        else if(trendQueryVo.getDataType().equals("4")) {
-            Pair<List,List> pair = getMonthData(trendQueryVo);
-            List leftData= null;
-            List rightData= null;
-            if (pair.getRight()!=null&&pair.getRight().size()>0){
-                rightData= pair.getRight();
+        } else if (trendQueryVo.getDataType().equals("4")) {
+            Pair<List, List> pair = getMonthData(trendQueryVo);
+            List leftData = null;
+            List rightData = null;
+            if (pair.getRight() != null && pair.getRight().size() > 0) {
+                rightData = pair.getRight();
             }
-            if (pair.getLeft()!=null&&pair.getLeft().size()>0){
-                leftData= pair.getLeft();
+            if (pair.getLeft() != null && pair.getLeft().size() > 0) {
+                leftData = pair.getLeft();
             }
-            map1= MapResult.GetChartMap(leftData,trendQueryVo,"1");
-            if (trendQueryVo.isCompare()){
-                map2= MapResult.GetChartMap(rightData,trendQueryVo,"2");
+            map1 = MapResult.GetChartMap(leftData, trendQueryVo, "1");
+            if (trendQueryVo.isCompare()) {
+                map2 = MapResult.GetChartMap(rightData, trendQueryVo, "2");
             }
         }
-        return  Pair.of(map1,map2);
+        return Pair.of(map1, map2);
     }
 
     /**
@@ -249,11 +244,11 @@ public class WXGameTrendService extends TrendService{
         log.debug("sql:" + sql);
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
         Map map1 = null;
-        List<Map<String, Object>> result1=null;
+        List<Map<String, Object>> result1 = null;
         if (trendQueryVo.isCompare()) {
             String sql1 = TrendSQLHelper.daySQL(trendQueryVo.getDate2Start(), trendQueryVo.getDate2End(), trendQueryVo.getAk());
             log.debug("sql1 compare:" + sql1);
-            result1= jdbcTemplate.queryForList(sql1);
+            result1 = jdbcTemplate.queryForList(sql1);
             map1 = new HashMap();
         }
         return Pair.of(result, result1);
@@ -272,7 +267,7 @@ public class WXGameTrendService extends TrendService{
         log.debug("sql:" + sql);
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
         Map map1 = null;
-        List<Map<String, Object>> result1=null;
+        List<Map<String, Object>> result1 = null;
         if (trendQueryVo.isCompare()) {
             String sql1 = TrendSQLHelper.weekSQL(trendQueryVo.getDate2Start(), trendQueryVo.getDate2End(), trendQueryVo.getAk());
             log.debug("sql1 compare:" + sql1);
@@ -295,7 +290,7 @@ public class WXGameTrendService extends TrendService{
         log.debug("sql:" + sql);
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
         Map map1 = null;
-        List<Map<String, Object>> result1=null;
+        List<Map<String, Object>> result1 = null;
         if (trendQueryVo.isCompare()) {
             String sql1 = TrendSQLHelper.monthSQL(trendQueryVo.getDate2Start(), trendQueryVo.getDate2End(), trendQueryVo.getAk());
             log.debug("sql1 compare:" + sql1);
@@ -317,17 +312,15 @@ public class WXGameTrendService extends TrendService{
         String sql = TrendSQLHelper.hourSQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());
         log.debug("sql:" + sql);
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
-        Pair<List,List> pair =null;
+        Pair<List, List> pair = null;
         Map map1 = null;
         if (trendQueryVo.isCompare()) {
             String sql1 = TrendSQLHelper.hourSQL(trendQueryVo.getDate2Start(), trendQueryVo.getDate2End(), trendQueryVo.getAk());
             log.debug("sql1 compare:" + sql1);
             List<Map<String, Object>> result1 = jdbcTemplate.queryForList(sql1);
-            pair= Pair.of(result,result1);
-//            map1 = new HashMap();
-        }
-        else{
-            pair= Pair.of(result,null);
+            pair = Pair.of(result, result1);
+        } else {
+            pair = Pair.of(result, null);
         }
         return pair;
     }

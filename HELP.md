@@ -1,7 +1,18 @@
-# Getting Started
+## 該項目爲QQMini和QQGame統計平臺而構造
 
-### Reference Documentation
-For further reference, please consider the following sections:
+####技術：SpringBoot + JdbcTemplate
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
+####已完成：
+- 1.相應分庫，動態切換數據源。
+- 2.QQ統計平臺小程序、小游戲趋势分析模块
+  * 1）趋势分析汇总
+  * 2）趋势分析列表
+  * 3）趋势分析图表
+    
+####待完成：
+- 1.WX小程序、小游戲趋势分析模块。
+- 2.預計9月初，QQ平臺會新增事件參數模塊。
+
+####时间：2019年8月8日17:17:30
+
 

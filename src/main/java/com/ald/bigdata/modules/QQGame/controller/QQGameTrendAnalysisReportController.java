@@ -3,7 +3,6 @@ package com.ald.bigdata.modules.QQGame.controller;
 import com.ald.bigdata.common.trend.vo.JsonResult;
 import com.ald.bigdata.common.trend.vo.TrendQueryVo;
 import com.ald.bigdata.common.util.DateUtil;
-
 import com.ald.bigdata.modules.QQGame.service.QQGameTrendService;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
@@ -44,10 +43,7 @@ public class QQGameTrendAnalysisReportController {
     @RequestMapping(value = "head", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public JsonResult findAldstatTrendAnalysisTotal(@RequestBody JSONObject json) {
         // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
-        String app_key = json.get("app_key").toString();
-        String te = json.get("te").toString();
-        JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te, PLATFORM, TYPE);
-        trendService.setJdbcTemplate(jdbcTemplate);
+        chooseDataSource(json);
 
         TrendQueryVo vo = constructQueryObject(json);
         Map result = trendService.getTotalData(vo);
@@ -67,11 +63,7 @@ public class QQGameTrendAnalysisReportController {
     @ResponseBody
     @RequestMapping(value = "table", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public JSONObject findAldstatTrendAnalysisTable(@RequestBody JSONObject json) {
-        // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
-        String app_key = json.get("app_key").toString();
-        String te = json.get("te").toString();
-        JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te, PLATFORM, TYPE);
-        trendService.setJdbcTemplate(jdbcTemplate);
+        chooseDataSource(json);
 
         TrendQueryVo vo = constructQueryObject(json);
         Pair<List, List> pair = trendService.tableData(vo);
@@ -102,11 +94,7 @@ public class QQGameTrendAnalysisReportController {
     @ResponseBody
     @RequestMapping(value = "chart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public JsonResult findAldstatTrendAnalysisChart(@RequestBody JSONObject json) {
-        // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
-        String app_key = json.get("app_key").toString();
-        String te = json.get("te").toString();
-        JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te, PLATFORM, TYPE);
-        trendService.setJdbcTemplate(jdbcTemplate);
+        chooseDataSource(json);
 
         TrendQueryVo vo = constructQueryObject(json);
         Pair<Map, Map> result = trendService.chartData(vo);
@@ -117,6 +105,18 @@ public class QQGameTrendAnalysisReportController {
         jsonResult.date_con = date2;
 
         return jsonResult;
+    }
+
+    /**
+     * 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
+     * @param json
+     */
+    private void chooseDataSource(@RequestBody JSONObject json) {
+        // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
+        String app_key = json.get("app_key").toString();
+        String te = json.get("te").toString();
+        JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te, PLATFORM, TYPE);
+        trendService.setJdbcTemplate(jdbcTemplate);
     }
 
     /**

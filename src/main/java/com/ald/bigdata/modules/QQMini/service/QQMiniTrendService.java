@@ -8,8 +8,6 @@ import com.ald.bigdata.common.util.StringUtil;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -24,16 +22,14 @@ import java.util.Map;
 @Service
 public class QQMiniTrendService extends TrendService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-    /**
-     * 注入qqMiniJdbcTemplate对应的数据源
-     */
-    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
+
+    // *********以下三个接口该业务逻辑代码待优化*********
 
     /**
      * 获取总和
@@ -51,6 +47,7 @@ public class QQMiniTrendService extends TrendService {
         try {
             result = jdbcTemplate.queryForMap(sql);
         } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+
         }
         if (result == null) {
             map2.put("new_count", "0");
@@ -75,6 +72,7 @@ public class QQMiniTrendService extends TrendService {
             try {
                 map1 = jdbcTemplate.queryForMap(sql1);
             } catch (org.springframework.dao.EmptyResultDataAccessException e) {
+
             }
             if (map1 != null) {
                 map1.put("new_count", StringUtil.formatThousand((BigDecimal) map1.get("new_count")));
@@ -118,8 +116,6 @@ public class QQMiniTrendService extends TrendService {
             if (pair.getLeft() != null && pair.getLeft().size() > 0) {
                 leftData = pair.getLeft();
             }
-             /*listRes1 =new ArrayList<>();
-             listRes2 =new ArrayList<>();*/
             listRes1 = MapResult.GetTableMap(leftData, trendQueryVo, "1");
             if (trendQueryVo.isCompare()) {
                 listRes2 = MapResult.GetTableMap(rightData, trendQueryVo, "2");
@@ -332,7 +328,6 @@ public class QQMiniTrendService extends TrendService {
             log.debug("sql1 compare:" + sql1);
             List<Map<String, Object>> result1 = jdbcTemplate.queryForList(sql1);
             pair = Pair.of(result, result1);
-//            map1 = new HashMap();
         } else {
             pair = Pair.of(result, null);
         }

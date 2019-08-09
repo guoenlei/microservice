@@ -1,6 +1,5 @@
 package com.ald.bigdata.modules.QQMini.controller;
 
-import com.ald.bigdata.modules.QQGame.controller.QQGameTrendAnalysisReportController;
 import com.ald.bigdata.common.util.DateUtil;
 import com.ald.bigdata.common.trend.vo.JsonResult;
 import com.ald.bigdata.common.trend.vo.TrendQueryVo;
@@ -8,8 +7,6 @@ import com.ald.bigdata.modules.QQMini.service.QQMiniTrendService;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -46,10 +43,7 @@ public class QQMiniTrendAnalysisReportController {
     @RequestMapping(value = "head", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public JsonResult findAldstatTrendAnalysisTotal(@RequestBody JSONObject json) {
         // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
-        String app_key = json.get("app_key").toString();
-        String te = json.get("te").toString();
-        JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te, PLATFORM, TYPE);
-        trendService.setJdbcTemplate(jdbcTemplate);
+        chooseDataSource(json);
 
         TrendQueryVo vo = constructQueryObject(json);
         Map result = trendService.getTotalData(vo);
@@ -69,15 +63,10 @@ public class QQMiniTrendAnalysisReportController {
     @ResponseBody
     @RequestMapping(value = "table", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public JSONObject findAldstatTrendAnalysisTable(@RequestBody JSONObject json) {
-        // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
-        String app_key = json.get("app_key").toString();
-        String te = json.get("te").toString();
-        JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te, PLATFORM, TYPE);
-        trendService.setJdbcTemplate(jdbcTemplate);
+        chooseDataSource(json);
 
         TrendQueryVo vo = constructQueryObject(json);
         Pair<List, List> pair = trendService.tableData(vo);
-        //JsonResult jsonResult = new JsonResult(pair);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", "200");
         if (pair.getLeft() == null || pair.getLeft().size() <= 0) {
@@ -105,11 +94,7 @@ public class QQMiniTrendAnalysisReportController {
     @ResponseBody
     @RequestMapping(value = "chart", method = RequestMethod.POST, produces = "application/json;charset=UTF-8")
     public JsonResult findAldstatTrendAnalysisChart(@RequestBody JSONObject json) {
-        // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
-        String app_key = json.get("app_key").toString();
-        String te = json.get("te").toString();
-        JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te, PLATFORM, TYPE);
-        trendService.setJdbcTemplate(jdbcTemplate);
+        chooseDataSource(json);
 
         TrendQueryVo vo = constructQueryObject(json);
         Pair<Map, Map> result = trendService.chartData(vo);
@@ -123,33 +108,18 @@ public class QQMiniTrendAnalysisReportController {
     }
 
     /**
-     * {
-     * "type_name": "1",
-     * "date": "2018-03-01 ~ 2019-04-06",
-     * "date2": "2018-03-01 ~ 2019-04-06",
-     * "data_type": "3",
-     * "is_compare" : "1",
-     * "token": "LlKyXHCPC7g876uMjPIG%2Ff5chon8g5xKYTTi9bWz0zGQsfv3WOdAt0%2BdrWKLSbGKlLXj22MPv%2FIiwLHpPKaJCwDR8AelznRjV9JCNRbzuVHTiKec5U3w16Xq6H61tJ8HFrJNx5ECvypkX0qR6ZR5%2BuMCddyywmlAK7U7kJzot%2FyHKmT5BFIOazcGHldJmsmwjrPq234qND5%2Br5v3cs2Drg%3D%3D",
-     * "app_key": "1eda86f738edd4884efc3733173192db",
-     * "/trend/data": "",
-     * "transdate": [
-     * "2019-03-01 ~ 2019-03-03",
-     * "2019-03-04 ~ 2019-03-10",
-     * "2019-03-11 ~ 2019-03-17",
-     * "2019-03-18 ~ 2019-03-24",
-     * "2019-03-25 ~ 2019-03-31",
-     * "2019-04-01 ~ 2019-04-06"
-     * ],
-     * "transdate2": [
-     * "2019-03-01 ~ 2019-03-03",
-     * "2019-03-04 ~ 2019-03-10",
-     * "2019-03-11 ~ 2019-03-17",
-     * "2019-03-18 ~ 2019-03-24",
-     * "2019-03-25 ~ 2019-03-31",
-     * "2019-04-01 ~ 2019-04-06"
-     * ]
-     * }
-     *
+     * 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
+     * @param json
+     */
+    private void chooseDataSource(@RequestBody JSONObject json) {
+        // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
+        String app_key = json.get("app_key").toString();
+        String te = json.get("te").toString();
+        JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te, PLATFORM, TYPE);
+        trendService.setJdbcTemplate(jdbcTemplate);
+    }
+
+    /**
      * @param json
      * @return
      */
