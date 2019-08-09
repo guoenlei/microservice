@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BaseVo implements Serializable {
+    protected String appKey;
+    private String platform="wx";
+
+
 
     //默认从第一个开始
     private String currentPage = "1";
@@ -68,6 +72,21 @@ public class BaseVo implements Serializable {
 
     public void setEndRow(int endRow) {
         this.endRow = endRow;
+    }
+    public String getAppKey() {
+        return appKey;
+    }
+
+    public void setAppKey(String appKey) {
+        this.appKey = appKey;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 
 }

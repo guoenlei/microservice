@@ -9,14 +9,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Map;
 
-import static com.ald.bigdata.common.database.mysql.TrendDataSourceConf.*;
+import static com.ald.bigdata.common.database.mysql.TrendDataSourceConf.oldConnMessage;
 
 /**
  * 接口中传入的ak不同，对应数据源不同。
  */
 public class ChooseUDataSource {
     // 根据接口传入的PLATFORM和TYPE即可判断出默认数据库。te暂时用不到。保留te，保持一致性。
-    public static JdbcTemplate chooseYourDataSource(String app_key, String te, String platform, String type) {
+    public static JdbcTemplate chooseYourDataSource(String app_key, String te) {
         Logger logger = LoggerFactory.getLogger("DBSplitUtil: query connection message log");
         JdbcTemplate defaultJdbcTemplate = oldConnMessage.get("default");
         // 1.在默认库索引表中查询ak，并赋值给result。要么是一条连接信息的map，要么是空。
@@ -61,30 +61,28 @@ public class ChooseUDataSource {
             newDataSource.setPassword(password);
             newJdbcTemplate.setDataSource(newDataSource);
             oldConnMessage.put(dbname, newJdbcTemplate);
-            logger.debug("new 了新的數據源啊："+dbname);
+            logger.debug("new 了新的數據源啊：" + dbname);
             return newJdbcTemplate;
 
         } else {
             // 5.索引表中没查出来，根据各接口二级路径传入的PLATFORM,TYPE判断是哪个数据源，并返回对应的jdbcTemplate。
-            if (StringUtils.equals(platform, "qq")) {
-                if (StringUtils.equals(type, "mini")) {
-                    // TODO delete assist info
-                    logger.debug("正在使用qqMini默认库："+oldConnMessage.get("qqMini"));
-                    return oldConnMessage.get("qqMini");
-                } else {
-                    logger.debug("正在使用qqGame默认库："+oldConnMessage.get("qqGame"));
-                    return oldConnMessage.get("qqGame");
-                }
+            if (StringUtils.equals(te, "qx")) {
+                // TODO delete assist info
+                logger.debug("正在使用qqMini默认库：" + oldConnMessage.get("qqMini"));
+                return oldConnMessage.get("qqMini");
+            } else if(StringUtils.equals(te, "qg")){
+                logger.debug("正在使用qqGame默认库：" + oldConnMessage.get("qqGame"));
+                return oldConnMessage.get("qqGame");
+            }
+                else if (StringUtils.equals(te, "wg")) {
+                logger.debug("正在使用wxGame默认库");
+                return oldConnMessage.get("wxGame");
             } else {
-                if (StringUtils.equals(type, "mini")) {
-                    logger.debug("正在使用wxMini默认库");
-                    return oldConnMessage.get("wxMini");
-                } else {
-                    logger.debug("正在使用wxGame默认库");
-                    return oldConnMessage.get("wxGame");
-                }
+
+                logger.debug("正在使用wxMini默认库");
+                return oldConnMessage.get("wxMini");
             }
         }
     }
-
 }
+
