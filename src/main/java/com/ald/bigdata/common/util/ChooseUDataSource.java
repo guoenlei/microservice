@@ -53,36 +53,54 @@ public class ChooseUDataSource {
                 }
             }
             // 4.不存在，则新建DataSource和JdbcTemplate，並添加到oldConnMessage中。
-            JdbcTemplate newJdbcTemplate = new JdbcTemplate();
-            DruidDataSource newDataSource = new DruidDataSource();
-            newDataSource.setDriverClassName(driverClass);
-            newDataSource.setUrl(url);
-            newDataSource.setUsername(user);
-            newDataSource.setPassword(password);
-            newJdbcTemplate.setDataSource(newDataSource);
-            oldConnMessage.put(dbname, newJdbcTemplate);
+            JdbcTemplate newJdbcTemplate = addJdbcTemplateToMap(dbname, url, user, password, driverClass);
             logger.debug("new 了新的數據源啊：" + dbname);
+            System.out.println("new 了新的數據源啊：");
             return newJdbcTemplate;
 
         } else {
             // 5.索引表中没查出来，根据各接口二级路径传入的PLATFORM,TYPE判断是哪个数据源，并返回对应的jdbcTemplate。
+            // qx爲例：q,w對應QQ和WX； x,g對應小程序和小游戲。
             if (StringUtils.equals(te, "qx")) {
                 // TODO delete assist info
+                System.out.println("正在使用qqMini默认库：");
                 logger.debug("正在使用qqMini默认库：" + oldConnMessage.get("qqMini"));
                 return oldConnMessage.get("qqMini");
             } else if(StringUtils.equals(te, "qg")){
+                System.out.println("正在使用qqGame默认库：");
                 logger.debug("正在使用qqGame默认库：" + oldConnMessage.get("qqGame"));
                 return oldConnMessage.get("qqGame");
-            }
-                else if (StringUtils.equals(te, "wg")) {
+            } else if (StringUtils.equals(te, "wg")) {
+                System.out.println("正在使用wxGame默认库");
                 logger.debug("正在使用wxGame默认库");
                 return oldConnMessage.get("wxGame");
             } else {
-
+                System.out.println("正在使用wxMini默认库");
                 logger.debug("正在使用wxMini默认库");
                 return oldConnMessage.get("wxMini");
             }
         }
+    }
+
+    /**
+     * 新建DataSource和JdbcTemplate，並添加到oldConnMessage中。
+     * @param dbname
+     * @param url
+     * @param user
+     * @param password
+     * @param driverClass
+     * @return
+     */
+    private static JdbcTemplate addJdbcTemplateToMap(String dbname, String url, String user, String password, String driverClass) {
+        JdbcTemplate newJdbcTemplate = new JdbcTemplate();
+        DruidDataSource newDataSource = new DruidDataSource();
+        newDataSource.setDriverClassName(driverClass);
+        newDataSource.setUrl(url);
+        newDataSource.setUsername(user);
+        newDataSource.setPassword(password);
+        newJdbcTemplate.setDataSource(newDataSource);
+        oldConnMessage.put(dbname, newJdbcTemplate);
+        return newJdbcTemplate;
     }
 }
 
