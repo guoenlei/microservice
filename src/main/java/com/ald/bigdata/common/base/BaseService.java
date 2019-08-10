@@ -64,5 +64,11 @@ public interface BaseService<T, S> {
      */
     Long queryDaysCountDataBy(S s);
 
+    /**
+     * 判断是否为从库
+     * @param s
+     * @return
+     */
+    boolean isCluster(S s);
 
 }

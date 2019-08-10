@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ald.bigdata.modules.ad.dao.master.AldAdAnomalyDataMasterDao">
+
+    <resultMap id="AldAdAnomalyDataEntityMap" type="com.ald.bigdata.modules.ad.entity.AldAdAnomalyDataEntity">
+        <result column="app_key" property="appKey" />
+        <result column="link_key" property="linkKey" />
+        <result column="media_id" property="mediaId" />
+        <result column="link_name" property="linkName" />
+        <result column="media_name" property="mediaName" />
+        <result column="ipclk_count_type" property="ipclkCountType" />
+        <result column="auth_times" property="authTimes" />
+        <result column="diff_time_type" property="diffTimeType" />
+        <result column="open_count" property="openCount" />
+        <result column="anomaly_click_count" property="anomalyClickCount" />
+        <result column="all_click_count" property="allClickCount" />
+        <result column="anomaly_click_prop" property="anomalyClickProp" />
+        <result column="new_auth_user" property="newAuthUser" />
+        <result column="anomaly_new_auth_user" property="anomalyNewAuthUser" />
+        <result column="anomaly_auth_user_prop" property="anomalyAuthUserProp" />
+        <result column="day" property="day" />
+        <result column="hour" property="hour" />
+        <result column="create_at" property="createAt" />
+        <result column="update_at" property="updateAt" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        app_key,link_key,media_id,link_name,media_name,
+        open_count,anomaly_click_count,all_click_count,anomaly_click_prop,new_auth_user,
+        anomaly_new_auth_user,anomaly_auth_user_prop,day
+	</sql>
+
+    <!--获取ip  时间差  异常授权list 列表数据 start-->
+    <!--查询今天 昨天 和7天  30天的列表数据-->
+    <select id="queryDayAnomalyTimeOrIpDataBy" resultMap="AldAdAnomalyDataEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdAnomalyDataVo">
+        select
+        <include refid="Base_Column_List" />
+        <choose>
+            <when test="null != module and '2'.toString() == module">
+                ,diff_time_type
+            </when>
+            <when test="null != module and '3'.toString() == module">
+                ,ipclk_count_type
+            </when>
+            <when test="null != module and '4'.toString() == module">
+                ,auth_times
+            </when>
+        </choose>
+        from ${tableName1}
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        <choose>
+            <when test="null != module and '2'.toString() == module">
+                and diff_time_type = #{diffTimeType}
+            </when>
+            <when test="null != module and '3'.toString() == module">
+                and ipclk_count_type = #{ipclkCountType}
+            </when>
+            <when test="null != module and '4'.toString() == module">
+                and auth_times = #{authTimes}
+            </when>
+        </choose>
+        <if test="null != prop and null != order">
+            order by ${prop} ${order}
+        </if>
+    </select>
+
+    <!--异常时间差  ip 授权 指定日期queryDayAnomalyAllDataBy-->
+    <select id="queryDayAnomalyAllDataBy" resultMap="AldAdAnomalyDataEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdAnomalyDataVo">
+        select
+        <include refid="Base_Column_List" />
+        <choose>
+            <when test="null != module and '2'.toString() == module">
+                ,diff_time_type
+            </when>
+            <when test="null != module and '3'.toString() == module">
+                ,ipclk_count_type
+            </when>
+            <when test="null != module and '4'.toString() == module">
+                ,auth_times
+            </when>
+        </choose>
+        from ${tableName1}
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        <if test="null != diffTimeType"> and diff_time_type = #{diffTimeType}</if>
+        <if test="null != ipclkCountType"> and ipclk_count_type = #{ipclkCountType}</if>
+        <if test="null != authTimes"> and auth_times = #{authTimes}</if>
+        <if test="null != prop and null != order"> order by ${prop} ${order}</if>
+    </select>
+
+
+    <!--异常时间差  ip 授权 指定日期查询-->
+    <select id="queryAnyDaysAnomalyTimeOrIpDataBy" resultMap="AldAdAnomalyDataEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdAnomalyDataVo">
+        select
+        a.app_key,
+        a.link_key,
+        a.media_id,
+        a.link_name,
+        a.media_name,
+        <choose>
+            <when test="null != module and '2'.toString() == module">
+                diff_time_type,
+            </when>
+            <when test="null != module and '3'.toString() == module">
+                ipclk_count_type,
+            </when>
+            <when test="null != module and '4'.toString() == module">
+                auth_times,
+            </when>
+        </choose>
+        a.open_count,
+        a.anomaly_click_count,
+        a.all_click_count,
+        a.anomaly_click_count/a.all_click_count as anomaly_click_prop,
+        a.new_auth_user,
+        a.anomaly_new_auth_user,
+        a.anomaly_new_auth_user/a.new_auth_user as anomaly_auth_user_prop
+        from (
+        select
+        app_key, link_key,
+        media_id, link_name,
+        media_name,
+        <choose>
+            <when test="null != module and '2'.toString() == module">
+                diff_time_type,
+            </when>
+            <when test="null != module and '3'.toString() == module">
+                ipclk_count_type,
+            </when>
+            <when test="null != module and '4'.toString() == module">
+                auth_times,
+            </when>
+        </choose>
+        sum(open_count) as open_count,
+        sum(anomaly_click_count) as anomaly_click_count,
+        sum(all_click_count) as all_click_count,
+        sum(new_auth_user) as new_auth_user,
+        sum(anomaly_new_auth_user) as anomaly_new_auth_user
+        from ${tableName1}
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey"> and app_key = #{appKey} </if>
+        <choose>
+            <when test="null != module and '2'.toString() == module">
+                and diff_time_type=#{diffTimeType}
+            </when>
+            <when test="null != module and '3'.toString() == module">
+                and ipclk_count_type=#{ipclkCountType}
+            </when>
+            <when test="null != module and '4'.toString() == module">
+                and auth_times=#{authTimes}
+            </when>
+        </choose>
+        group by app_key, link_key, media_id,
+        <choose>
+            <when test="null != module and '2'.toString() == module">
+                diff_time_type,
+            </when>
+            <when test="null != module and '3'.toString() == module">
+                ipclk_count_type,
+            </when>
+            <when test="null != module and '4'.toString() == module">
+                auth_times,
+            </when>
+        </choose>
+        link_name, media_name
+        ) a
+        <if test="null != prop and null != order"> order by ${prop} ${order}</if>
+    </select>
+
+
+    <select id="queryAnyDaysAnomalyAllDataBy" resultMap="AldAdAnomalyDataEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdAnomalyDataVo">
+        select
+        a.app_key,
+        a.link_key,
+        a.media_id,
+        a.link_name,
+        a.media_name,
+        diff_time_type,
+        ipclk_count_type,
+        auth_times,
+        a.open_count,
+        a.anomaly_click_count,
+        a.all_click_count,
+        a.anomaly_click_count/a.all_click_count as anomaly_click_prop,
+        a.new_auth_user,
+        a.anomaly_new_auth_user,
+        a.anomaly_new_auth_user/a.new_auth_user as anomaly_auth_user_prop
+        from (
+        select
+        app_key, link_key,
+        media_id, link_name,
+        media_name,diff_time_type,ipclk_count_type,auth_times,
+        sum(open_count) as open_count,
+        sum(anomaly_click_count) as anomaly_click_count,
+        sum(all_click_count) as all_click_count,
+        sum(new_auth_user) as new_auth_user,
+        sum(anomaly_new_auth_user) as anomaly_new_auth_user
+        from ${tableName1}
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey"> and app_key = #{appKey} </if>
+        <if test="null != diffTimeType"> and diff_time_type = #{diffTimeType}</if>
+        <if test="null != ipclkCountType"> and ipclk_count_type = #{ipclkCountType}</if>
+        <if test="null != authTimes"> and auth_times = #{authTimes}</if>
+        group by app_key, link_key, media_id, diff_time_type, ipclk_count_type, auth_times, link_name, media_name
+        ) a
+        <if test="null != prop and null != order"> order by ${prop} ${order}</if>
+    </select>
+
+
+    <!--折线图 天数据 基于小时的 今天昨天-->
+    <select id="queryDayAnomalyChartDataBy" resultMap="AldAdAnomalyDataEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdAnomalyDataVo">
+        select
+        a.app_key,
+        a.anomaly_click_count,
+        a.all_click_count,
+        a.anomaly_click_count/a.all_click_count as anomaly_click_prop,
+        a.new_auth_user,
+        a.anomaly_new_auth_user,
+        a.anomaly_new_auth_user/a.new_auth_user as anomaly_auth_user_prop,
+        a.day,
+        a.hour
+        from (
+        select
+        app_key, `day`, `hour`,
+        sum(anomaly_click_count) as anomaly_click_count,
+        sum(all_click_count) as all_click_count,
+        sum(new_auth_user) as new_auth_user,
+        sum(anomaly_new_auth_user) as anomaly_new_auth_user
+        from aldstat_ad_anomaly_all_analyze_hour
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey"> and app_key = #{appKey} </if>
+        <if test="null != diffTimeType"> and diff_time_type = #{diffTimeType}</if>
+        <if test="null != ipclkCountType"> and ipclk_count_type = #{ipclkCountType}</if>
+        <if test="null != authTimes"> and auth_times = #{authTimes}</if>
+        group by app_key, `day`, `hour`
+        ) a
+    </select>
+
+    <!--折线图 指定任意日期 -->
+    <select id="queryAnyDaysAnomalyChartDataBy" resultMap="AldAdAnomalyDataEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdAnomalyDataVo">
+        select
+        a.app_key,
+        a.anomaly_click_count,
+        a.all_click_count,
+        a.anomaly_click_count/a.all_click_count as anomaly_click_prop,
+        a.new_auth_user,
+        a.anomaly_new_auth_user,
+        a.anomaly_new_auth_user/a.new_auth_user as anomaly_auth_user_prop,
+        a.day
+        from (
+        select
+        app_key, `day`,
+        sum(anomaly_click_count) as anomaly_click_count,
+        sum(all_click_count) as all_click_count,
+        sum(new_auth_user) as new_auth_user,
+        sum(anomaly_new_auth_user) as anomaly_new_auth_user
+        from aldstat_ad_anomaly_all_analyze
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey"> and app_key = #{appKey} </if>
+        <if test="null != diffTimeType"> and diff_time_type = #{diffTimeType}</if>
+        <if test="null != ipclkCountType"> and ipclk_count_type = #{ipclkCountType}</if>
+        <if test="null != authTimes"> and auth_times = #{authTimes}</if>
+        group by app_key, `day`
+        ) a
+    </select>
+
+
+
+</mapper>

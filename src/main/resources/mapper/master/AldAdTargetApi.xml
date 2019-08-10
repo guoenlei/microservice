@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ald.bigdata.modules.ad.dao.master.AldAdTargetApiMasterDao">
+
+
+    <resultMap id="AldAdTargetApiEntityMap" type="com.ald.bigdata.modules.ad.entity.AldAdTargetApiEntity">
+        <result column="app_key" property="appKey" />
+        <result column="app_id" property="appId" />
+        <result column="app_name" property="appName" />
+        <result column="media_name" property="mediaName" />
+        <result column="link_name" property="linkName" />
+        <result column="open_count" property="openCount" />
+        <result column="visitor_count" property="visitorCount" />
+        <result column="newuser_count" property="newUserCount" />
+        <result column="newauth_count" property="newAuthCount" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+      app_key, `day`, visitor_count, newuser_count, newauth_count
+	</sql>
+
+
+    <!--获取天表监测 小时实时展示-->
+    <select id="byAppKey" resultMap="AldAdTargetApiEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdTargetApiVo">
+        select a.app_key,
+        b.link_name, c.media_name,
+        a.link_visitor_count as visitor_count,
+        a.link_authuser_count as newauth_count,
+        a.link_open_count as open_count,
+        a.link_newer_for_app as newuser_count
+        from
+        (
+        select
+        app_key,
+        link_key,
+        sum(link_visitor_count) as link_visitor_count,
+        sum(link_authuser_count) as link_authuser_count,
+        sum(link_open_count) as link_open_count,
+        sum(link_newer_for_app) as link_newer_for_app
+        from aldstat_daily_link
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and `app_key` = #{appKey}
+        </if>
+        group by app_key, link_key
+        ) a
+        left join
+        ald_link_trace b
+        on a.app_key=b.app_key and a.link_key=b.link_key
+        left join
+        ald_media c
+        on b.app_key=c.app_key and b.media_id=c.media_id
+    </select>
+
+
+    <!--获取天表监测 小时实时展示-->
+    <select id="byMediaId" resultMap="AldAdTargetApiEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdTargetApiVo">
+        select * from aldstat_link_summary
+    </select>
+
+
+    <!--获取getAppKey-->
+    <select id="getAppKey" resultMap="AldAdTargetApiEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdTargetApiVo">
+        select app_key, app_name, app_id
+        from user_apps
+        where 1=1
+        <if test="null != appName">
+            and `app_name` = #{appName}
+        </if>
+        <if test="null != appId">
+            and `app_id` = #{appId}
+        </if>
+    </select>
+
+
+    <!--获取所有小程序的广告信息 -->
+    <select id="queryDaysDataBy" resultMap="AldAdTargetApiEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdTargetApiVo">
+        select a.app_key,
+        d.app_name,
+        d.app_id,
+        b.link_name, c.media_name,
+        a.link_visitor_count as visitor_count,
+        a.link_authuser_count as newauth_count,
+        a.link_open_count as open_count,
+        a.link_newer_for_app as newuser_count
+        from
+        (
+        select
+        app_key,
+        link_key,
+        sum(link_visitor_count) as link_visitor_count,
+        sum(link_authuser_count) as link_authuser_count,
+        sum(link_open_count) as link_open_count,
+        sum(link_newer_for_app) as link_newer_for_app
+        from aldstat_daily_link
+        where 1=1
+        <if test="null != list and list.size() > 0">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        group by app_key, link_key
+        ) a
+        left join
+        ald_link_trace b
+        on a.app_key=b.app_key and a.link_key=b.link_key
+        left join
+        ald_media c
+        on b.app_key=c.app_key and b.media_id=c.media_id
+        left join
+        user_apps d
+        on a.app_key=d.app_key
+    </select>
+
+
+</mapper>
