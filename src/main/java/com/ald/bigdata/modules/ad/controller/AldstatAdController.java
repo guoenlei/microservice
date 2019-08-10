@@ -22,7 +22,7 @@ import java.util.List;
 
 @Controller
 @EnableAutoConfiguration
-@RequestMapping("/aldstat/adMonitor2")
+@RequestMapping("/wx/mini/adMonitor2")
 public class AldstatAdController {
 
     @Autowired

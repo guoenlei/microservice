@@ -27,7 +27,7 @@ import java.util.Map;
  */
 @Controller
 @EnableAutoConfiguration
-@RequestMapping(value="aldstat/adMonitor")
+@RequestMapping(value="/wx/mini/adMonitor")
 public class AldAdMonitorDataController extends BaseController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AldAdMonitorDataController.class);
