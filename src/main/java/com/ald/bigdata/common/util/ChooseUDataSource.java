@@ -21,8 +21,8 @@ public class ChooseUDataSource {
         JdbcTemplate defaultJdbcTemplate = oldConnMessage.get("default");
         // 1.在默认库索引表中查询ak，并赋值给result。要么是一条连接信息的map，要么是空。
         // TODO change table from ald_db_split_geltest to ald_db_split
-//        String dbInfoSQL = "select app_key,conn_name,dbname,dbip,port,dbuser,dbpassword,platform from ald_db_split " +
-        String dbInfoSQL = "select app_key,conn_name,dbname,dbip,port,dbuser,dbpassword,platform from ald_db_split_geltest " +
+        String dbInfoSQL = "select app_key,conn_name,dbname,dbip,port,dbuser,dbpassword,platform from ald_db_split " +
+//        String dbInfoSQL = "select app_key,conn_name,dbname,dbip,port,dbuser,dbpassword,platform from ald_db_split_geltest " +
                 " where app_key = '" + app_key + "';";
         Map<String, Object> result = null;
         try {
