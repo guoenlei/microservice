@@ -45,7 +45,7 @@ public class DynamicDataSourceAspect {
                 SourceDatabaseBean sourceDatabaseBean = new SourceDatabaseBean();
                 sourceDatabaseBean.setAppKey(appKey);
                 //TODO 上线提测记得更改这部分代码，改成现上环境的字典表
-                sourceDatabaseBean.setTableName("ald_db_split_copy1");
+                sourceDatabaseBean.setTableName("ald_db_split_copy");
                 List<SourceDatabaseBean> sourceDatabaseBeans = this.dataSourceDefaultDao.queryByAppKey(sourceDatabaseBean);
 
                 if (sourceDatabaseBeans == null || sourceDatabaseBeans.size() == 0) { //属于第一种情况
