@@ -48,6 +48,7 @@ public class ChooseUDataSource {
             for (String olddbname : oldConnMessage.keySet()) {
                 if (StringUtils.equals(dbname, olddbname)) {
                     // TODO delete assist info
+                    System.out.println("正在使用已經存在的數據源：" + olddbname + "！！！！");
                     logger.debug("正在使用已經存在的數據源：" + olddbname + "！！！！");
                     return oldConnMessage.get(olddbname);
                 }

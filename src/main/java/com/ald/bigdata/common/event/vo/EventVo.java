@@ -1,29 +1,38 @@
-package com.ald.bigdata.modules.eventParam.vo;
+package com.ald.bigdata.common.event.vo;
 
 
 import com.ald.bigdata.common.base.BaseVo;
 
-public class AldEventParamVo extends BaseVo {
+/**
+ * 参数
+ */
+public class EventVo extends BaseVo {
+
 
     private String date;
+//    private String typeId;
+//    private String keyword;
     private String prop;
     private String order;
-    private String appKey;
     private String eventKey;
     private String eventName;
+    private String isDownload;
     private String type;
 
-    public AldEventParamVo() {
+    public EventVo() {
     }
 
-    public AldEventParamVo(String date, String prop, String order,
-                   String appKey, String eventKey, String eventName) {
+    public EventVo(String date, String typeId, String keyword, String prop, String order,
+                   String appKey, String eventKey, String eventName, String isDownLoad) {
         this.date = date;
+//        this.typeId = typeId;
+//        this.keyword = keyword;
         this.prop = prop;
         this.order = order;
         this.appKey = appKey;
         this.eventKey = eventKey;
         this.eventName = eventName;
+        this.isDownload = isDownLoad;
     }
 
     public String getDate() {
@@ -33,6 +42,22 @@ public class AldEventParamVo extends BaseVo {
     public void setDate(String date) {
         this.date = date;
     }
+
+//    public String getTypeId() {
+//        return typeId;
+//    }
+//
+//    public void setTypeId(String typeId) {
+//        this.typeId = typeId;
+//    }
+//
+//    public String getKeyword() {
+//        return keyword;
+//    }
+//
+//    public void setKeyword(String keyword) {
+//        this.keyword = keyword;
+//    }
 
     public String getProp() {
         return prop;
@@ -50,13 +75,6 @@ public class AldEventParamVo extends BaseVo {
         this.order = order;
     }
 
-    public String getAppKey() {
-        return appKey;
-    }
-
-    public void setAppKey(String appKey) {
-        this.appKey = appKey;
-    }
 
     public String getEventKey() {
         return eventKey;
@@ -74,6 +92,14 @@ public class AldEventParamVo extends BaseVo {
         this.eventName = eventName;
     }
 
+    public String getIsDownload() {
+        return isDownload;
+    }
+
+    public void setIsDownload(String isDownload) {
+        this.isDownload = isDownload;
+    }
+
     public String getType() {
         return type;
     }
@@ -81,5 +107,4 @@ public class AldEventParamVo extends BaseVo {
     public void setType(String type) {
         this.type = type;
     }
-
 }

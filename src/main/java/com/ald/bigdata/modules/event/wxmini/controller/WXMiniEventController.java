@@ -1,9 +1,9 @@
-package com.ald.bigdata.modules.event.controller;
+package com.ald.bigdata.modules.event.wxmini.controller;
 
 import com.ald.bigdata.common.base.BaseController;
-import com.ald.bigdata.modules.event.util.ParamUtils;
-import com.ald.bigdata.modules.event.util.TaskUtils;
-import com.ald.bigdata.modules.event.vo.EventVo;
+import com.ald.bigdata.common.event.util.ParamUtils;
+import com.ald.bigdata.common.event.util.TaskUtils;
+import com.ald.bigdata.common.event.vo.EventVo;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,9 +16,9 @@ import java.util.Map;
  * 事件
  */
 @Controller
-@RequestMapping(value="event")
+@RequestMapping(value="wx/mini/event")
 @EnableAutoConfiguration
-public class AldEventController extends BaseController {
+public class WXMiniEventController extends BaseController {
 
 //
 //    @Autowired

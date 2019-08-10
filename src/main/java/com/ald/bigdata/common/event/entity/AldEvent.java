@@ -1,23 +1,32 @@
-package com.ald.bigdata.modules.eventParam.entity;
+package com.ald.bigdata.common.event.entity;
+
+public class AldEvent {
 
 
-import java.io.Serializable;
-
-public class AldEventEntity implements Serializable {
-
-    private long id;                    //id
-    private String appKey;              //小程序key
+    private String id;                  //id
+    private String appKey;              //app Key
     private String evId;                //事件id
-    private String eventKey;            //加密eventKey
-    private String evName;              //事件名
-    private String evStatus;            //0-已删除, 1-未删除
-    private String evUpdateTime;        //事件删除时间
+    private String eventKey;            //事件key
+    private String evName;              //事件名称
+    private String evStatus;            //事件状态
+    private String evUpdateTime;        //更新时间
 
-    public long getId() {
+
+    public AldEvent(String id, String appKey, String evId, String eventKey, String evName, String evStatus, String evUpdateTime) {
+        this.id = id;
+        this.appKey = appKey;
+        this.evId = evId;
+        this.eventKey = eventKey;
+        this.evName = evName;
+        this.evStatus = evStatus;
+        this.evUpdateTime = evUpdateTime;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -67,5 +76,18 @@ public class AldEventEntity implements Serializable {
 
     public void setEvUpdateTime(String evUpdateTime) {
         this.evUpdateTime = evUpdateTime;
+    }
+
+    public static void main(String[] args) {
+        String a = null;
+
+        for(int i=0; i<10;i++) {
+
+//            if() {
+//
+//            }
+        }
+
+
     }
 }
