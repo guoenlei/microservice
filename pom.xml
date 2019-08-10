@@ -21,7 +21,7 @@
 
         <druid>1.0.18</druid>
         <mysql-connector>5.1.39</mysql-connector>
-        <mybatis-spring-boot>1.2.0</mybatis-spring-boot>
+        <mybatis-spring-boot>2.1.0</mybatis-spring-boot>
     </properties>
 
     <!--    mvn打包-->
@@ -169,6 +169,12 @@
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
             <version>1.1.36</version>
+        </dependency>
+
+        <!-- 引入aop -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
     </dependencies>
 

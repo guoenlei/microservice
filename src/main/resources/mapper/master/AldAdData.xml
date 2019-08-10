@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ald.bigdata.modules.ad.dao.master.AldAdDataMasterDao">
+
+    <resultMap id="AldAdDataEntityMap" type="com.ald.bigdata.modules.ad.entity.AldAdDataEntity">
+        <result column="app_key" property="appKey" />
+        <result column="day" property="day" />
+        <result column="hour" property="hour" />
+        <result column="open_popu_count" property="openPopuCount" />
+        <result column="open_natu_count" property="openNatuCount" />
+        <result column="open_total_count" property="openTotalCount" />
+        <result column="new_popu_count" property="newPopuCount" />
+        <result column="new_natu_count" property="newNatuCount" />
+        <result column="new_total_count" property="newTotalCount" />
+        <result column="visitor_popu_count" property="visitorPopuCount" />
+        <result column="visitor_natu_count" property="visitorNatuCount" />
+        <result column="visitor_total_count" property="visitorTotalCount" />
+        <result column="create_at" property="createAt" />
+        <result column="update_at" property="updateAt" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        app_key, popu_count, natu_count, total_count, `day`, `hour`, create_at, update_at
+	</sql>
+
+
+    <!--获取天表监测 小时实时展示-->
+    <select id="queryAdDataListByHour" resultMap="AldAdDataEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdDataVo">
+        select
+        a.app_key,
+        a.day,
+        a.hour,
+        b.open_count as open_total_Count,
+        b.new_comer_count as new_total_Count,
+        b.visitor_count as visitor_total_Count,
+        a.link_open_count as open_popu_Count,
+        a.link_newer_for_app as new_popu_Count,
+        a.link_visitor_count as visitor_popu_Count,
+        (b.open_count - a.link_open_count) as open_natu_count,
+        (b.new_comer_count - a.link_newer_for_app) as new_natu_count,
+        (b.visitor_count - a.link_visitor_count) as visitor_natu_count
+        FROM
+        (select app_key, day, hour, link_open_count, link_newer_for_app, link_visitor_count
+        from aldstat_link_summary_hour
+        where 1=1
+        <if test="null != date">
+           and `day` = #{date}
+        </if>
+        <if test="null != appKey">
+            and `app_key` = #{appKey}
+        </if>
+        ) a
+        JOIN
+        (select app_key, day, hour, open_count, new_comer_count, visitor_count
+        from aldstat_hourly_trend_analysis
+        where 1=1
+        <if test="null != list">
+            and `day` = #{date}
+        </if>
+        <if test="null != appKey">
+            and `app_key` = #{appKey}
+        </if>
+        ) b
+        ON
+        a.app_key=b.app_key
+        and a.day=b.day
+        and a.hour=b.hour
+    </select>
+
+    <!--获取7天 30天表监测-->
+    <select id="queryAd7Or30DaysDataListBy" resultMap="AldAdDataEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdDataVo">
+        select
+        a.app_key,
+        a.day,
+        b.open_count as open_total_Count,
+        b.new_comer_count as new_total_Count,
+        b.visitor_count as visitor_total_Count,
+        a.link_open_count as open_popu_Count,
+        a.link_newer_for_app as new_popu_Count,
+        a.link_visitor_count as visitor_popu_Count,
+        (b.open_count - a.link_open_count) as open_natu_count,
+        (b.new_comer_count - a.link_newer_for_app) as new_natu_count,
+        (b.visitor_count - a.link_visitor_count) as visitor_natu_count
+        FROM
+        (select app_key, day, link_open_count, link_newer_for_app, link_visitor_count
+        from ${tableName1}
+        where 1=1
+        <if test="null != list">
+            and `day` = #{date}
+        </if>
+        <if test="null != appKey">
+            and `app_key` = #{appKey}
+        </if>
+        ) a
+        JOIN
+        (select app_key, day, open_count, new_comer_count, visitor_count
+        from ${tableName2}
+        where 1=1
+        <if test="null != list">
+            and `day` = #{date}
+        </if>
+        <if test="null != appKey">
+            and `app_key` = #{appKey}
+        </if>
+        ) b
+        ON
+        a.app_key=b.app_key
+        and a.day=b.day
+    </select>
+
+
+    <!--获取任意天表监测-->
+    <select id="queryAdDaysDataListBy" resultMap="AldAdDataEntityMap" parameterType="com.ald.bigdata.modules.ad.vo.AldAdDataVo">
+        select
+        a.app_key,
+        a.day,
+        a.open_count as open_total_Count,
+        a.new_comer_count as new_total_Count,
+        a.visitor_count as visitor_total_Count,
+        b.link_open_count as open_popu_Count,
+        b.link_newer_for_app as new_popu_Count,
+        b.link_visitor_count as visitor_popu_Count,
+        (a.open_count - b.link_open_count) as open_natu_count,
+        (a.new_comer_count - b.link_newer_for_app) as new_natu_count,
+        (a.visitor_count - b.link_visitor_count) as visitor_natu_count
+        from
+        (select app_key, `day`,
+        sum(open_count) as open_count,
+        sum(new_comer_count) as new_comer_count,
+        sum(visitor_count) as visitor_count
+        from aldstat_trend_analysis
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and `app_key` = #{appKey}
+        </if>
+        group by app_key, `day`) a
+        JOIN
+        (select app_key, `day`,
+        sum(link_open_count) as link_open_count,
+        sum(link_newer_for_app) as link_newer_for_app,
+        sum(link_visitor_count) as link_visitor_count
+        from aldstat_link_summary
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list2">
+                #{list2}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and `app_key` = #{appKey}
+        </if>
+        group by app_key, `day`) b
+        on
+        a.app_key=b.app_key
+        and a.day=b.day
+    </select>
+
+
+
+</mapper>
