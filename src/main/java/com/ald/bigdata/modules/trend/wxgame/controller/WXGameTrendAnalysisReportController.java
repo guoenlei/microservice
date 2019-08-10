@@ -1,9 +1,10 @@
-package com.ald.bigdata.modules.QQMini.controller;
+package com.ald.bigdata.modules.trend.wxgame.controller;
 
-import com.ald.bigdata.common.util.DateUtil;
+import com.ald.bigdata.common.trend.controller.TrendBaseController;
 import com.ald.bigdata.common.trend.vo.JsonResult;
 import com.ald.bigdata.common.trend.vo.TrendQueryVo;
-import com.ald.bigdata.modules.QQMini.service.QQMiniTrendService;
+import com.ald.bigdata.common.util.DateUtil;
+import com.ald.bigdata.modules.trend.wxgame.service.WXGameTrendService;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,18 +23,16 @@ import java.util.Map;
 import static com.ald.bigdata.common.util.ChooseUDataSource.chooseYourDataSource;
 
 /**
- * QQ小程序趋势分析模块controller
+ * WX小游戏趋势分析模块controller
  */
 @Controller
 @EnableAutoConfiguration
-@RequestMapping(value = "qq/mini/trend")
-public class QQMiniTrendAnalysisReportController {
+@RequestMapping(value = "wx/game/trend")
+public class WXGameTrendAnalysisReportController {
 
     @Autowired
-    QQMiniTrendService trendService;
+    WXGameTrendService trendService;
 
-    private static final String PLATFORM = "qq";
-    private static final String TYPE = "mini";
     /**
      * 趋势分析汇总
      *
@@ -120,6 +119,7 @@ public class QQMiniTrendAnalysisReportController {
     }
 
     /**
+     *
      * @param json
      * @return
      */

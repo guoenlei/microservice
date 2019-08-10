@@ -15,12 +15,12 @@ import javax.sql.DataSource;
 import java.util.Properties;
 
 @Configuration
-@MapperScan(basePackages = PrestoDBConfiguration.PACKAGE, sqlSessionFactoryRef = "prestoSqlSessionFactory")
+//@MapperScan(basePackages = PrestoDBConfiguration.PACKAGE, sqlSessionFactoryRef = "prestoSqlSessionFactory")
 public class PrestoDBConfiguration {
 
     // 精确到 presto 目录，以便跟其他数据源隔离
-    static final String PACKAGE = "com.aldwx.bigdata.modules.*.dao.presto";
-    static final String MAPPER_LOCATION = "classpath:mapper/presto/*.xml";
+//    static final String PACKAGE = "com.aldwx.bigdata.modules.*.dao.presto";
+//    static final String MAPPER_LOCATION = "classpath:mapper/presto/*.xml";
 //    static final String MAPPER_LOCATION = "classpath:mapper/master/*.xml";
 
     @Value("${presto.datasource.url}")
@@ -61,8 +61,8 @@ public class PrestoDBConfiguration {
             throws Exception {
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(prestoDataSource);
-        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver()
-                .getResources(PrestoDBConfiguration.MAPPER_LOCATION));
+//        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver()
+//                .getResources(PrestoDBConfiguration.MAPPER_LOCATION));
         return sessionFactory.getObject();
     }
 }

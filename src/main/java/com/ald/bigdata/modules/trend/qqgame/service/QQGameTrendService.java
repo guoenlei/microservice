@@ -1,4 +1,4 @@
-package com.ald.bigdata.modules.QQGame.service;
+package com.ald.bigdata.modules.trend.qqgame.service;
 
 import com.ald.bigdata.common.trend.helper.TrendSQLHelper;
 import com.ald.bigdata.common.trend.service.TrendService;

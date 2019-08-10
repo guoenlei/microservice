@@ -1,9 +1,10 @@
-package com.ald.bigdata.modules.QQGame.controller;
+package com.ald.bigdata.modules.trend.qqgame.controller;
 
+import com.ald.bigdata.common.trend.controller.TrendBaseController;
 import com.ald.bigdata.common.trend.vo.JsonResult;
 import com.ald.bigdata.common.trend.vo.TrendQueryVo;
 import com.ald.bigdata.common.util.DateUtil;
-import com.ald.bigdata.modules.QQGame.service.QQGameTrendService;
+import com.ald.bigdata.modules.trend.qqgame.service.QQGameTrendService;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -32,8 +33,6 @@ public class QQGameTrendAnalysisReportController {
     @Autowired
     QQGameTrendService trendService;
 
-    private static final String PLATFORM = "qq";
-    private static final String TYPE = "game";
     /**
      * 趋势分析汇总
      *

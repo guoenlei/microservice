@@ -1,9 +1,10 @@
-package com.ald.bigdata.modules.WXGame.controller;
+package com.ald.bigdata.modules.trend.wxmini.controller;
 
+import com.ald.bigdata.common.trend.controller.TrendBaseController;
 import com.ald.bigdata.common.trend.vo.JsonResult;
 import com.ald.bigdata.common.trend.vo.TrendQueryVo;
 import com.ald.bigdata.common.util.DateUtil;
-import com.ald.bigdata.modules.WXGame.service.WXGameTrendService;
+import com.ald.bigdata.modules.trend.wxmini.service.WXMiniTrendService;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,18 +23,16 @@ import java.util.Map;
 import static com.ald.bigdata.common.util.ChooseUDataSource.chooseYourDataSource;
 
 /**
- * WX小游戏趋势分析模块controller
+ * WX小程序趋势分析模块controller
  */
 @Controller
 @EnableAutoConfiguration
-@RequestMapping(value = "wx/game/trend")
-public class WXGameTrendAnalysisReportController {
+@RequestMapping(value = "wx/mini/trend")
+public class WXMiniTrendAnalysisReportController {
 
     @Autowired
-    WXGameTrendService trendService;
+    WXMiniTrendService trendService;
 
-    private static final String PLATFORM = "wx";
-    private static final String TYPE = "game";
     /**
      * 趋势分析汇总
      *
@@ -67,6 +66,7 @@ public class WXGameTrendAnalysisReportController {
 
         TrendQueryVo vo = constructQueryObject(json);
         Pair<List, List> pair = trendService.tableData(vo);
+        //JsonResult jsonResult = new JsonResult(pair);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", "200");
         if (pair.getLeft() == null || pair.getLeft().size() <= 0) {
@@ -120,7 +120,6 @@ public class WXGameTrendAnalysisReportController {
     }
 
     /**
-     *
      * @param json
      * @return
      */

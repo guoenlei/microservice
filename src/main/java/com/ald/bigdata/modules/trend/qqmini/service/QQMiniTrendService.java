@@ -1,4 +1,4 @@
-package com.ald.bigdata.modules.QQMini.service;
+package com.ald.bigdata.modules.trend.qqmini.service;
 
 import com.ald.bigdata.common.trend.helper.TrendSQLHelper;
 import com.ald.bigdata.common.trend.service.TrendService;

@@ -1,4 +1,4 @@
-package com.ald.bigdata.modules.WXGame.service;
+package com.ald.bigdata.modules.trend.wxmini.service;
 
 import com.ald.bigdata.common.trend.helper.TrendSQLHelper;
 import com.ald.bigdata.common.trend.service.TrendService;
@@ -17,18 +17,23 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * WX小游戏
+ * WX小程序
  */
 @Service
-public class WXGameTrendService extends TrendService {
+public class WXMiniTrendService extends TrendService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
+    /**
+     * 注入qqMiniJdbcTemplate对应的数据源
+     */
+    //    @Autowired
     private JdbcTemplate jdbcTemplate;
 
     @Override
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
-    // **********业务逻辑if else待優化**********
+
+    // *********以下三个接口该业务逻辑代码待优化*********
 
     /**
      * 获取总和
@@ -51,13 +56,17 @@ public class WXGameTrendService extends TrendService {
         if (result == null) {
             map2.put("new_count", "0");
             map2.put("visit_count", "0");
+            map2.put("total_page_count", "0");
             map2.put("open_count", "0");
             map2.put("secondary_avg_stay_time", "00:00:00");
+            map2.put("bounce_rate", "0%");
         } else {
             map2.put("new_count", StringUtil.formatThousand((BigDecimal) result.get("new_count")));
             map2.put("visit_count", StringUtil.formatThousand((BigDecimal) result.get("visit_count")));
+            map2.put("total_page_count", StringUtil.formatThousand((BigDecimal) result.get("total_page_count")));
             map2.put("open_count", StringUtil.formatThousand((BigDecimal) result.get("open_count")));
             map2.put("secondary_avg_stay_time", StringUtil.formatTime((Double.parseDouble(result.get("secondary_avg_stay_time").toString()))));
+            map2.put("bounce_rate", StringUtil.formatPercent1(Float.parseFloat(result.get("bounce_rate").toString())));
         }
         map.put("data", map2);
         Map map1 = null;
@@ -72,14 +81,18 @@ public class WXGameTrendService extends TrendService {
             if (map1 != null) {
                 map1.put("new_count", StringUtil.formatThousand((BigDecimal) map1.get("new_count")));
                 map1.put("visit_count", StringUtil.formatThousand((BigDecimal) map1.get("visit_count")));
+                map1.put("total_page_count", StringUtil.formatThousand((BigDecimal) map1.get("total_page_count")));
                 map1.put("open_count", StringUtil.formatThousand((BigDecimal) map1.get("open_count")));
                 map1.put("secondary_avg_stay_time", StringUtil.formatTime((Double.parseDouble(map1.get("secondary_avg_stay_time").toString()))));
+                map1.put("bounce_rate", StringUtil.formatPercent1(Float.parseFloat(map1.get("bounce_rate").toString())));
             } else {
                 map1 = new HashMap();
                 map1.put("new_count", "0");
                 map1.put("visit_count", "0");
+                map1.put("total_page_count", "0");
                 map1.put("open_count", "0");
                 map1.put("secondary_avg_stay_time", "00:00:00");
+                map1.put("bounce_rate", "0%");
             }
             map.put("data_con", map1);
         }
@@ -107,6 +120,8 @@ public class WXGameTrendService extends TrendService {
             if (pair.getLeft() != null && pair.getLeft().size() > 0) {
                 leftData = pair.getLeft();
             }
+             /*listRes1 =new ArrayList<>();
+             listRes2 =new ArrayList<>();*/
             listRes1 = MapResult.GetTableMap(leftData, trendQueryVo, "1");
             if (trendQueryVo.isCompare()) {
                 listRes2 = MapResult.GetTableMap(rightData, trendQueryVo, "2");
@@ -319,6 +334,7 @@ public class WXGameTrendService extends TrendService {
             log.debug("sql1 compare:" + sql1);
             List<Map<String, Object>> result1 = jdbcTemplate.queryForList(sql1);
             pair = Pair.of(result, result1);
+//            map1 = new HashMap();
         } else {
             pair = Pair.of(result, null);
         }

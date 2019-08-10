@@ -1,9 +1,10 @@
-package com.ald.bigdata.modules.WXMini.controller;
+package com.ald.bigdata.modules.trend.qqmini.controller;
 
+import com.ald.bigdata.common.trend.controller.TrendBaseController;
+import com.ald.bigdata.common.util.DateUtil;
 import com.ald.bigdata.common.trend.vo.JsonResult;
 import com.ald.bigdata.common.trend.vo.TrendQueryVo;
-import com.ald.bigdata.common.util.DateUtil;
-import com.ald.bigdata.modules.WXMini.service.WXMiniTrendService;
+import com.ald.bigdata.modules.trend.qqmini.service.QQMiniTrendService;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -22,18 +23,16 @@ import java.util.Map;
 import static com.ald.bigdata.common.util.ChooseUDataSource.chooseYourDataSource;
 
 /**
- * WX小程序趋势分析模块controller
+ * QQ小程序趋势分析模块controller
  */
 @Controller
 @EnableAutoConfiguration
-@RequestMapping(value = "wx/mini/trend")
-public class WXMiniTrendAnalysisReportController {
+@RequestMapping(value = "qq/mini/trend")
+public class QQMiniTrendAnalysisReportController {
 
     @Autowired
-    WXMiniTrendService trendService;
+    QQMiniTrendService trendService;
 
-    private static final String PLATFORM = "wx";
-    private static final String TYPE = "mini";
     /**
      * 趋势分析汇总
      *
@@ -67,7 +66,6 @@ public class WXMiniTrendAnalysisReportController {
 
         TrendQueryVo vo = constructQueryObject(json);
         Pair<List, List> pair = trendService.tableData(vo);
-        //JsonResult jsonResult = new JsonResult(pair);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("code", "200");
         if (pair.getLeft() == null || pair.getLeft().size() <= 0) {
