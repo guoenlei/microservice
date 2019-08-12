@@ -54,11 +54,14 @@ public class AldAdMonitorDataController extends BaseController {
     @ResponseBody
     @RequestMapping(value = "cheatDataList", method = RequestMethod.POST)
     public String cheatDataList(@NotEmpty String app_key, String date, String module, String currentPage,
-                                String total, String prop, String order) {
+                                String total, String prop, String order,String platform) {
         date = date.replaceAll("\\s*", "");
         AldAdAnomalyDataVo aldAdAnomalyDataVo = new AldAdAnomalyDataVo(app_key, date, module, prop, order);
         aldAdAnomalyDataVo.setCurrentPage(currentPage);
         aldAdAnomalyDataVo.setTotal(total);
+        if(platform !=null){
+            aldAdAnomalyDataVo.setPlatform(platform);
+        }
         Map<String, Object> mapEntity = null;
         try {
             aldAdAnomalyDataVo = AdAssist.requestHandler(aldAdAnomalyDataVo);
@@ -77,11 +80,14 @@ public class AldAdMonitorDataController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "cheatDataCount", method = RequestMethod.POST)
-    public String cheatDataCount(@NotEmpty String app_key, String date) {
+    public String cheatDataCount(@NotEmpty String app_key, String date,String platform) {
         date = date.replaceAll("\\s*", "");
         AldAdAnomalyDataVo aldAdAnomalyDataVo = new AldAdAnomalyDataVo();
         aldAdAnomalyDataVo.setAppKey(app_key);
         aldAdAnomalyDataVo.setDate(date);
+        if(platform !=null){
+            aldAdAnomalyDataVo.setPlatform(platform);
+        }
         Map<String, Object> mapEntity = null;
         try {
             aldAdAnomalyDataVo = AdAssist.requestHandler(aldAdAnomalyDataVo);
@@ -104,10 +110,13 @@ public class AldAdMonitorDataController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "openPageCount", method = RequestMethod.POST)
-    public String openPageCount(String app_key, String date) {
+    public String openPageCount(String app_key, String date,String platform) {
         date = date.replaceAll("\\s*", "");
         AldAdDataVo aldAdDataVo = new AldAdDataVo(app_key);
         aldAdDataVo.setDate(date);
+        if(platform !=null){
+            aldAdDataVo.setPlatform(platform);
+        }
         Map<String, Object> mapEntity = null;
         try {
             aldAdDataVo = AdAssist2.requestHandler(aldAdDataVo);
@@ -133,10 +142,13 @@ public class AldAdMonitorDataController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "newUserCount")
-    public String newUserCount(String app_key, String date) {
+    public String newUserCount(String app_key, String date,String platform) {
         date = date.replaceAll("\\s*", "");
         AldAdDataVo aldAdDataVo = new AldAdDataVo(app_key);
         aldAdDataVo.setDate(date);
+        if(platform !=null){
+            aldAdDataVo.setPlatform(platform);
+        }
         Map<String, Object> mapEntity = null;
         try {
             aldAdDataVo = AdAssist2.requestHandler(aldAdDataVo);
@@ -162,10 +174,13 @@ public class AldAdMonitorDataController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "visitUserCount")
-    public String visitUserCount(String app_key, String date) {
+    public String visitUserCount(String app_key, String date,String platform) {
         date = date.replaceAll("\\s*", "");
         AldAdDataVo aldAdDataVo = new AldAdDataVo(app_key);
         aldAdDataVo.setDate(date);
+        if(platform !=null){
+            aldAdDataVo.setPlatform(platform);
+        }
         Map<String, Object> mapEntity = null;
         try {
             aldAdDataVo = AdAssist2.requestHandler(aldAdDataVo);

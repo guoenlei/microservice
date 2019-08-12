@@ -6,6 +6,8 @@ import com.ald.bigdata.modules.ad.dao.master.Aldstat30daysLinkMonitorDao;
 import com.ald.bigdata.modules.ad.dao.master.Aldstat7daysLinkMonitorDao;
 import com.ald.bigdata.modules.ad.dao.master.AldstatDailyLinkMonitorDao;
 import com.ald.bigdata.modules.ad.vo.AldAdParamVo;
+import com.ald.bigdata.modules.ad.vo.PupoAnalyzeListDetailLineVo;
+import com.ald.bigdata.modules.ad.vo.PupoAnalyzeListVo;
 import com.facebook.presto.jdbc.internal.spi.function.IsNull;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -379,8 +381,27 @@ public class    AldstatAdAnalysisService {
         }
         return  list;
     }
+
+    /**
+     * 之前传递的参数,修改为对象传递,为了aop切割方便
+     * @param pupoVo
+     * @return
+     */
     //推广分析列表
-    public PageInfo pupoAnalyzeListService(String app_key, @IsNull@NotBlank String date, @IsNull@NotBlank String source, String typeId, String keyword, @NotNull@NotBlank String currentPage, @NotNull@NotBlank String total, String prop, String order, String scenceName, String linkName, String channelName){
+    public PageInfo pupoAnalyzeListService(PupoAnalyzeListVo pupoVo){
+        String date = pupoVo.getDate();
+        String app_key = pupoVo.getAppKey();
+        String total = pupoVo.getTotal();
+        String prop = pupoVo.getProp();
+        String typeId = pupoVo.getTypeId();
+        String keyword = pupoVo.getKeyword();
+        String order = pupoVo.getOrder();
+        String currentPage = pupoVo.getCurrentPage();
+        String channelName = pupoVo.getChannelName();
+        String scenceName = pupoVo.getScenceName();
+        String linkName = pupoVo.getLinkName();
+        String source = pupoVo.getSource();
+
         List list=null;
         //Page<?> page = PageUtil.startPage(currentPage, total, "-1");
         Page page =PageHelper.startPage(Integer.parseInt(currentPage),Integer.parseInt(total));
@@ -618,8 +639,20 @@ public class    AldstatAdAnalysisService {
         //List temp = page.getResult();
         return  info;
     }
-    public List pupoAnalyzeListSomeDayService(String app_key,String date,String source,String scenceName,String linkName,String channelName){
+
+    /**
+     * 之前的是变量传递参数,现在封装成对象传递,为了aop切 方便
+     * @param pupoVo
+     * @return
+     */
+    public List pupoAnalyzeListSomeDayService(PupoAnalyzeListDetailLineVo pupoVo){
         List list=null;
+        String app_key = pupoVo.getAppKey();
+        String linkName = pupoVo.getLinkName();
+        String channelName = pupoVo.getChannelName();
+        String scenceName = pupoVo.getScenceName();
+        String date = pupoVo.getDate();
+        String source = pupoVo.getSource();
 
         AldAdParamVo vo= new AldAdParamVo();
         if (app_key!=null&&!app_key.equals("")){

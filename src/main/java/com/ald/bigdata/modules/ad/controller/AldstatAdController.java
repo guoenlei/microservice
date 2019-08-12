@@ -3,6 +3,8 @@ package com.ald.bigdata.modules.ad.controller;
 import com.ald.bigdata.common.util.DateTools;
 import com.ald.bigdata.common.util.DateUtil;
 import com.ald.bigdata.modules.ad.service.AldstatAdAnalysisService;
+import com.ald.bigdata.modules.ad.vo.PupoAnalyzeListDetailLineVo;
+import com.ald.bigdata.modules.ad.vo.PupoAnalyzeListVo;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.facebook.presto.jdbc.internal.spi.function.IsNull;
@@ -872,8 +874,25 @@ public class AldstatAdController {
     //总列表
     @ResponseBody
     @RequestMapping(value = "/pupoAnalyzeList", method = RequestMethod.POST)
-    public JSONObject pupoAnalyzeList(String app_key, @IsNull@NotBlank String date, @IsNull@NotBlank String source, String typeId, String keyword, @NotNull @NotBlank String currentPage, @NotNull@NotBlank String total, String prop, String order, String scenceName, String linkName, String channelName){
-        PageInfo info= aldstatAdService.pupoAnalyzeListService(app_key,date,source,typeId,keyword,currentPage,total,prop,order,scenceName,linkName,channelName);
+    public JSONObject pupoAnalyzeList(@IsNull@NotBlank String app_key, @IsNull@NotBlank String date, @IsNull@NotBlank String source, String typeId, String keyword, @NotNull @NotBlank String currentPage, @NotNull@NotBlank String total, String prop, String order, String scenceName, String linkName, String channelName,String platform){
+        PupoAnalyzeListVo pupoVo = new PupoAnalyzeListVo();
+        pupoVo.setAppKey(app_key);
+        pupoVo.setDate(date);
+        pupoVo.setSource(source);
+        pupoVo.setTypeId(typeId);
+        pupoVo.setKeyword(keyword);
+        pupoVo.setTotal(total);
+        pupoVo.setProp(prop);
+        pupoVo.setOrder(order);
+        pupoVo.setScenceName(scenceName);
+        pupoVo.setLinkName(linkName);
+        pupoVo.setChannelName(channelName);
+        if(platform !=null){
+            pupoVo.setPlatform(platform);
+        }
+        pupoVo.setCurrentPage(currentPage);
+
+        PageInfo info= aldstatAdService.pupoAnalyzeListService(pupoVo);
         List list=info.getList();
         JSONObject JSON =new JSONObject();
         if (list!=null&&list.size()>0) {
@@ -909,7 +928,18 @@ public class AldstatAdController {
     //详情列表折线图
     @ResponseBody
     @RequestMapping(value = "/pupoAnalyzeListDetailLine", method = RequestMethod.POST)
-    public JSONObject pupoAnalyzeListDetailLine(@IsNull@NotBlank String app_key, @IsNull@NotBlank String date,@IsNull@NotBlank String source,String scenceName,String linkName,String channelName){
+    public JSONObject pupoAnalyzeListDetailLine(@IsNull@NotBlank String app_key, @IsNull@NotBlank String date,@IsNull@NotBlank String source,String scenceName,String linkName,String channelName,String platform){
+
+        PupoAnalyzeListDetailLineVo pupoVo = new PupoAnalyzeListDetailLineVo();
+        pupoVo.setAppKey(app_key);
+        pupoVo.setDate(date);
+        pupoVo.setSource(source);
+        pupoVo.setScenceName(scenceName);
+        pupoVo.setLinkName(linkName);
+        pupoVo.setChannelName(channelName);
+        if(platform !=null){
+            pupoVo.setPlatform(platform);
+        }
 
 
         JSONObject JSON =new JSONObject();
@@ -917,7 +947,7 @@ public class AldstatAdController {
         JSONArray jsonArrayResult = new JSONArray();
         JSONArray jsonArrayListDay=null;
         try {
-            List listDay= aldstatAdService.pupoAnalyzeListSomeDayService(app_key,date,source,scenceName,linkName,channelName);
+            List listDay= aldstatAdService.pupoAnalyzeListSomeDayService(pupoVo);
             jsonArrayListDay = new JSONArray(listDay);
             // JSONObject JSON =new JSONObject();
             if (listDay!=null&&listDay.size()>0) {

@@ -5,6 +5,8 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -14,7 +16,10 @@ import java.util.List;
 @Aspect
 @Component
 public class DynamicDataSourceAspect {
-    @Value("${master.datasource.driverClassName}")
+
+    private static final Logger log = LoggerFactory.getLogger(DynamicDataSourceAspect.class);
+
+    @Value("${ald.spring.datasource.mysql.driver}")
     private String driverClass;
 
     @Autowired
@@ -29,17 +34,9 @@ public class DynamicDataSourceAspect {
         // 切换数据源
 //        DataSourceContextHolder.setDB(dataSource);
         for (Object o : point.getArgs()) {
-            if (o != null && ((String) o).length() == 32) {
-                String appKey = null;
-                if (o instanceof BaseVo) {
-                    appKey = ((BaseVo) o).getAppKey();
-                }
-                appKey = ((String) o);
-
-                //部分接口不符合appType 的规范，则需要强转
-//                if(appType==null){
-//                    appType=((RetainVo) o).getType();
-//                }
+            if (o != null && o instanceof BaseVo) {
+                String appKey = ((BaseVo) o).getAppKey();
+                String platform = ((BaseVo) o).getPlatform();
 
                 //1.首先查找字典表是否为空，如果为空则设置默认的连接数据源
                 SourceDatabaseBean sourceDatabaseBean = new SourceDatabaseBean();
@@ -49,15 +46,25 @@ public class DynamicDataSourceAspect {
                 List<SourceDatabaseBean> sourceDatabaseBeans = this.dataSourceDefaultDao.queryByAppKey(sourceDatabaseBean);
 
                 if (sourceDatabaseBeans == null || sourceDatabaseBeans.size() == 0) { //属于第一种情况
-                    DataSourceContextHolder.setDB(DataSourceContextHolder.DEFAULT_DS);
-                    dynamicDataSource.determineTargetDataSource();
-                   /* if(isStatApp(appType)){
+                    /*DataSourceContextHolder.setDB(DataSourceContextHolder.DEFAULT_DS);
+                    dynamicDataSource.determineTargetDataSource();*/
+                    if ("wx".equals(platform)) {
                         DataSourceContextHolder.setDB(DataSourceContextHolder.DEFAULT_DS);
                         dynamicDataSource.determineTargetDataSource();
-                    }else{
+                    } else if ("wg".equals(platform)) {
                         DataSourceContextHolder.setDB(DataSourceContextHolder.DEFAULT_DS_GAME);
                         dynamicDataSource.determineTargetDataSource();
-                    }*/
+                    } else if ("qx".equals(platform)) {
+                        //TODO 增加QQ小游戏广告监测的时候在曾加数据源
+                    } else if ("qg".equals(platform)) {
+                        //TODO 增加QQ小游戏广告监测的时候在曾加数据源
+                    } else {
+                        //TODO 如果传递为null 设直为小程序的默认连接
+                        log.error("platform 参数异常,可能为空,具体值为[{}]", platform);
+                        DataSourceContextHolder.setDB(DataSourceContextHolder.DEFAULT_DS);
+                        dynamicDataSource.determineTargetDataSource();
+                    }
+
                 } else {
                     //理论上有且仅有一条记录
                     SourceDatabaseBean sdb = sourceDatabaseBeans.get(0);

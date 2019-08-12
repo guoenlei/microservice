@@ -31,16 +31,16 @@ public class MngDataSourceConfig {
     static final String PACKAGE = "com.ald.bigdata.common.database.dynamic.DataSourceDefaultDao";
     static final String MAPPER_LOCATION = "classpath*:mapper/report/Stat*.xml";
 
-    @Value("${master.datasource.url}")
+    @Value("${ald.master.datasource.url}")
     private String url;
 
-    @Value("${master.datasource.username}")
+    @Value("${ald.master.datasource.username}")
     private String user;
 
-    @Value("${master.datasource.password}")
+    @Value("${ald.master.datasource.password}")
     private String password;
 
-    @Value("${master.datasource.driverClassName}")
+    @Value("${ald.spring.datasource.mysql.driver}")
     private String driverClass;
 
     @Bean(name = "mngDataSource")

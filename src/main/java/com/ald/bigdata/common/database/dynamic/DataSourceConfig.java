@@ -44,20 +44,20 @@ public class DataSourceConfig {
     }
 
     @Bean(name = "dbMaster")
-    public DataSource dbMaster(@Value("${default.datasource.url}") String url,
-                               @Value("${default.datasource.username}") String userName,
-                               @Value("${default.datasource.password}") String password,
-                               @Value("${default.datasource.driverClassName}") String driverClassName) {
+    public DataSource dbMaster(@Value("${ald.master.datasource.url}") String url,
+                               @Value("${ald.master.datasource.username}") String userName,
+                               @Value("${ald.master.datasource.password}") String password,
+                               @Value("${ald.spring.datasource.mysql.driver}") String driverClassName) {
         DataSource dataSource = createDataSource(url,userName,password,driverClassName);
         return dataSource;
 
     }
 
     @Bean(name = "dbGameMaster")
-    public DataSource dbGameMaster(@Value("${game.datasource.url}") String url,
-                                   @Value("${game.datasource.username}") String userName,
-                                   @Value("${game.datasource.password}") String password,
-                                   @Value("${game.datasource.driverClassName}") String driverClassName) {
+    public DataSource dbGameMaster(@Value("${ald.game.datasource.url}") String url,
+                                   @Value("${ald.game.datasource.username}") String userName,
+                                   @Value("${ald.game.datasource.password}") String password,
+                                   @Value("${ald.spring.datasource.mysql.driver}") String driverClassName) {
         DataSource dataSource = createDataSource(url,userName,password,driverClassName);
         return dataSource;
 
