@@ -113,7 +113,7 @@ public class QQGameTrendAnalysisReportController {
     private void chooseDataSource(@RequestBody JSONObject json) {
         // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
         String app_key = json.get("app_key").toString();
-        String te = json.get("te").toString();
+        String te = json.get("platform").toString();
         JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te);
         trendService.setJdbcTemplate(jdbcTemplate);
     }
