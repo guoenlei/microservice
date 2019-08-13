@@ -17,7 +17,7 @@ import static com.ald.bigdata.common.database.mysql.TrendDataSourceConf.oldConnM
 public class ChooseUDataSource {
     // 根据接口传入的PLATFORM和TYPE即可判断出默认数据库。te暂时用不到。保留te，保持一致性。
     public static JdbcTemplate chooseYourDataSource(String app_key, String te) {
-        Logger logger = LoggerFactory.getLogger("DBSplitUtil: query connection message log");
+        Logger logger = LoggerFactory.getLogger(ChooseUDataSource.class);
         JdbcTemplate defaultJdbcTemplate = oldConnMessage.get("default");
         // 1.在默认库索引表中查询ak，并赋值给result。要么是一条连接信息的map，要么是空。
         // TODO change table from ald_db_split_geltest to ald_db_split
@@ -29,8 +29,7 @@ public class ChooseUDataSource {
             result = defaultJdbcTemplate.queryForMap(dbInfoSQL);
         } catch (DataAccessException e) {
             // TODO delete sout
-            logger.debug("从分库索引表查询结果为:" + result);
-            logger.debug(dbInfoSQL + "`````````这条SQL的结果是：" + result);
+            logger.info("from dbSplitIndex table: {}", result);
         }
 
         // 2.查到连接信息，则判斷是否已經存在。dbname是唯一的标识。
@@ -48,15 +47,13 @@ public class ChooseUDataSource {
             for (String olddbname : oldConnMessage.keySet()) {
                 if (StringUtils.equals(dbname, olddbname)) {
                     // TODO delete assist info
-                    System.out.println("正在使用已經存在的數據源：" + olddbname + "！！！！");
-                    logger.debug("正在使用已經存在的數據源：" + olddbname + "！！！！");
+                    logger.info("Data source in use: {}", olddbname);
                     return oldConnMessage.get(olddbname);
                 }
             }
             // 4.不存在，则新建DataSource和JdbcTemplate，並添加到oldConnMessage中。
             JdbcTemplate newJdbcTemplate = addJdbcTemplateToMap(dbname, url, user, password, driverClass);
-            logger.debug("new 了新的數據源啊：" + dbname);
-            System.out.println("new 了新的數據源啊：");
+            logger.info("use new dataSource: {}", dbname);
             return newJdbcTemplate;
 
         } else {
@@ -64,20 +61,16 @@ public class ChooseUDataSource {
             // qx爲例：q,w對應QQ和WX； x,g對應小程序和小游戲。
             if (StringUtils.equals(te, "qx")) {
                 // TODO delete assist info
-                System.out.println("正在使用qqMini默认库：");
-                logger.debug("正在使用qqMini默认库：" + oldConnMessage.get("qqMini"));
+                logger.info("use qqMini default dataSource: {}", oldConnMessage.get("qqMini"));
                 return oldConnMessage.get("qqMini");
             } else if(StringUtils.equals(te, "qg")){
-                System.out.println("正在使用qqGame默认库：");
-                logger.debug("正在使用qqGame默认库：" + oldConnMessage.get("qqGame"));
+                logger.info("use qqGame default dataSource: {}", oldConnMessage.get("qqGame"));
                 return oldConnMessage.get("qqGame");
             } else if (StringUtils.equals(te, "wg")) {
-                System.out.println("正在使用wxGame默认库");
-                logger.debug("正在使用wxGame默认库");
+                logger.info("use wxGame default dataSource: {}", oldConnMessage.get("wxGame"));
                 return oldConnMessage.get("wxGame");
             } else {
-                System.out.println("正在使用wxMini默认库");
-                logger.debug("正在使用wxMini默认库");
+                logger.info("use wxMini default dataSource: {}", oldConnMessage.get("wxMini"));
                 return oldConnMessage.get("wxMini");
             }
         }

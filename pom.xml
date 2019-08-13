@@ -45,35 +45,37 @@
                 <mysql.datasource.driverClassName>com.mysql.jdbc.Driver</mysql.datasource.driverClassName>
                 <!--                默认库（索引表）-->
                 <!--<default.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/service_bus_test?useUnicode=true&amp;characterEncoding=utf-8</default.datasource.url>-->
-                <default.datasource.url>10.0.220.36:3306/service_bus_test?useUnicode=true&amp;characterEncoding=utf-8</default.datasource.url>
+                <default.datasource.url>jdbc:mysql://10.0.220.36:3306/service_bus_test?useUnicode=true&amp;characterEncoding=utf-8</default.datasource.url>
                 <default.datasource.username>tongjitest</default.datasource.username>
                 <default.datasource.password>ookun7Ee</default.datasource.password>
 
                 <!--                wx小程序测试-->
 <!--                <master.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/tongji_test?useUnicode=true&amp;characterEncoding=utf-8</master.datasource.url>-->
-                <master.datasource.url>10.0.220.36:3306/tongji_test?useUnicode=true&amp;characterEncoding=utf-8</master.datasource.url>
+                <master.datasource.url>jdbc:mysql://10.0.220.36:3306/tongji_test?useUnicode=true&amp;characterEncoding=utf-8</master.datasource.url>
                 <master.datasource.username>tongjitest</master.datasource.username>
                 <master.datasource.password>ookun7Ee</master.datasource.password>
 
-                <!--                未定义QQ小程序生产-->
+                <!--                QQ小程序测试-待修改-->
 <!--                <QQmaster.datasource.url>-->
-<!--                    jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/tongji_test?useUnicode=true&amp;characterEncoding=utf-8-->
+<!--                    jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/ald_qq_test?useUnicode=true&amp;characterEncoding=utf-8-->
 <!--                </QQmaster.datasource.url>-->
-<!--                <QQmaster.datasource.username>tongjitest</QQmaster.datasource.username>-->
-<!--                <QQmaster.datasource.password>ookun7Ee</QQmaster.datasource.password>-->
+                <QQmaster.datasource.url>jdbc:mysql://10.0.220.36:3306/ald_qq_test?useUnicode=true&amp;characterEncoding=utf-8</QQmaster.datasource.url>
+                <QQmaster.datasource.username>tongjitest</QQmaster.datasource.username>
+                <QQmaster.datasource.password>ookun7Ee</QQmaster.datasource.password>
 
                 <!--              wx小游戏测试-->
 <!--                <game.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/game_test?useUnicode=true&amp;characterEncoding=utf-8-->
 <!--                </game.datasource.url>-->
-                <game.datasource.url>10.0.220.36:3306/game_test?useUnicode=true&amp;characterEncoding=utf-8</game.datasource.url>
+                <game.datasource.url>jdbc:mysql://10.0.220.36:3306/game_test?useUnicode=true&amp;characterEncoding=utf-8</game.datasource.url>
                 <game.datasource.username>tongjitest</game.datasource.username>
                 <game.datasource.password>ookun7Ee</game.datasource.password>
 
-                <!--                QQ小游戏生产未定义-->
-<!--                <QQgame.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/game_test?useUnicode=true&amp;characterEncoding=utf-8-->
+                <!--                QQ小游戏测试-待修改-->
+<!--                <QQgame.datasource.url>jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/ald_qqgame_test?useUnicode=true&amp;characterEncoding=utf-8-->
 <!--                </QQgame.datasource.url>-->
-<!--                <QQgame.datasource.username>tongjitest</QQgame.datasource.username>-->
-<!--                <QQgame.datasource.password>ookun7Ee</QQgame.datasource.password>-->
+                <QQgame.datasource.url>jdbc:mysql://10.0.0.123:3306/ald_qqgame_test?useUnicode=true&amp;characterEncoding=utf-8</QQgame.datasource.url>
+                <QQgame.datasource.username>gametest</QQgame.datasource.username>
+                <QQgame.datasource.password>ookun7Ee</QQgame.datasource.password>
 
                 <!--区别恩磊的配置-->
                 <!--测试小程序库,外网链接地址-->

@@ -1,6 +1,7 @@
 package com.ald.bigdata.common.constants;
 
 import com.ald.bigdata.common.config.ConfigurationManager;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * 常量
@@ -47,11 +48,12 @@ public interface Constants {
     /**
      * mysql 数据库表
      */
+    String PERSTO_TABLENAME = ConfigurationManager.getProperty("hive.table.aldstat.event.paras");
+
     String ALDSTAT_DAILY_EVENT_USER_GROUP = ConfigurationManager.getProperty("mysql.table.aldstat.event.paras");
     String ALDSTAT_7DAYS_EVENT_USER_GROUP = ConfigurationManager.getProperty("mysql.table.aldstat.7days.event.paras");
     String ALDSTAT_30DAYS_EVENT_USER_GROUP = ConfigurationManager.getProperty("mysql.table.aldstat.30days.event.paras");
 
-    String PERSTO_TABLENAME = ConfigurationManager.getProperty("hive.table.aldstat.event.paras");
 
     boolean IS_COUNT = false;
 

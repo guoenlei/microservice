@@ -8,9 +8,12 @@ import com.ald.bigdata.common.util.Arith;
 import com.ald.bigdata.common.util.ChooseUDataSource;
 import com.ald.bigdata.common.util.DateUtil;
 import com.ald.bigdata.common.event.vo.EventVo;
+import com.ald.bigdata.modules.ad.controller.AldAdMonitorDataController;
 import com.facebook.presto.jdbc.internal.guava.collect.Lists;
 import com.facebook.presto.jdbc.internal.guava.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,6 +33,8 @@ import java.util.Set;
 public class TaskUtils {
     @Autowired
     ApplicationContext applicationContext;
+
+    private static final Logger LOG = LoggerFactory.getLogger(TaskUtils.class);
 
     /**
      * 获取事件参数列表
@@ -142,28 +147,28 @@ public class TaskUtils {
         //最近7天和30天表 查询presto
         if (StringUtils.isNotBlank(date) && (date.contains(Constants.FLAG_01) || date.equals("3") || date.equals("4"))) {
             if (date.equals("3") || date.equals("4")) {
-                System.out.println("不需要关联查询，只查询hive中数据");
+                LOG.info("Don't need join query, only need query hive's data!!!");
                 perstoSql = createPerstoSql4(eventInfo, false).toString();
                 perstoSqlCount = createPerstoSqlCount(eventInfo);
-                System.out.println("perstoSql=" + perstoSql);
+                LOG.info("perstoSql {}", perstoSql);
             } else {
                 String[] dates = StringUtils.splitPreserveAllTokens(date.replaceAll("\\s*", ""), Constants.FLAG_01);
                 boolean isContains = DateUtil.isContainsToday(dates[0], dates[1]);
                 if (isContains) {
-                    System.out.println("需要关联查询");
+                    LOG.info("Only need join query!!!");
                     //获取persto查询条件
                     perstoSql = createPerstoSql4(eventInfo, false).toString();
                     perstoSqlCount = createPerstoSqlCount(eventInfo);
                     //获取mysql查询条件
                     mySql = createMySql(eventInfo);
                     mySqlCount = createMySqlCount(eventInfo);
-                    System.out.println("拼接perstoSql=" + perstoSql);
-                    System.out.println("拼接mySql=" + mySql);
+                    LOG.info("subString perstoSql {}", perstoSql);
+                    LOG.info("subString MySQL {}", mySql);
                 } else {
-                    System.out.println("不需要关联查询，只查询hive中数据");
+                    LOG.info("Don't need join query, only need query hive's data!!!");
                     perstoSql = createPerstoSql4(eventInfo, false).toString();
                     perstoSqlCount = createPerstoSqlCount(eventInfo);
-                    System.out.println("perstoSql=" + perstoSql);
+                    LOG.info("perstoSql {}", perstoSql);
                 }
             }
 
@@ -177,22 +182,22 @@ public class TaskUtils {
         int mysqlCount = 0;
         int prestoCount = 0;
         if (StringUtils.isNotBlank(mySql)) {
-            System.out.println("开始查询mysql中数据========" + mySql);
-            System.out.println("开始查询mysql count数据========" + mySqlCount);
+            LOG.info("Start query MySQL's data {}", mySql);
+            LOG.info("Start query MySQL count's data {}", mySqlCount);
             long startTime = System.currentTimeMillis();
             mysqlResultList = queryMysqlEventResult(eventInfo, mySql);
-            mysqlCount = queryMysqlEventResultCount(mySqlCount,eventInfo);
+            mysqlCount = queryMysqlEventResultCount(mySqlCount, eventInfo);
             long endTime = System.currentTimeMillis();
-            System.out.println("结束查询msyql中数据, 共耗时：" + (endTime - startTime) / 1000 + "秒，查询到" + mysqlResultList.size() + "条数据");
+            LOG.info("End query MySQL's data, total time consuming: " + (endTime - startTime) / 1000 + "second, query result: " + mysqlResultList.size() + "record");
         }
         if (StringUtils.isNotBlank(perstoSql)) {
-            System.out.println("开始查询persto中数据========" + perstoSql);
-            System.out.println("开始查询persto count数据========" + perstoSqlCount);
+            LOG.info("Start query MySQL's data {}", mySql);
+            LOG.info("Start query MySQL count's data {}", mySqlCount);
             long startTime = System.currentTimeMillis();
             perstoResultList = queryPerstoEventResult(eventInfo, perstoSql);
             prestoCount = queryPrestoEventResultCount(perstoSqlCount);
             long endTime = System.currentTimeMillis();
-            System.out.println("结束查询persto中数据, 共耗时：" + (endTime - startTime) / 1000 + "秒，查询到" + perstoResultList.size() + "条数据");
+            LOG.info("End query MySQL's data, total time consuming: " + (endTime - startTime) / 1000 + "second, query result: " + perstoResultList.size() + "record");
         }
 
         if (null != mysqlResultList && mysqlResultList.size() > 0
@@ -231,16 +236,16 @@ public class TaskUtils {
 
                     List<Map<String, String>> listMap = (List) resultMap.get("data");
                     if (Integer.parseInt(eventInfo.getCurrentPage()) <= 10) {
-                        System.out.println("第二次分页");
+                        System.out.println("Second page");
                         if (null != resultMap && listMap.size() <= Integer.parseInt(total) && limitStart <= listMap.size()) { //排序并添加全部数据到结果集中
-                            System.out.println("第二次分页");
+                            System.out.println("Second page");
                             resultMap.put("data", listMap);
                         } else { //根据分页 取total值条数据
-                            System.out.println("开始分页：" + limitStart + " 结束分页：" + limitEnd);
+                            System.out.println("start page:" + limitStart + " end page：" + limitEnd);
                             if (null != listMap && limitStart <= listMap.size()) {
-                                System.out.println("第二次分页---2");
+                                System.out.println("Second page---2");
                                 for (int a = (limitStart - 1); (a < listMap.size() && a < limitEnd); a++) {
-                                    System.out.println("开始重组数据，索引为：" + a);
+                                    System.out.println("Start restructuring data, index:" + a);
                                     addList.add(listMap.get(a));
                                 }
                                 resultMap.put("data", addList);
@@ -283,7 +288,7 @@ public class TaskUtils {
             selectField = "ev_paras_name";
         }
 
-        System.out.println("开始拼接persto sql");
+        System.out.println("start subString persto sql");
         String date = eventInfo.getDate();
         String[] dates = StringUtils.splitPreserveAllTokens(date.replaceAll("\\s*", ""), Constants.FLAG_01);
 
@@ -502,7 +507,7 @@ public class TaskUtils {
     }
 
 
-     static Connection getPrestoConnection() {
+    static Connection getPrestoConnection() {
         try {
             return ((DataSource) ApplicationContextProvider.getBean("prestoDataSource")).getConnection();
         } catch (Exception e) {
@@ -510,7 +515,7 @@ public class TaskUtils {
         }
     }
 
-     static Connection getSplitDBConnection(BaseVo baseVo) {
+    static Connection getSplitDBConnection(BaseVo baseVo) {
         try {
             JdbcTemplate newJdbcTemplate = ChooseUDataSource.chooseYourDataSource(baseVo.getAppKey(), baseVo.getPlatform());
             return newJdbcTemplate.getDataSource().getConnection();
@@ -776,7 +781,7 @@ public class TaskUtils {
             Object sumCountVal = sumCountMap.get(sumCountKey);
             if (null == sumCountVal) {
                 //sout
-                System.out.println(" prestoResultList 新的数据放入到treemap - " + sumCountKey);
+                System.out.println(" prestoResultList new data put to:treemap - " + sumCountKey);
                 sumCountMap.put(sumCountKey, map);
             } else {
                 //累加计算访问人数和消息数
@@ -817,7 +822,7 @@ public class TaskUtils {
             Set<String> keys = sumCountMap.keySet();
             if (null != keys && keys.size() > 0) {
                 for (String key : keys) {
-                    System.out.println("当前key为：" + key);
+                    System.out.println("current key is:" + key);
                     if (StringUtils.isNotBlank(key)) {
                         Map<String, String> mapStr = (Map<String, String>) sumCountMap.get(key);
                         if (null != mapStr) {

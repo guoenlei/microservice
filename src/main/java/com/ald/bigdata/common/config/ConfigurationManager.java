@@ -15,7 +15,7 @@ public class ConfigurationManager {
 	static {
 		try {
 			InputStream in = ConfigurationManager.class
-					.getClassLoader().getResourceAsStream("default.properties");
+					.getClassLoader().getResourceAsStream("application.properties");
 			prop.load(in);  
 		} catch (Exception e) {
 			e.printStackTrace();
