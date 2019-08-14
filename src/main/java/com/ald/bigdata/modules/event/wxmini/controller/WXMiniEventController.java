@@ -13,18 +13,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import java.util.Map;
 
 /**
- * 事件
+ * 小程序事件
  */
 @Controller
 @RequestMapping(value="wx/mini/event")
 @EnableAutoConfiguration
 public class WXMiniEventController extends BaseController {
-
-//
-//    @Autowired
-//    private AldEventService aldEventService;
-
-
 
     /**
      * 事件处理 -- 参数列表
@@ -32,11 +26,11 @@ public class WXMiniEventController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value = "/param-list", method = RequestMethod.POST)
-    public String queryEventParamDataList(String date, String typeId, String keyword, String currentPage, String total,
+    public String queryEventParamDataList(String date, String currentPage, String total,
                                           String order, String prop, String app_key, String event_key, String ev_paras_name,
-                                          String isDownload) {
+                                          String isDownload, String platform) {
 
-        EventVo e = new EventVo(date, typeId, keyword, prop, order, app_key, event_key, ev_paras_name, isDownload);
+        EventVo e = new EventVo(date, prop, order, app_key, event_key, ev_paras_name, isDownload, platform);
         e.setCurrentPage(currentPage);
         e.setTotal(total);
         e.setType("2"); //列表
@@ -63,11 +57,11 @@ public class WXMiniEventController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(value="/param-detail-list", method = RequestMethod.POST)
-    public String queryEventParamDetailsList(String date, String typeId, String keyword, String currentPage, String total,
+    public String queryEventParamDetailsList(String date, String currentPage, String total,
                                              String order, String prop, String app_key, String event_key, String ev_paras_name,
-                                             String isDownload) {
+                                             String isDownload, String platform) {
 
-        EventVo e = new EventVo(date, typeId, keyword, prop, order, app_key, event_key, ev_paras_name, isDownload);
+        EventVo e = new EventVo(date, prop, order, app_key, event_key, ev_paras_name, isDownload, platform);
         e.setCurrentPage(currentPage);
         e.setTotal(total);
         e.setType("1"); //明细
@@ -89,6 +83,11 @@ public class WXMiniEventController extends BaseController {
     }
 
 
+    /**
+     * 有数据或没数据
+     * @param map
+     * @return
+     */
     private Map<String, Object> formatData(Map<String, Object> map) {
         if(map.get("code").equals("200")) {
             map.put("code", 200);

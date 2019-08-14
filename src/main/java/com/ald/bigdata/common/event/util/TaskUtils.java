@@ -171,7 +171,7 @@ public class TaskUtils {
                     LOG.info("perstoSql {}", perstoSql);
                 }
             }
-
+        // 今日昨日 查MySQL
         } else {
             mySql = createMySql(eventInfo);
             mySqlCount = createMySqlCount(eventInfo);
@@ -191,13 +191,13 @@ public class TaskUtils {
             LOG.info("End query MySQL's data, total time consuming: " + (endTime - startTime) / 1000 + "second, query result: " + mysqlResultList.size() + "record");
         }
         if (StringUtils.isNotBlank(perstoSql)) {
-            LOG.info("Start query MySQL's data {}", mySql);
-            LOG.info("Start query MySQL count's data {}", mySqlCount);
+            LOG.info("Start query Presto's data {}", mySql);
+            LOG.info("Start query Presto count's data {}", mySqlCount);
             long startTime = System.currentTimeMillis();
             perstoResultList = queryPerstoEventResult(eventInfo, perstoSql);
             prestoCount = queryPrestoEventResultCount(perstoSqlCount);
             long endTime = System.currentTimeMillis();
-            LOG.info("End query MySQL's data, total time consuming: " + (endTime - startTime) / 1000 + "second, query result: " + perstoResultList.size() + "record");
+            LOG.info("End query Presto's data, total time consuming: " + (endTime - startTime) / 1000 + "second, query result: " + perstoResultList.size() + "record");
         }
 
         if (null != mysqlResultList && mysqlResultList.size() > 0
@@ -288,7 +288,7 @@ public class TaskUtils {
             selectField = "ev_paras_name";
         }
 
-        System.out.println("start subString persto sql");
+        System.out.println("start subString persto sql!!!");
         String date = eventInfo.getDate();
         String[] dates = StringUtils.splitPreserveAllTokens(date.replaceAll("\\s*", ""), Constants.FLAG_01);
 
@@ -515,9 +515,15 @@ public class TaskUtils {
         }
     }
 
-    static Connection getSplitDBConnection(BaseVo baseVo) {
+
+    /**
+     * 通过ak和前端传入的part（PHP转成platform）判断选择哪个数据源。
+     * @param eventVo
+     * @return
+     */
+    static Connection getSplitDBConnection(EventVo eventVo) {
         try {
-            JdbcTemplate newJdbcTemplate = ChooseUDataSource.chooseYourDataSource(baseVo.getAppKey(), baseVo.getPlatform());
+            JdbcTemplate newJdbcTemplate = ChooseUDataSource.chooseYourDataSource(eventVo.getAppKey(), eventVo.getPlatform());
             return newJdbcTemplate.getDataSource().getConnection();
         } catch (Exception e) {
             return null;
@@ -655,7 +661,12 @@ public class TaskUtils {
         return resultList;
     }
 
-
+    /**
+     * 获取MySQL count 数据
+     * @param mysql
+     * @param e
+     * @return
+     */
     public static int queryMysqlEventResultCount(String mysql, EventVo e) {
         Statement stmt = null;
         int result = 0;

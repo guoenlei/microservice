@@ -9,6 +9,7 @@ import java.util.List;
 
 public class BaseVo implements Serializable {
     protected String appKey;
+    // 父vo默认值为微信小程序。
     private String platform="wx";
 
 

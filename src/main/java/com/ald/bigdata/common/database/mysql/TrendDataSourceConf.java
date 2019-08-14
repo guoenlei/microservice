@@ -2,6 +2,7 @@ package com.ald.bigdata.common.database.mysql;
 
 import com.ald.bigdata.common.util.ChooseUDataSource;
 import com.alibaba.druid.pool.DruidDataSource;
+import com.alibaba.druid.pool.DruidDataSourceFactory;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
