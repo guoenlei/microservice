@@ -147,7 +147,7 @@ public class TaskUtils {
         //最近7天和30天表 查询presto
         if (StringUtils.isNotBlank(date) && (date.contains(Constants.FLAG_01) || date.equals("3") || date.equals("4"))) {
             if (date.equals("3") || date.equals("4")) {
-                LOG.info("Don't need join query, only need query hive's data!!!");
+                LOG.info("7day 30day data. Don't need join query, only need query hive's data!!!");
                 perstoSql = createPerstoSql4(eventInfo, false).toString();
                 perstoSqlCount = createPerstoSqlCount(eventInfo);
                 LOG.info("perstoSql {}", perstoSql);
