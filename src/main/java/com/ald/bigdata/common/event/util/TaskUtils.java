@@ -610,8 +610,9 @@ public class TaskUtils {
     private static List<Map<String, String>> queryMysqlEventResult(EventVo e, String mysql) {
         List<Map<String, String>> resultList = Lists.newArrayList();
         Statement stmt = null;
+        Connection connection = null;
         try {
-            Connection connection = getSplitDBConnection(e);
+            connection = getSplitDBConnection(e);
             //建立mysql连接
             stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(mysql);
@@ -657,6 +658,13 @@ public class TaskUtils {
                     e2.printStackTrace();
                 }
             }
+            if (null != connection) {
+                try {
+                    connection.close();
+                } catch (SQLException e2) {
+                    e2.printStackTrace();
+                }
+            }
         }
         return resultList;
     }
@@ -671,8 +679,9 @@ public class TaskUtils {
         Statement stmt = null;
         int result = 0;
 
-        Connection connection = getSplitDBConnection(e);//建立mysql连接
+        Connection connection = null;
         try {
+            connection = getSplitDBConnection(e);//建立mysql连接
             stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery(mysql);
             if (null != rs) {
@@ -686,8 +695,15 @@ public class TaskUtils {
             if (null != stmt) {
                 try {
                     stmt.close();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
+                } catch (SQLException e2) {
+                    e2.printStackTrace();
+                }
+            }
+            if (null != connection) {
+                try {
+                    connection.close();
+                } catch (SQLException e2) {
+                    e2.printStackTrace();
                 }
             }
         }
