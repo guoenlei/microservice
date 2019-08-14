@@ -13,6 +13,18 @@ public interface Constants {
     String JDBC_POOL = "spring.datasource.pool";
 
     /**
+     * 前端传入的part，类型标识：
+     * qx：QQ小程序
+     * qg：QQ小游戏
+     * wx：WX小程序
+     * wg：WX小游戏
+     */
+    String QQ_MINI = "qx";
+    String QQ_GAME = "qg";
+    String WX_MINI = "wx";
+    String WX_GAME = "wg";
+
+    /**
      * mysql
      */
     String MYSQL_JDBC_DRIVER = "spring.datasource.mysql.driver";
@@ -70,17 +82,14 @@ public interface Constants {
     String ALDSTAT_EVENT_TYPE_ID = "2";
 
 
-
     String TOTAL_COUNT = "20"; //默认20条
     String CURRENT_PAGE = "1"; //默认第一页
-
 
 
     //分页默认从第一页
     String CURRENT_PAGE_DEFAULT = "1";
     //默认每页100条
     String TOTAL_DEFAULT = "100";
-
 
 
     //提示信息
@@ -90,8 +99,6 @@ public interface Constants {
     String ALERT_DATE_ERROR_MSG = "时间格式有误";
 
     String ALERT_NO_AK_MSG = "APPKEY不能为空";
-
-
 
 
 }

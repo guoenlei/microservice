@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Map;
 
+import static com.ald.bigdata.common.constants.Constants.*;
 import static com.ald.bigdata.common.database.mysql.TrendDataSourceConf.oldConnMessage;
 
 /**
@@ -59,14 +60,14 @@ public class ChooseUDataSource {
         } else {
             // 5.索引表中没查出来，根据各接口二级路径传入的PLATFORM,TYPE判断是哪个数据源，并返回对应的jdbcTemplate。
             // qx爲例：q,w對應QQ和WX； x,g對應小程序和小游戲。
-            if (StringUtils.equals(te, "qx")) {
+            if (StringUtils.equals(te, QQ_MINI)) {
                 // TODO delete assist info
                 logger.info("use qqMini default dataSource: {}", oldConnMessage.get("qqMini"));
                 return oldConnMessage.get("qqMini");
-            } else if(StringUtils.equals(te, "qg")){
+            } else if(StringUtils.equals(te, QQ_GAME)){
                 logger.info("use qqGame default dataSource: {}", oldConnMessage.get("qqGame"));
                 return oldConnMessage.get("qqGame");
-            } else if (StringUtils.equals(te, "wg")) {
+            } else if (StringUtils.equals(te, WX_GAME)) {
                 logger.info("use wxGame default dataSource: {}", oldConnMessage.get("wxGame"));
                 return oldConnMessage.get("wxGame");
             } else {

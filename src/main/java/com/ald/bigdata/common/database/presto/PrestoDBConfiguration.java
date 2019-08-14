@@ -23,7 +23,8 @@ public class PrestoDBConfiguration {
 //    static final String MAPPER_LOCATION = "classpath:mapper/presto/*.xml";
 //    static final String MAPPER_LOCATION = "classpath:mapper/master/*.xml";
 
-    @Value("${presto.datasource.mini.url}")
+//    微信小程序数据源
+    @Value("${presto.datasource.wxmini.url}")
     private String url;
 //    @Value("${presto.datasource.username}")
 //    private String user;
@@ -46,13 +47,13 @@ public class PrestoDBConfiguration {
         return dataSource;
     }
 
-    @Bean(name = "prestoTransactionManager")
-    public DataSourceTransactionManager prestoTransactionManager() {
+    @Bean(name = "prestoWXMiniTransactionManager")
+    public DataSourceTransactionManager prestoWXMiniTransactionManager() {
         return new DataSourceTransactionManager(prestoWXMiniDataSource());
     }
 
-    @Bean(name = "prestoSqlSessionFactory")
-    public SqlSessionFactory prestoSqlSessionFactory(@Qualifier("prestoWXMiniDataSource") DataSource prestoWXMiniDataSource)
+    @Bean(name = "prestoWXMiniSqlSessionFactory")
+    public SqlSessionFactory prestoWXMiniSqlSessionFactory(@Qualifier("prestoWXMiniDataSource") DataSource prestoWXMiniDataSource)
             throws Exception {
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
         sessionFactory.setDataSource(prestoWXMiniDataSource);
@@ -61,8 +62,8 @@ public class PrestoDBConfiguration {
         return sessionFactory.getObject();
     }
 
-
-    @Value("${presto.datasource.game.url}")
+//  微信小游戏Presto数据源
+    @Value("${presto.datasource.wxgame.url}")
     private String gameurl;
     @Value("${presto.datasource.driverClassName}")
     private String gamedriverClass;
@@ -76,4 +77,16 @@ public class PrestoDBConfiguration {
         dataSource.setConnectProperties(properties);
         return dataSource;
     }
+    @Bean(name = "prestoWXGameTransactionManager")
+    public DataSourceTransactionManager prestoWXGameTransactionManager() {
+        return new DataSourceTransactionManager(prestoWXGameDataSource());
+    }
+    @Bean(name = "prestoWXGameSqlSessionFactory")
+    public SqlSessionFactory prestoWXGameSqlSessionFactory(@Qualifier("prestoWXGameDataSource") DataSource prestoWXGameDataSource)
+            throws Exception {
+        final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
+        sessionFactory.setDataSource(prestoWXGameDataSource);
+        return sessionFactory.getObject();
+    }
+
 }

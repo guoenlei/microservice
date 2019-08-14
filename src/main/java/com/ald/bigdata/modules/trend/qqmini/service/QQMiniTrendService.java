@@ -74,16 +74,6 @@ public class QQMiniTrendService extends TrendService {
                 map1 = jdbcTemplate.queryForMap(sql1);
             } catch (org.springframework.dao.EmptyResultDataAccessException e) {
 
-            } finally {
-                // TODO closed database connection
-                try {
-                    Connection conn = jdbcTemplate.getDataSource().getConnection();
-                    if (conn != null) {
-                        conn.close();
-                    }
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
             }
             if (map1 != null) {
                 map1.put("new_count", StringUtil.formatThousand((BigDecimal) map1.get("new_count")));

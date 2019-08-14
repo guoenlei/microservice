@@ -1,14 +1,12 @@
 package com.ald.bigdata.common.event.util;
 
 
-import com.ald.bigdata.common.base.BaseVo;
 import com.ald.bigdata.common.constants.Constants;
 import com.ald.bigdata.common.util.ApplicationContextProvider;
 import com.ald.bigdata.common.util.Arith;
 import com.ald.bigdata.common.util.ChooseUDataSource;
 import com.ald.bigdata.common.util.DateUtil;
 import com.ald.bigdata.common.event.vo.EventVo;
-import com.ald.bigdata.modules.ad.controller.AldAdMonitorDataController;
 import com.facebook.presto.jdbc.internal.guava.collect.Lists;
 import com.facebook.presto.jdbc.internal.guava.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +26,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static com.ald.bigdata.common.constants.Constants.WX_GAME;
+import static com.ald.bigdata.common.constants.Constants.WX_MINI;
 
 @Service
 public class TaskUtils {
@@ -171,7 +172,7 @@ public class TaskUtils {
                     LOG.info("perstoSql {}", perstoSql);
                 }
             }
-        // 今日昨日 查MySQL
+            // 今日昨日 查MySQL
         } else {
             mySql = createMySql(eventInfo);
             mySqlCount = createMySqlCount(eventInfo);
@@ -195,7 +196,7 @@ public class TaskUtils {
             LOG.info("Start query Presto count's data {}", mySqlCount);
             long startTime = System.currentTimeMillis();
             perstoResultList = queryPerstoEventResult(eventInfo, perstoSql);
-            prestoCount = queryPrestoEventResultCount(perstoSqlCount);
+            prestoCount = queryPrestoEventResultCount(eventInfo, perstoSqlCount);
             long endTime = System.currentTimeMillis();
             LOG.info("End query Presto's data, total time consuming: " + (endTime - startTime) / 1000 + "second, query result: " + perstoResultList.size() + "record");
         }
@@ -429,7 +430,6 @@ public class TaskUtils {
         if (StringUtils.isNotBlank(date)) {
             if (date.equals(Constants.ALDSTAT_EVENT_TODAY_TIME)) {                   //今天
                 tableName = Constants.ALDSTAT_DAILY_EVENT_USER_GROUP;
-                //TODO
                 filterDate = FILTER_DATE_HEAR + DateUtil.getTodayDate() + "' ";
 //                filterDate = FILTER_DATE_HEAR + "2018-09-04' ";
 
@@ -507,9 +507,18 @@ public class TaskUtils {
     }
 
 
-    static Connection getPrestoConnection() {
+    static Connection getPrestoConnection(String platform) {
         try {
-            return ((DataSource) ApplicationContextProvider.getBean("prestoDataSource")).getConnection();
+            // 类型不同，获取presto连接不同。
+            if (StringUtils.equals(platform, WX_GAME)) {
+                LOG.info("prestoWXGameDataSource");
+                return ((DataSource) ApplicationContextProvider
+                        .getBean("prestoWXGameDataSource")).getConnection();
+            } else {
+                LOG.info("prestoWXMiniDataSource");
+                return ((DataSource) ApplicationContextProvider
+                        .getBean("prestoWXMiniDataSource")).getConnection();
+            }
         } catch (Exception e) {
             return null;
         }
@@ -518,6 +527,7 @@ public class TaskUtils {
 
     /**
      * 通过ak和前端传入的part（PHP转成platform）判断选择哪个数据源。
+     *
      * @param eventVo
      * @return
      */
@@ -536,19 +546,20 @@ public class TaskUtils {
      * @param perstoSql
      * @return
      */
-    private static List<Map<String, String>> queryPerstoEventResult(EventVo e, String perstoSql) {
+    private static List<Map<String, String>> queryPerstoEventResult(EventVo eventVo, String perstoSql) {
         List<Map<String, String>> resultList = Lists.newArrayList();
         Statement stmt = null;
         Connection prestoConnection = null;
         try {
-            prestoConnection = getPrestoConnection();//创建presto连接对象
+            // 类型不同，获取连接不同。
+            prestoConnection = getPrestoConnection(eventVo.getPlatform());//创建presto连接对象
             stmt = prestoConnection.createStatement();// 创建Statement对象
             ResultSet rs = stmt.executeQuery(perstoSql);
             if (null != rs) {
                 while (rs.next()) {
                     Map<String, String> map = Maps.newConcurrentMap();
 
-                    if (e.getType().equals("1")) {
+                    if (eventVo.getType().equals("1")) {
                         String app_key = rs.getString(2);
                         String event_key = rs.getString(3);
                         String ev_paras_value = rs.getString(4);
@@ -671,6 +682,7 @@ public class TaskUtils {
 
     /**
      * 获取MySQL count 数据
+     *
      * @param mysql
      * @param e
      * @return
@@ -711,12 +723,12 @@ public class TaskUtils {
     }
 
 
-    public static int queryPrestoEventResultCount(String prestoSql) {
+    public static int queryPrestoEventResultCount(EventVo eventVo, String prestoSql) {
         Statement stmt = null;
         int result = 0;
         Connection prestoConnection = null;
         try {
-            prestoConnection = getPrestoConnection();
+            prestoConnection = getPrestoConnection(eventVo.getPlatform());
             ;//创建presto连接对象
             stmt = prestoConnection.createStatement();// 创建Statement对象
             ResultSet rs = stmt.executeQuery(prestoSql);
