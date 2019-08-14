@@ -23,24 +23,21 @@ public class PrestoDBConfiguration {
 //    static final String MAPPER_LOCATION = "classpath:mapper/presto/*.xml";
 //    static final String MAPPER_LOCATION = "classpath:mapper/master/*.xml";
 
-    @Value("${presto.datasource.url}")
+    @Value("${presto.datasource.mini.url}")
     private String url;
-
-    @Value("${presto.datasource.username}")
-    private String user;
-
-    @Value("${presto.datasource.password}")
-    private String password;
-
+//    @Value("${presto.datasource.username}")
+//    private String user;
+//    @Value("${presto.datasource.password}")
+//    private String password;
     @Value("${presto.datasource.driverClassName}")
     private String driverClass;
 
-
-    @Bean(name = "prestoDataSource")
-    public DataSource prestoDataSource() {
+    @Bean(name = "prestoWXMiniDataSource")
+    public DataSource prestoWXMiniDataSource() {
         DruidDataSource dataSource = new DruidDataSource();
         dataSource.setDriverClassName(driverClass);
         dataSource.setUrl(url);
+//        使用用户名密码需要SSL
 //        dataSource.setUsername(user);
 //        dataSource.setPassword(password);
         Properties properties = new Properties();
@@ -49,20 +46,34 @@ public class PrestoDBConfiguration {
         return dataSource;
     }
 
-
     @Bean(name = "prestoTransactionManager")
     public DataSourceTransactionManager prestoTransactionManager() {
-        return new DataSourceTransactionManager(prestoDataSource());
+        return new DataSourceTransactionManager(prestoWXMiniDataSource());
     }
 
-
     @Bean(name = "prestoSqlSessionFactory")
-    public SqlSessionFactory prestoSqlSessionFactory(@Qualifier("prestoDataSource") DataSource prestoDataSource)
+    public SqlSessionFactory prestoSqlSessionFactory(@Qualifier("prestoWXMiniDataSource") DataSource prestoWXMiniDataSource)
             throws Exception {
         final SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
-        sessionFactory.setDataSource(prestoDataSource);
+        sessionFactory.setDataSource(prestoWXMiniDataSource);
 //        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver()
 //                .getResources(PrestoDBConfiguration.MAPPER_LOCATION));
         return sessionFactory.getObject();
+    }
+
+
+    @Value("${presto.datasource.game.url}")
+    private String gameurl;
+    @Value("${presto.datasource.driverClassName}")
+    private String gamedriverClass;
+    @Bean(name = "prestoWXGameDataSource")
+    public DataSource prestoWXGameDataSource() {
+        DruidDataSource dataSource = new DruidDataSource();
+        dataSource.setDriverClassName(driverClass);
+        dataSource.setUrl(url);
+        Properties properties = new Properties();
+        properties.setProperty("user","root");
+        dataSource.setConnectProperties(properties);
+        return dataSource;
     }
 }
