@@ -13,7 +13,10 @@ import static com.ald.bigdata.common.constants.Constants.*;
 import static com.ald.bigdata.common.database.mysql.TrendDataSourceConf.oldConnMessage;
 
 /**
- * 接口中传入的ak不同，对应数据源不同。
+ * @author guoenlei
+ * @date 2019-08-14
+ * @version 1.0
+ * 传入的ak不同，对应数据源不同。（从分库索引表查询）
  */
 public class ChooseUDataSource {
     // 根据接口传入的PLATFORM和TYPE即可判断出默认数据库。te暂时用不到。保留te，保持一致性。

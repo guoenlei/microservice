@@ -1,8 +1,7 @@
 package com.ald.bigdata.modules.trend.wxgame.service;
 
 import com.ald.bigdata.common.trend.helper.TrendSQLHelper;
-import com.ald.bigdata.common.trend.service.TrendService;
-import com.ald.bigdata.common.trend.vo.MapResult;
+import com.ald.bigdata.common.trend.vo.GameMapResult;
 import com.ald.bigdata.common.trend.vo.TrendQueryVo;
 import com.ald.bigdata.common.util.StringUtil;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,11 +19,11 @@ import java.util.Map;
  * WX小游戏
  */
 @Service
-public class WXGameTrendService extends TrendService {
+public class WXGameTrendService {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     private JdbcTemplate jdbcTemplate;
 
-    @Override
+    
     public void setJdbcTemplate(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
@@ -36,7 +35,7 @@ public class WXGameTrendService extends TrendService {
      * @param trendQueryVo
      * @return
      */
-    @Override
+    
     public Map getTotalData(TrendQueryVo trendQueryVo) {
         String sql = TrendSQLHelper.totalSQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());
         Map map = new HashMap();
@@ -92,7 +91,7 @@ public class WXGameTrendService extends TrendService {
      * @param trendQueryVo
      * @return
      */
-    @Override
+    
     public Pair<List, List> tableData(TrendQueryVo trendQueryVo) {
         //存放最终结果
         List<Map<String, String>> listRes1 = null;
@@ -107,9 +106,9 @@ public class WXGameTrendService extends TrendService {
             if (pair.getLeft() != null && pair.getLeft().size() > 0) {
                 leftData = pair.getLeft();
             }
-            listRes1 = MapResult.GetTableMap(leftData, trendQueryVo, "1");
+            listRes1 = GameMapResult.GetTableMap(leftData, trendQueryVo, "1");
             if (trendQueryVo.isCompare()) {
-                listRes2 = MapResult.GetTableMap(rightData, trendQueryVo, "2");
+                listRes2 = GameMapResult.GetTableMap(rightData, trendQueryVo, "2");
             }
 
         } else if (trendQueryVo.getDataType().equals("2")) {
@@ -122,9 +121,9 @@ public class WXGameTrendService extends TrendService {
             if (pair.getLeft() != null && pair.getLeft().size() > 0) {
                 leftData = pair.getLeft();
             }
-            listRes1 = MapResult.GetTableMap(leftData, trendQueryVo, "1");
+            listRes1 = GameMapResult.GetTableMap(leftData, trendQueryVo, "1");
             if (trendQueryVo.isCompare()) {
-                listRes2 = MapResult.GetTableMap(rightData, trendQueryVo, "2");
+                listRes2 = GameMapResult.GetTableMap(rightData, trendQueryVo, "2");
             }
 
         } else if (trendQueryVo.getDataType().equals("3")) {
@@ -137,9 +136,9 @@ public class WXGameTrendService extends TrendService {
             if (pair.getLeft() != null && pair.getLeft().size() > 0) {
                 leftData = pair.getLeft();
             }
-            listRes1 = MapResult.GetTableMap(leftData, trendQueryVo, "1");
+            listRes1 = GameMapResult.GetTableMap(leftData, trendQueryVo, "1");
             if (trendQueryVo.isCompare()) {
-                listRes2 = MapResult.GetTableMap(rightData, trendQueryVo, "2");
+                listRes2 = GameMapResult.GetTableMap(rightData, trendQueryVo, "2");
             }
         } else if (trendQueryVo.getDataType().equals("4")) {
             Pair<List, List> pair = getMonthData(trendQueryVo);
@@ -151,9 +150,9 @@ public class WXGameTrendService extends TrendService {
             if (pair.getLeft() != null && pair.getLeft().size() > 0) {
                 leftData = pair.getLeft();
             }
-            listRes1 = MapResult.GetTableMap(leftData, trendQueryVo, "1");
+            listRes1 = GameMapResult.GetTableMap(leftData, trendQueryVo, "1");
             if (trendQueryVo.isCompare()) {
-                listRes2 = MapResult.GetTableMap(rightData, trendQueryVo, "2");
+                listRes2 = GameMapResult.GetTableMap(rightData, trendQueryVo, "2");
             }
         }
         return Pair.of(listRes1, listRes2);
@@ -165,7 +164,7 @@ public class WXGameTrendService extends TrendService {
      * @param trendQueryVo
      * @return
      */
-    @Override
+    
     public Pair<Map, Map> chartData(TrendQueryVo trendQueryVo) {
         //存放最终结果
         Map map1 = null;
@@ -180,9 +179,9 @@ public class WXGameTrendService extends TrendService {
             if (pair.getLeft() != null && pair.getLeft().size() > 0) {
                 leftData = pair.getLeft();
             }
-            map1 = MapResult.GetChartMap(leftData, trendQueryVo, "1");
+            map1 = GameMapResult.GetChartMap(leftData, trendQueryVo, "1");
             if (trendQueryVo.isCompare()) {
-                map2 = MapResult.GetChartMap(rightData, trendQueryVo, "2");
+                map2 = GameMapResult.GetChartMap(rightData, trendQueryVo, "2");
             }
 
         } else if (trendQueryVo.getDataType().equals("2")) {
@@ -195,9 +194,9 @@ public class WXGameTrendService extends TrendService {
             if (pair.getLeft() != null && pair.getLeft().size() > 0) {
                 leftData = pair.getLeft();
             }
-            map1 = MapResult.GetChartMap(leftData, trendQueryVo, "1");
+            map1 = GameMapResult.GetChartMap(leftData, trendQueryVo, "1");
             if (trendQueryVo.isCompare()) {
-                map2 = MapResult.GetChartMap(rightData, trendQueryVo, "2");
+                map2 = GameMapResult.GetChartMap(rightData, trendQueryVo, "2");
             }
         } else if (trendQueryVo.getDataType().equals("3")) {
             Pair<List, List> pair = getWeekData(trendQueryVo);
@@ -209,9 +208,9 @@ public class WXGameTrendService extends TrendService {
             if (pair.getLeft() != null && pair.getLeft().size() > 0) {
                 leftData = pair.getLeft();
             }
-            map1 = MapResult.GetChartMap(leftData, trendQueryVo, "1");
+            map1 = GameMapResult.GetChartMap(leftData, trendQueryVo, "1");
             if (trendQueryVo.isCompare()) {
-                map2 = MapResult.GetChartMap(rightData, trendQueryVo, "2");
+                map2 = GameMapResult.GetChartMap(rightData, trendQueryVo, "2");
             }
         } else if (trendQueryVo.getDataType().equals("4")) {
             Pair<List, List> pair = getMonthData(trendQueryVo);
@@ -223,9 +222,9 @@ public class WXGameTrendService extends TrendService {
             if (pair.getLeft() != null && pair.getLeft().size() > 0) {
                 leftData = pair.getLeft();
             }
-            map1 = MapResult.GetChartMap(leftData, trendQueryVo, "1");
+            map1 = GameMapResult.GetChartMap(leftData, trendQueryVo, "1");
             if (trendQueryVo.isCompare()) {
-                map2 = MapResult.GetChartMap(rightData, trendQueryVo, "2");
+                map2 = GameMapResult.GetChartMap(rightData, trendQueryVo, "2");
             }
         }
         return Pair.of(map1, map2);
@@ -237,7 +236,7 @@ public class WXGameTrendService extends TrendService {
      * @param trendQueryVo
      * @return
      */
-    @Override
+    
     public Pair<List, List> getDayData(TrendQueryVo trendQueryVo) {
         Map map = new HashMap();
         String sql = TrendSQLHelper.daySQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());
@@ -260,7 +259,7 @@ public class WXGameTrendService extends TrendService {
      * @param trendQueryVo
      * @return
      */
-    @Override
+    
     public Pair<List, List> getWeekData(TrendQueryVo trendQueryVo) {
         Map map = new HashMap();
         String sql = TrendSQLHelper.weekSQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());
@@ -283,7 +282,7 @@ public class WXGameTrendService extends TrendService {
      * @param trendQueryVo
      * @return
      */
-    @Override
+    
     public Pair<List, List> getMonthData(TrendQueryVo trendQueryVo) {
         Map map = new HashMap();
         String sql = TrendSQLHelper.monthSQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());
@@ -306,7 +305,7 @@ public class WXGameTrendService extends TrendService {
      * @param trendQueryVo
      * @return
      */
-    @Override
+    
     public Pair<List, List> getHourData(TrendQueryVo trendQueryVo) {
         Map map = new HashMap();
         String sql = TrendSQLHelper.hourSQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());

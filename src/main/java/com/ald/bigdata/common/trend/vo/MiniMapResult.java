@@ -9,12 +9,12 @@ import java.util.*;
 /**
  * 小程序（字段比小游戲多）
  */
-public class MapResult {
+public class MiniMapResult {
     //对比列表
     public static List<Map<String, String>> GetTableMap(List list, TrendQueryVo vo, String a) {
         List<Map<String, String>> listRes = null;
         if (vo.getDataType().equals("1")) {
-            listRes = MapResult.getEmptyHour(vo, a);
+            listRes = MiniMapResult.getEmptyHour(vo, a);
             if (list != null && list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     Map mapresult = (Map) list.get(i);
@@ -30,14 +30,23 @@ public class MapResult {
                     map.put("visit_count", StringUtil.formatThousand((BigDecimal) mapresult.get("visit_count")));
                     map.put("total_page_count", StringUtil.formatThousand((BigDecimal) mapresult.get("total_page_count")));
                     map.put("open_count", StringUtil.formatThousand((BigDecimal) mapresult.get("open_count")));
-                    map.put("secondary_avg_stay_time", StringUtil.formatTime((Double.parseDouble(mapresult.get("secondary_avg_stay_time").toString()))));
-                    map.put("bounce_rate", StringUtil.formatPercent1(Float.parseFloat(mapresult.get("bounce_rate").toString())));
+                    if (mapresult.get("secondary_avg_stay_time") != null) {
+                        map.put("secondary_avg_stay_time", StringUtil.formatTime((Double.parseDouble(mapresult.get("secondary_avg_stay_time").toString()))));
+                    } else {
+                        map.put("secondary_avg_stay_time", StringUtil.formatTime((0.0)));
+                    }
+                    if (mapresult.get("bounce_rate") != null) {
+
+                        map.put("bounce_rate", StringUtil.formatPercent1(Float.parseFloat(mapresult.get("bounce_rate").toString())));
+                    } else {
+                        map.put("bounce_rate", StringUtil.formatPercent1(Float.parseFloat("0")));
+                    }
                     listRes.set(Integer.parseInt(mapresult.get("hour").toString()), map);
                 }
             }
         }
         if (vo.getDataType().equals("2")) {
-            listRes = MapResult.getEmptyDay(vo, a);
+            listRes = MiniMapResult.getEmptyDay(vo, a);
             if (list != null && list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     Map mapresult = (Map) list.get(i);
@@ -64,7 +73,7 @@ public class MapResult {
             }
         }
         if (vo.getDataType().equals("3")) {
-            listRes = MapResult.getEmptyWeek(vo, a);
+            listRes = MiniMapResult.getEmptyWeek(vo, a);
             if (list != null && list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     Map mapresult = (Map) list.get(i);
@@ -94,7 +103,7 @@ public class MapResult {
             }
         }
         if (vo.getDataType().equals("4")) {
-            listRes = MapResult.getEmptyMonth(vo, a);
+            listRes = MiniMapResult.getEmptyMonth(vo, a);
             if (list != null && list.size() > 0) {
                 for (int i = 0; i < list.size(); i++) {
                     Map mapresult = (Map) list.get(i);
@@ -178,12 +187,12 @@ public class MapResult {
                 }
             }
         }
-        List tema = MapResult.getMapEmpty(vo, a);
-        List temb = MapResult.getMapEmpty(vo, a);
-        List temc = MapResult.getMapEmpty(vo, a);
-        List temd = MapResult.getMapEmpty(vo, a);
-        List teme = MapResult.getMapEmpty(vo, a);
-        List temf = MapResult.getMapEmpty(vo, a);
+        List tema = MiniMapResult.getMapEmpty(vo, a);
+        List temb = MiniMapResult.getMapEmpty(vo, a);
+        List temc = MiniMapResult.getMapEmpty(vo, a);
+        List temd = MiniMapResult.getMapEmpty(vo, a);
+        List teme = MiniMapResult.getMapEmpty(vo, a);
+        List temf = MiniMapResult.getMapEmpty(vo, a);
         Map mapa = new HashMap();
         Map mapb = new HashMap();
         Map mapc = new HashMap();
@@ -342,7 +351,11 @@ public class MapResult {
                     } else if (key.equals("secondary_avg_stay_time")) {
 
                         if (vo.getDataType().equals("1")) {
-                            teme.set(Integer.parseInt(map.get("hour").toString()), StringUtil.formatPercent3(Double.parseDouble(map.get("secondary_avg_stay_time").toString())));
+                            if (map.get("secondary_avg_stay_time") != null) {
+                                teme.set(Integer.parseInt(map.get("hour").toString()), StringUtil.formatPercent3(Double.parseDouble(map.get("secondary_avg_stay_time").toString())));
+                            } else {
+                                teme.set(Integer.parseInt(map.get("hour").toString()), StringUtil.formatPercent3(0.0));
+                            }
                             mape.put("name", "次均停留时长");
                             mape.put("data", teme);
                         }
@@ -350,7 +363,11 @@ public class MapResult {
                             if (time1.contains(map.get("day").toString())) {
                                 int m = time1.indexOf(map.get("day").toString());
                                 if (m >= 0) {
-                                    teme.set(m, StringUtil.formatPercent3(Double.parseDouble(map.get("secondary_avg_stay_time").toString())));
+                                    if (map.get("secondary_avg_stay_time") != null) {
+                                        teme.set(m, StringUtil.formatPercent3(Double.parseDouble(map.get("secondary_avg_stay_time").toString())));
+                                    } else {
+                                        teme.set(m, StringUtil.formatPercent3(Double.parseDouble("0.0")));
+                                    }
                                 }
                             }
                             mape.put("name", "次均停留时长");
@@ -360,7 +377,11 @@ public class MapResult {
                             if (time1.contains(map.get("week").toString())) {
                                 int m = time1.indexOf(map.get("week").toString());
                                 if (m >= 0) {
-                                    teme.set(m, StringUtil.formatPercent3(Double.parseDouble(map.get("secondary_avg_stay_time").toString())));
+                                    if (map.get("secondary_avg_stay_time") != null) {
+                                        teme.set(m, StringUtil.formatPercent3(Double.parseDouble(map.get("secondary_avg_stay_time").toString())));
+                                    } else {
+                                        teme.set(m, StringUtil.formatPercent3(Double.parseDouble("0.0")));
+                                    }
                                 }
                             }
                             mape.put("name", "次均停留时长");
@@ -370,7 +391,11 @@ public class MapResult {
                             if (time1.contains(map.get("mon").toString())) {
                                 int m = time1.indexOf(map.get("mon").toString());
                                 if (m >= 0) {
-                                    teme.set(m, StringUtil.formatPercent3(Double.parseDouble(map.get("secondary_avg_stay_time").toString())));
+                                    if (map.get("secondary_avg_stay_time") != null) {
+                                        teme.set(m, StringUtil.formatPercent3(Double.parseDouble(map.get("secondary_avg_stay_time").toString())));
+                                    } else {
+                                        teme.set(m, StringUtil.formatPercent3(Double.parseDouble("0.0")));
+                                    }
                                 }
                             }
                             mape.put("name", "次均停留时长");
@@ -379,7 +404,11 @@ public class MapResult {
                     } else if (key.equals("bounce_rate")) {
 
                         if (vo.getDataType().equals("1")) {
-                            temf.set(Integer.parseInt(map.get("hour").toString()), map.get("bounce_rate"));
+                            if (map.get("bounce_rate") != null) {
+                                temf.set(Integer.parseInt(map.get("hour").toString()), map.get("bounce_rate"));
+                            } else {
+                                temf.set(Integer.parseInt(map.get("hour").toString()), 0);
+                            }
                             mapf.put("name", "跳出率");
                             mapf.put("data", temf);
                         }
@@ -387,7 +416,11 @@ public class MapResult {
                             if (time1.contains(map.get("day").toString())) {
                                 int m = time1.indexOf(map.get("day").toString());
                                 if (m >= 0) {
-                                    temf.set(m, map.get("bounce_rate"));
+                                    if (map.get("bounce_rate") != null) {
+                                        temf.set(m, map.get("bounce_rate"));
+                                    } else {
+                                        temf.set(m, 0);
+                                    }
                                 }
                             }
                             mapf.put("name", "跳出率");
@@ -397,7 +430,11 @@ public class MapResult {
                             if (time1.contains(map.get("week").toString())) {
                                 int m = time1.indexOf(map.get("week").toString());
                                 if (m >= 0) {
-                                    temf.set(m, map.get("bounce_rate"));
+                                    if (map.get("bounce_rate") != null) {
+                                        temf.set(m, map.get("bounce_rate"));
+                                    } else {
+                                        temf.set(m, 0);
+                                    }
                                 }
                             }
                             mapf.put("name", "跳出率");
@@ -407,7 +444,11 @@ public class MapResult {
                             if (time1.contains(map.get("mon").toString())) {
                                 int m = time1.indexOf(map.get("mon").toString());
                                 if (m >= 0) {
-                                    temf.set(m, map.get("bounce_rate"));
+                                    if (map.get("bounce_rate") != null) {
+                                        temf.set(m, map.get("bounce_rate"));
+                                    } else {
+                                        temf.set(m, 0);
+                                    }
                                 }
                             }
                             mapf.put("name", "跳出率");

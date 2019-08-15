@@ -1,6 +1,5 @@
 package com.ald.bigdata.modules.trend.wxgame.controller;
 
-import com.ald.bigdata.common.trend.controller.TrendBaseController;
 import com.ald.bigdata.common.trend.vo.JsonResult;
 import com.ald.bigdata.common.trend.vo.TrendQueryVo;
 import com.ald.bigdata.common.util.DateUtil;

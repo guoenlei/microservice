@@ -1,6 +1,5 @@
 package com.ald.bigdata.modules.trend.qqgame.controller;
 
-import com.ald.bigdata.common.trend.controller.TrendBaseController;
 import com.ald.bigdata.common.trend.vo.JsonResult;
 import com.ald.bigdata.common.trend.vo.TrendQueryVo;
 import com.ald.bigdata.common.util.DateUtil;
@@ -111,7 +110,6 @@ public class QQGameTrendAnalysisReportController {
      * @param json
      */
     private void chooseDataSource(@RequestBody JSONObject json) {
-        // 根据传入的ak，类型等信息返回一个对应的jdbcTemplate。
         String app_key = json.get("app_key").toString();
         String te = json.get("platform").toString();
         JdbcTemplate jdbcTemplate = chooseYourDataSource(app_key, te);

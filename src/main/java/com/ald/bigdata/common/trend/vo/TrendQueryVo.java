@@ -1,11 +1,20 @@
 package com.ald.bigdata.common.trend.vo;
 
+import com.ald.bigdata.common.base.BaseVo;
+
 import java.util.List;
 
 /**
- * 小程序
+ *
  */
 public class TrendQueryVo {
+
+//    /**
+//     * 平台类型
+//     * wx-微信小程序
+//     * wg-微信小游戏
+//     */
+//    private String platform;
 
     /**
      * 日期类型
