@@ -24,12 +24,10 @@ public class TrendDataSourceConf {
      * 2.在controller处加工具类（chooseYouJdbCTemplate）返回值为jdbcTemplate，然后传给service。
      * 3.工具类里有choose方法（jdbctemplate在方法体内）
      * 4.choose：先查找default库。
-     * 5.如果找到了，则在configDataSource静态类中判断是否已经存在
+     * 5.如果找到了，则在configDataSource静态类中判断是否已经存在，存在直接拿，否则set连接信息put进去
      * 6.如果没找到，则判断类型是QQ还是WX，是Game还是Mini，设置其默认数据源。
-     */
-
-    /**
-     * 静态集合，用于存放Map<dbname, JdbcTemplate>
+     *
+     * oldConnMessage是静态集合，用于存放Map<dbname, JdbcTemplate>
      *     對應關係如下：
      * default,defaultJdbcTemplate
      * qqMini,qqMiniJdbcTemplate
