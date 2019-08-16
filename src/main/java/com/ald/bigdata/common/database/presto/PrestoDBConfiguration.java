@@ -15,7 +15,7 @@ import java.util.Properties;
 @Configuration
 public class PrestoDBConfiguration {
 
-//    微信小程序数据源
+//    微信小程序Presto数据源
     @Value("${presto.datasource.wxmini.url}")
     private String url;
     @Value("${presto.datasource.driverClassName}")
