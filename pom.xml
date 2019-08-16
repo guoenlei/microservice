@@ -88,16 +88,18 @@
                 <ald.game.datasource.password>ookun7Ee</ald.game.datasource.password>-->
 
                 <!--测试小程序库,内网链接地址-->
-                <ald.master.datasource.url>jdbc:mysql://10.0.220.36:3306/tongji_test?useUnicode=true&amp;characterEncoding=utf-8</ald.master.datasource.url>
+                <ald.manager.datasource.url>jdbc:mysql://10.0.220.36:3306/service_bus_test?useUnicode=true&amp;characterEncoding=utf-8</ald.manager.datasource.url>
+                <ald.manager.datasource.username>tongjitest</ald.manager.datasource.username>
+                <ald.manager.datasource.password>ookun7Ee</ald.manager.datasource.password>
+
+                <!--测试小程序库,内网链接地址-->
+                <ald.master.datasource.url>jdbc:mysql://10.0.220.36:3306/ald_wx_test?useUnicode=true&amp;characterEncoding=utf-8</ald.master.datasource.url>
                 <ald.master.datasource.username>tongjitest</ald.master.datasource.username>
                 <ald.master.datasource.password>ookun7Ee</ald.master.datasource.password>
                 <!--测试小游戏库,内网链接地址-->
                 <ald.game.datasource.url>jdbc:mysql://10.0.0.123:3306/ald_game_test?useUnicode=true&amp;characterEncoding=utf-8</ald.game.datasource.url>
                 <ald.game.datasource.username>gametest</ald.game.datasource.username>
                 <ald.game.datasource.password>ookun7Ee</ald.game.datasource.password>
-
-
-
             </properties>
         </profile>
     </profiles>
