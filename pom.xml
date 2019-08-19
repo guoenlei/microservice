@@ -65,27 +65,8 @@
                 </QQgame.datasource.url>
                 <QQgame.datasource.username>aldqg</QQgame.datasource.username>
                 <QQgame.datasource.password>g#uo11f%6efw</QQgame.datasource.password>
-
-                <!--                广告检测Prod的环境 zy-->
-                <!--                分库manager-Prod-->
-                <ald.manager.datasource.url>jdbc:mysql://10.0.1.10:3306/ald_service_bus?useUnicode=true&amp;characterEncoding=utf-8</ald.manager.datasource.url>
-                <ald.manager.datasource.username>servicebus_read</ald.manager.datasource.username>
-                <ald.manager.datasource.password>RPVcFnn2C73f</ald.manager.datasource.password>
-
-                <!--                分库stat-Prod-->
-                <ald.master.datasource.url>jdbc:mysql://10.0.0.179:3306/ald_xinen?useUnicode=true&amp;characterEncoding=utf-8</ald.master.datasource.url>
-                <ald.master.datasource.username>aldstat</ald.master.datasource.username>
-                <ald.master.datasource.password>Eet9Ii-Chat8</ald.master.datasource.password>
-
-                <!--                分库game-Prod-->
-                <ald.game.datasource.url>jdbc:mysql://10.0.221.7:3306/ald_game?useUnicode=true&amp;characterEncoding=utf-8</ald.game.datasource.url>
-                <ald.game.datasource.username>aldgame</ald.game.datasource.username>
-                <ald.game.datasource.password>phu6laip[a4x</ald.game.datasource.password>
-
-                
             </properties>
         </profile>
-
 
         <profile>
             <id>test</id>
