@@ -38,6 +38,10 @@ public class ChooseUDataSource {
 
         // 2.查到连接信息，则判斷是否已經存在。dbname是唯一的标识。
         if (result != null) {
+            // 查询索引表结果不唯一时报错误日志，不默认获取第几个连接（线上索引表正常不会出现多个相同ak）。
+            if (result.size() > 1) {
+                logger.error("The index table has duplicate app_key {}", result);
+            }
             String ip = result.get("dbip").toString();
             String port = result.get("port").toString();
             String dbname = result.get("dbname").toString();
@@ -67,7 +71,7 @@ public class ChooseUDataSource {
                 // TODO delete assist info
                 logger.info("use qqMini default dataSource: {}", oldConnMessage.get("qqMini"));
                 return oldConnMessage.get("qqMini");
-            } else if(StringUtils.equals(te, QQ_GAME)){
+            } else if (StringUtils.equals(te, QQ_GAME)) {
                 logger.info("use qqGame default dataSource: {}", oldConnMessage.get("qqGame"));
                 return oldConnMessage.get("qqGame");
             } else if (StringUtils.equals(te, WX_GAME)) {

@@ -31,13 +31,48 @@
             <properties>
                 <mysql.datasource.driverClassName>com.mysql.jdbc.Driver</mysql.datasource.driverClassName>
 
+                <!--                default database(index table)-->
+                <default.datasource.url>
+                    jdbc:mysql://10.0.1.10:3306/ald_service_bus?useUnicode=true&amp;characterEncoding=utf-8
+                </default.datasource.url>
+                <default.datasource.username>servicebus_read</default.datasource.username>
+                <default.datasource.password>RPVcFnn2C73f</default.datasource.password>
 
+                <!--                wxMini-Prod-->
+                <master.datasource.url>
+                    jdbc:mysql://10.0.0.179:3306/ald_xinen?useUnicode=true&amp;characterEncoding=utf-8
+                </master.datasource.url>
+                <master.datasource.username>aldstat</master.datasource.username>
+                <master.datasource.password>Eet9Ii-Chat8</master.datasource.password>
+
+                <!--                wxGame-Prod-->
+                <game.datasource.url>
+                    jdbc:mysql://10.0.221.7:3306/ald_game?useUnicode=true&amp;characterEncoding=utf-8
+                </game.datasource.url>
+                <game.datasource.username>aldgame</game.datasource.username>
+                <game.datasource.password>phu6laip[a4x</game.datasource.password>
+
+                <!--                qqMini-Prod-->
+                <QQmaster.datasource.url>
+                    jdbc:mysql://10.0.220.69:3306/ald_qx?useUnicode=true&amp;characterEncoding=utf-8
+                </QQmaster.datasource.url>
+                <QQmaster.datasource.username>aldqx</QQmaster.datasource.username>
+                <QQmaster.datasource.password>g#uald%o6efw</QQmaster.datasource.password>
+
+                <!--                qqGame-Prod-->
+                <QQgame.datasource.url>
+                    jdbc:mysql://10.0.220.137:3306/ald_qg?useUnicode=true&amp;characterEncoding=utf-8
+                </QQgame.datasource.url>
+                <QQgame.datasource.username>aldqg</QQgame.datasource.username>
+                <QQgame.datasource.password>g#uo11f%6efw</QQgame.datasource.password>
+
+                
             </properties>
         </profile>
 
 
         <profile>
-            <id>dev</id>
+            <id>test</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
@@ -50,42 +85,40 @@
                 <default.datasource.password>ookun7Ee</default.datasource.password>
 
                 <!--                wx小程序测试-->
-<!--                <master.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/tongji_test?useUnicode=true&amp;characterEncoding=utf-8</master.datasource.url>-->
+                <!--                <master.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/tongji_test?useUnicode=true&amp;characterEncoding=utf-8</master.datasource.url>-->
                 <master.datasource.url>jdbc:mysql://10.0.220.36:3306/ald_wx_test?useUnicode=true&amp;characterEncoding=utf-8</master.datasource.url>
                 <master.datasource.username>tongjitest</master.datasource.username>
                 <master.datasource.password>ookun7Ee</master.datasource.password>
 
-                <!--                QQ小程序测试-待修改-->
-<!--                <QQmaster.datasource.url>-->
-<!--                    jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/ald_qq_test?useUnicode=true&amp;characterEncoding=utf-8-->
-<!--                </QQmaster.datasource.url>-->
+                <!--                QQ小程序测试-->
+                <!--                <QQmaster.datasource.url>-->
+                <!--                    jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/ald_qq_test?useUnicode=true&amp;characterEncoding=utf-8-->
+                <!--                </QQmaster.datasource.url>-->
                 <QQmaster.datasource.url>jdbc:mysql://10.0.220.36:3306/ald_qq_test?useUnicode=true&amp;characterEncoding=utf-8</QQmaster.datasource.url>
                 <QQmaster.datasource.username>tongjitest</QQmaster.datasource.username>
                 <QQmaster.datasource.password>ookun7Ee</QQmaster.datasource.password>
 
                 <!--              wx小游戏测试-->
-<!--                <game.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/game_test?useUnicode=true&amp;characterEncoding=utf-8-->
-<!--                </game.datasource.url>-->
-                <game.datasource.url>jdbc:mysql://10.0.220.36:3306/game_test?useUnicode=true&amp;characterEncoding=utf-8</game.datasource.url>
-                <game.datasource.username>tongjitest</game.datasource.username>
+                <game.datasource.url>jdbc:mysql://10.0.0.123:3306/ald_game_test?useUnicode=true&amp;characterEncoding=utf-8</game.datasource.url>
+                <game.datasource.username>gametest</game.datasource.username>
                 <game.datasource.password>ookun7Ee</game.datasource.password>
 
-                <!--                QQ小游戏测试-待修改-->
-<!--                <QQgame.datasource.url>jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/ald_qqgame_test?useUnicode=true&amp;characterEncoding=utf-8-->
-<!--                </QQgame.datasource.url>-->
+                <!--                QQ小游戏测试-->
+                <!--                <QQgame.datasource.url>jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/ald_qqgame_test?useUnicode=true&amp;characterEncoding=utf-8-->
+                <!--                </QQgame.datasource.url>-->
                 <QQgame.datasource.url>jdbc:mysql://10.0.0.123:3306/ald_qqgame_test?useUnicode=true&amp;characterEncoding=utf-8</QQgame.datasource.url>
                 <QQgame.datasource.username>gametest</QQgame.datasource.username>
                 <QQgame.datasource.password>ookun7Ee</QQgame.datasource.password>
 
                 <!--区别恩磊的配置-->
                 <!--测试小程序库,外网链接地址-->
-             <!--   <ald.master.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/tongji_test?useUnicode=true&amp;characterEncoding=utf-8</ald.master.datasource.url>
-                <ald.master.datasource.username>tongjitest</ald.master.datasource.username>
-                <ald.master.datasource.password>ookun7Ee</ald.master.datasource.password>
-                &lt;!&ndash;测试小游戏库,外网链接地址&ndash;&gt;
-                <ald.game.datasource.url>jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/ald_game_test?useUnicode=true&amp;characterEncoding=utf-8</ald.game.datasource.url>
-                <ald.game.datasource.username>gametest</ald.game.datasource.username>
-                <ald.game.datasource.password>ookun7Ee</ald.game.datasource.password>-->
+                <!--   <ald.master.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/tongji_test?useUnicode=true&amp;characterEncoding=utf-8</ald.master.datasource.url>
+                   <ald.master.datasource.username>tongjitest</ald.master.datasource.username>
+                   <ald.master.datasource.password>ookun7Ee</ald.master.datasource.password>
+                   &lt;!&ndash;测试小游戏库,外网链接地址&ndash;&gt;
+                   <ald.game.datasource.url>jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/ald_game_test?useUnicode=true&amp;characterEncoding=utf-8</ald.game.datasource.url>
+                   <ald.game.datasource.username>gametest</ald.game.datasource.username>
+                   <ald.game.datasource.password>ookun7Ee</ald.game.datasource.password>-->
 
                 <!--测试小程序库,内网链接地址-->
                 <ald.manager.datasource.url>jdbc:mysql://10.0.220.36:3306/service_bus_test?useUnicode=true&amp;characterEncoding=utf-8</ald.manager.datasource.url>
@@ -102,6 +135,7 @@
                 <ald.game.datasource.password>ookun7Ee</ald.game.datasource.password>
             </properties>
         </profile>
+
     </profiles>
 
     <!--    依赖包-->
