@@ -22,13 +22,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
-import static com.ald.bigdata.common.constants.Constants.WX_GAME;
-import static com.ald.bigdata.common.constants.Constants.WX_MINI;
+import static com.ald.bigdata.common.constants.Constants.*;
 
 @Service
 public class TaskUtils {
@@ -71,7 +67,9 @@ public class TaskUtils {
                 if (StringUtils.isNotBlank(isDownload) && isDownload.equals("1")) {
                     result.put("tableData", newList);
                 } else {
+                    // 返回格式化后的日期
                     result.put("code", code);
+//                    result.put("date", date);
                     result.put("date", date);
                     result.put("count", count);
                     result.put("tableData", newList);
@@ -145,7 +143,7 @@ public class TaskUtils {
         String mySqlCount = null;
         String date = eventInfo.getDate();
         Map<String, Object> resultMap = Maps.newConcurrentMap();
-        //最近7天和30天，或者时间段，查询presto
+        //最近7天和30天，查询presto
         if (StringUtils.isNotBlank(date) && (date.contains(Constants.FLAG_01) || date.equals("3") || date.equals("4"))) {
             if (date.equals("3") || date.equals("4")) {
                 LOG.info("7day 30day data. Don't need join query, only need query hive's data!!!");
@@ -172,7 +170,7 @@ public class TaskUtils {
                     LOG.info("perstoSql {}", perstoSql);
                 }
             }
-            // 今日昨日 查MySQL
+            // 今日昨日 或者时间段，查MySQL
         } else {
             mySql = createMySql(eventInfo);
             mySqlCount = createMySqlCount(eventInfo);
@@ -428,7 +426,7 @@ public class TaskUtils {
         String tableName = null;
         String filterDate = null;
         if (StringUtils.isNotBlank(date)) {
-            if (date.equals(Constants.ALDSTAT_EVENT_TODAY_TIME)) {                   //今天
+            if (date.equals(ALDSTAT_EVENT_TODAY_TIME)) {                   //今天
                 tableName = Constants.ALDSTAT_DAILY_EVENT_USER_GROUP;
                 filterDate = FILTER_DATE_HEAR + DateUtil.getTodayDate() + "' ";
 //                filterDate = FILTER_DATE_HEAR + "2018-09-04' ";

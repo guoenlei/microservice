@@ -4,6 +4,8 @@ import com.ald.bigdata.common.base.BaseController;
 import com.ald.bigdata.common.event.util.ParamUtils;
 import com.ald.bigdata.common.event.util.TaskUtils;
 import com.ald.bigdata.common.event.vo.EventVo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,6 +21,7 @@ import java.util.Map;
 @RequestMapping(value="wx/game/event")
 @EnableAutoConfiguration
 public class WXGameEventController extends BaseController {
+    private static Logger LOG = LoggerFactory.getLogger(WXGameEventController.class);
 
     /**
      * 事件处理 -- 参数列表
@@ -46,6 +49,9 @@ public class WXGameEventController extends BaseController {
         Map<String, Object>  resultMap = TaskUtils.queryEventParamDataList(vo);
 
         resultMap = formatData(resultMap);
+
+        // 更新map中的date为日期类型
+        resultMap.put("date", formatReturnDate(resultMap.get("date").toString()));
 
         return returnJson(resultMap);
     }
@@ -78,6 +84,9 @@ public class WXGameEventController extends BaseController {
         Map<String, Object>  resultMap = TaskUtils.queryEventParamDetailsList(vo);
 
         resultMap = formatData(resultMap);
+
+        // 更新map中的date为日期类型
+        resultMap.put("date", formatReturnDate(resultMap.get("date").toString()));
 
         return returnJson(resultMap);
     }

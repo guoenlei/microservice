@@ -1,13 +1,21 @@
 package com.ald.bigdata.common.base;
 
+import com.ald.bigdata.common.util.DateUtil;
+import com.ald.bigdata.modules.event.wxmini.controller.WXMiniEventController;
 import com.alibaba.fastjson.JSONObject;
 import com.facebook.presto.jdbc.internal.guava.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 
-public class BaseController {
+import static com.ald.bigdata.common.constants.Constants.*;
+import static com.ald.bigdata.common.constants.Constants.ALDSTAT_EVENT_NEAR_MONTH_TIME;
 
+public class BaseController {
+    private static Logger LOG = LoggerFactory.getLogger(BaseController.class);
 
     private static final Integer STATUS_OK = 200;
     private static final Integer STATUS_ERROR = 202;
@@ -20,6 +28,37 @@ public class BaseController {
     public static final String RESULT_COUNT = "count";
 
     public static final String RESULT_NULL_DATA_MSG = "没有数据";
+    /**
+     * 日期格式化方法：
+     * 1,2,3,4或时间段的参数 => "2019-08-20 ~ 2019-08-20", ...
+     *
+     * @param date
+     * @return
+     */
+    public static String formatReturnDate(String date) {
+        if (StringUtils.equals(date, ALDSTAT_EVENT_TODAY_TIME)) {
+            String todayDate = DateUtil.getTodayDate();
+            return todayDate + " ~ " + todayDate;
+        } else if (StringUtils.equals(date, ALDSTAT_EVENT_YESTERDAY_TIME)) {
+            String yesterday = DateUtil.getYesterday();
+            return yesterday + " ~ " + yesterday;
+        } else if (StringUtils.equals(date, ALDSTAT_EVENT_NEAR_WEEKDAY_TIME)) {
+            String[] nearly7Day = DateUtil.getNearly7Day();
+            String weekFirstDay = nearly7Day[1];
+            String weekLastDay = nearly7Day[0];
+            return weekFirstDay + " ~ " + weekLastDay;
+        } else if (StringUtils.equals(date, ALDSTAT_EVENT_NEAR_MONTH_TIME)) {
+            String[] nearly30Day = DateUtil.getNearly30Day();
+            String MonthFirstDay = nearly30Day[1];
+            String MonthLastDay = nearly30Day[0];
+            return MonthFirstDay + " ~ " + MonthLastDay;
+        } else if (date.contains("~")) {
+            return date;
+        } else {
+            LOG.error("Incoming date format error: [{}]", date);
+            return date;
+        }
+    }
 
 
     /**

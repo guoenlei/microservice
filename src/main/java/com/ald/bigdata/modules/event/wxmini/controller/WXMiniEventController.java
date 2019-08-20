@@ -4,24 +4,36 @@ import com.ald.bigdata.common.base.BaseController;
 import com.ald.bigdata.common.event.util.ParamUtils;
 import com.ald.bigdata.common.event.util.TaskUtils;
 import com.ald.bigdata.common.event.vo.EventVo;
+import com.ald.bigdata.common.util.DateUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Map;
+
+import static com.ald.bigdata.common.constants.Constants.*;
 
 /**
  * 小程序事件
  */
 @Controller
-@RequestMapping(value="wx/mini/event")
+@RequestMapping(value = "wx/mini/event")
 @EnableAutoConfiguration
 public class WXMiniEventController extends BaseController {
 
+    private static Logger LOG = LoggerFactory.getLogger(WXMiniEventController.class);
+
     /**
      * 事件处理 -- 参数列表
+     *
      * @return
      */
     @ResponseBody
@@ -35,7 +47,7 @@ public class WXMiniEventController extends BaseController {
         e.setTotal(total);
         e.setType("2"); //列表
         Map<String, Object> checkMap = ParamUtils.check(e);
-        if(null != checkMap.get("code")) {
+        if (null != checkMap.get("code")) {
 
             checkMap = formatData(checkMap);
 
@@ -43,20 +55,26 @@ public class WXMiniEventController extends BaseController {
         }
 
         EventVo vo = ParamUtils.format(e);
-        Map<String, Object>  resultMap = TaskUtils.queryEventParamDataList(vo);
+        Map<String, Object> resultMap = TaskUtils.queryEventParamDataList(vo);
 
         resultMap = formatData(resultMap);
+
+        // 更新map中的date为日期类型
+        resultMap.put("date", formatReturnDate(resultMap.get("date").toString()));
 
         return returnJson(resultMap);
     }
 
 
+
+
     /**
      * 参数明细列表
+     *
      * @return
      */
     @ResponseBody
-    @RequestMapping(value="/param-detail-list", method = RequestMethod.POST)
+    @RequestMapping(value = "/param-detail-list", method = RequestMethod.POST)
     public String queryEventParamDetailsList(String date, String currentPage, String total,
                                              String order, String prop, String app_key, String event_key, String ev_paras_name,
                                              String isDownload, String platform) {
@@ -67,7 +85,7 @@ public class WXMiniEventController extends BaseController {
         e.setType("1"); //明细
 
         Map<String, Object> checkMap = ParamUtils.check(e);
-        if(null != checkMap.get("code")) {
+        if (null != checkMap.get("code")) {
 
             checkMap = formatData(checkMap);
 
@@ -75,9 +93,12 @@ public class WXMiniEventController extends BaseController {
         }
 
         EventVo vo = ParamUtils.format(e);
-        Map<String, Object>  resultMap = TaskUtils.queryEventParamDetailsList(vo);
+        Map<String, Object> resultMap = TaskUtils.queryEventParamDetailsList(vo);
 
         resultMap = formatData(resultMap);
+
+        // 更新map中的date为日期类型
+        resultMap.put("date", formatReturnDate(resultMap.get("date").toString()));
 
         return returnJson(resultMap);
     }
@@ -85,11 +106,12 @@ public class WXMiniEventController extends BaseController {
 
     /**
      * 有数据或没数据
+     *
      * @param map
      * @return
      */
     private Map<String, Object> formatData(Map<String, Object> map) {
-        if(map.get("code").equals("200")) {
+        if (map.get("code").equals("200")) {
             map.put("code", 200);
         } else {
             map.put("code", 202);

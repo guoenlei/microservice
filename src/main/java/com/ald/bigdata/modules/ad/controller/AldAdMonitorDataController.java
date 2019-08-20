@@ -151,6 +151,7 @@ public class AldAdMonitorDataController extends BaseController {
         }
         Map<String, Object> mapEntity = null;
         try {
+            // 设置7天30天表。
             aldAdDataVo = AdAssist2.requestHandler(aldAdDataVo);
             mapEntity = aldDataService.newUserCount(aldAdDataVo);
 //            aldAdDataVo.setDate(date);
