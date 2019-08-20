@@ -67,9 +67,7 @@ public class TaskUtils {
                 if (StringUtils.isNotBlank(isDownload) && isDownload.equals("1")) {
                     result.put("tableData", newList);
                 } else {
-                    // 返回格式化后的日期
                     result.put("code", code);
-//                    result.put("date", date);
                     result.put("date", date);
                     result.put("count", count);
                     result.put("tableData", newList);
