@@ -60,6 +60,8 @@ public interface Constants {
     /**
      * mysql 数据库表
      */
+    String DB_SPLIT_INDEX_TABLE = ConfigurationManager.getProperty("mysql.dbsplit.index.table");
+
     String PERSTO_TABLENAME = ConfigurationManager.getProperty("hive.table.aldstat.event.paras");
 
     String ALDSTAT_DAILY_EVENT_USER_GROUP = ConfigurationManager.getProperty("mysql.table.aldstat.event.paras");

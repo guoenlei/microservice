@@ -52,7 +52,7 @@ public class BaseController {
             String MonthFirstDay = nearly30Day[1];
             String MonthLastDay = nearly30Day[0];
             return MonthFirstDay + " ~ " + MonthLastDay;
-        } else if (date.contains("~")) {
+        } else if (date.contains(FLAG_01)) {
             return date;
         } else {
             LOG.error("Incoming date format error: [{}]", date);

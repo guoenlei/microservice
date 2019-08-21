@@ -14,9 +14,9 @@ import static com.ald.bigdata.common.database.mysql.TrendDataSourceConf.oldConnM
 
 /**
  * @author guoenlei
- * @date 2019-08-14
  * @version 1.0
  * 传入的ak不同，对应数据源不同。（从分库索引表查询）
+ * @date 2019-08-14
  */
 public class ChooseUDataSource {
     // 根据接口传入的PLATFORM和TYPE即可判断出默认数据库。te暂时用不到。保留te，保持一致性。
@@ -25,8 +25,9 @@ public class ChooseUDataSource {
         JdbcTemplate defaultJdbcTemplate = oldConnMessage.get("default");
         // 1.在默认库索引表中查询ak，并赋值给result。要么是一条连接信息的map，要么是空。
         // TODO change table from ald_db_split_geltest to ald_db_split
-        String dbInfoSQL = "select app_key,conn_name,dbname,dbip,port,dbuser,dbpassword,platform from ald_db_split " +
+        String dbInfoSQL = "select app_key,conn_name,dbname,dbip,port,dbuser,dbpassword,platform from "
 //        String dbInfoSQL = "select app_key,conn_name,dbname,dbip,port,dbuser,dbpassword,platform from ald_db_split_geltest " +
+                + DB_SPLIT_INDEX_TABLE +
                 " where app_key = '" + app_key + "';";
         Map<String, Object> result = null;
         try {
@@ -86,6 +87,7 @@ public class ChooseUDataSource {
 
     /**
      * 新建DataSource和JdbcTemplate，並添加到oldConnMessage中。
+     *
      * @param dbname
      * @param url
      * @param user
