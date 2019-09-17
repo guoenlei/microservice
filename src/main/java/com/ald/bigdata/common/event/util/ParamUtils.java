@@ -40,7 +40,8 @@ public class ParamUtils {
                 || !StringUtils.isNumeric(currentPage) || !StringUtils.isNumeric(total)) {
             resultMap.put("code", 202);
             resultMap.put("msg", "请输入正确的分页信息");
-        } else if (StringUtils.isEmpty(ak) || StringUtils.isEmpty(ek)) {
+        }
+        else if (StringUtils.isEmpty(ak) || StringUtils.isEmpty(ek)) {
             resultMap.put("code", 202);
             resultMap.put("msg", "参数输入有误");
         }

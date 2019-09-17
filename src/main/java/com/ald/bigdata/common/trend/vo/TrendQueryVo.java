@@ -38,7 +38,8 @@ public class TrendQueryVo {
      */
     private String date2End;
     /**
-     * 是否比较，true-比较，false不比较
+     * 是否比较，
+     * 1比较，0不比较
      */
     private boolean isCompare = false;
 

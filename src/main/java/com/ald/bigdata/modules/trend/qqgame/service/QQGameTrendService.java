@@ -36,7 +36,7 @@ public class QQGameTrendService {
      * @param trendQueryVo
      * @return
      */
-     
+
     public Map getTotalData(TrendQueryVo trendQueryVo) {
         String sql = TrendSQLHelper.totalSQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());
         Map map = new HashMap();
@@ -92,7 +92,7 @@ public class QQGameTrendService {
      * @param trendQueryVo
      * @return
      */
-     
+
     public Pair<List, List> tableData(TrendQueryVo trendQueryVo) {
         //存放最终结果
         List<Map<String, String>> listRes1 = null;
@@ -111,7 +111,7 @@ public class QQGameTrendService {
             if (trendQueryVo.isCompare()) {
                 listRes2 = GameMapResult.GetTableMap(rightData, trendQueryVo, "2");
             }
-
+//day
         } else if (trendQueryVo.getDataType().equals("2")) {
             Pair<List, List> pair = getDayData(trendQueryVo);
             List leftData = null;
@@ -126,7 +126,7 @@ public class QQGameTrendService {
             if (trendQueryVo.isCompare()) {
                 listRes2 = GameMapResult.GetTableMap(rightData, trendQueryVo, "2");
             }
-
+// week
         } else if (trendQueryVo.getDataType().equals("3")) {
             Pair<List, List> pair = getWeekData(trendQueryVo);
             List leftData = null;
@@ -141,6 +141,7 @@ public class QQGameTrendService {
             if (trendQueryVo.isCompare()) {
                 listRes2 = GameMapResult.GetTableMap(rightData, trendQueryVo, "2");
             }
+            // month
         } else if (trendQueryVo.getDataType().equals("4")) {
             Pair<List, List> pair = getMonthData(trendQueryVo);
             List leftData = null;
@@ -165,7 +166,7 @@ public class QQGameTrendService {
      * @param trendQueryVo
      * @return
      */
-     
+
     public Pair<Map, Map> chartData(TrendQueryVo trendQueryVo) {
         //存放最终结果
         Map map1 = null;
@@ -237,7 +238,7 @@ public class QQGameTrendService {
      * @param trendQueryVo
      * @return
      */
-     
+
     public Pair<List, List> getDayData(TrendQueryVo trendQueryVo) {
         Map map = new HashMap();
         String sql = TrendSQLHelper.daySQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());
@@ -260,7 +261,7 @@ public class QQGameTrendService {
      * @param trendQueryVo
      * @return
      */
-     
+
     public Pair<List, List> getWeekData(TrendQueryVo trendQueryVo) {
         Map map = new HashMap();
         String sql = TrendSQLHelper.weekSQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());
@@ -283,7 +284,7 @@ public class QQGameTrendService {
      * @param trendQueryVo
      * @return
      */
-     
+
     public Pair<List, List> getMonthData(TrendQueryVo trendQueryVo) {
         Map map = new HashMap();
         String sql = TrendSQLHelper.monthSQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());
@@ -306,7 +307,7 @@ public class QQGameTrendService {
      * @param trendQueryVo
      * @return
      */
-     
+
     public Pair<List, List> getHourData(TrendQueryVo trendQueryVo) {
         Map map = new HashMap();
         String sql = TrendSQLHelper.hourSQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());

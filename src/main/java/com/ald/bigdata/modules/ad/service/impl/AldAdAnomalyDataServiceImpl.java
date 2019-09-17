@@ -42,6 +42,7 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
 
     /**
      * 获取异常检测数据列表
+     *
      * @param aldAdAnomalyDataVo
      * @return
      */
@@ -49,7 +50,7 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
     public Map<String, Object> queryPageDataList(AldAdAnomalyDataVo aldAdAnomalyDataVo) {
         Map<String, Object> resultMap = Maps.newConcurrentMap();
         List<AldPreventCheat> aldPreventCheatList = aldPreventCheatMaterDao.seleteEntityBy(aldAdAnomalyDataVo.getAppKey());
-        if(null != aldPreventCheatList && aldPreventCheatList.size() > 0) {
+        if (null != aldPreventCheatList && aldPreventCheatList.size() > 0) {
             aldAdAnomalyDataVo.setDiffTimeType(aldPreventCheatList.get(0).getDiffTimeType());
             aldAdAnomalyDataVo.setAuthTimes(aldPreventCheatList.get(0).getOauthCountType());
             aldAdAnomalyDataVo.setIpclkCountType(aldPreventCheatList.get(0).getIpclkCountType());
@@ -59,15 +60,15 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
 
 //        AldAdAnomalyDataEntity aldAdAnomalyDataEntity = this.aldAdAnomalyDataMasterDao.queryAnyDayAnomalyCountBy(aldAdAnomalyDataVo);
 
-        if(null != aldAdAnomalyDataVo) {
+        if (null != aldAdAnomalyDataVo) {
             String date = aldAdAnomalyDataVo.getDate();
-            if(date.contains(Constants.FLAG_01)) {
+            if (date.contains(Constants.FLAG_01)) {
                 String[] dates = StringUtils.splitPreserveAllTokens(date, Constants.FLAG_01);
                 //判断日期是否包含今天
                 boolean isContains = DateUtil.isContainsToday(dates[0], dates[1]);
                 //日期转换为数组
-                aldAdAnomalyDataVo.setList(DateUtil.getBetweenDates3(dates[0],dates[1]));
-                if(false) {
+                aldAdAnomalyDataVo.setList(DateUtil.getBetweenDates3(dates[0], dates[1]));
+                if (false) {
 //                    //重置分页开始和结束，用于合并数据和排序
 //                    aldAdAnomalyDataVo = GameEventDataUtil.setPageRow(aldAdAnomalyDataVo);
 //                    LOG.info("查询presto和mysql数据，重置startRow和endRow，startRow:{}, endRow:{}",
@@ -91,15 +92,15 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
                     //查询多天
                     resultMap = this.queryDaysDataBy(aldAdAnomalyDataVo);
                 }
-            }else if(date.equals(Constants.ALDSTAT_EVENT_TODAY_TIME)) {
+            } else if (date.equals(Constants.ALDSTAT_EVENT_TODAY_TIME)) {
                 aldAdAnomalyDataVo.setDate(DateUtil.getTodayDate());
                 resultMap = this.queryTodayDataBy(aldAdAnomalyDataVo);
-            } else if(date.equals(Constants.ALDSTAT_EVENT_YESTERDAY_TIME)) {
+            } else if (date.equals(Constants.ALDSTAT_EVENT_YESTERDAY_TIME)) {
                 aldAdAnomalyDataVo.setDate(DateUtil.getYesterday());
                 resultMap = this.queryYesterdayDataBy(aldAdAnomalyDataVo);
-            } else if(date.equals(Constants.ALDSTAT_EVENT_NEAR_WEEKDAY_TIME)) {
+            } else if (date.equals(Constants.ALDSTAT_EVENT_NEAR_WEEKDAY_TIME)) {
                 resultMap = this.query7DayDataBy(aldAdAnomalyDataVo);
-            } else if(date.equals(Constants.ALDSTAT_EVENT_NEAR_MONTH_TIME)) {
+            } else if (date.equals(Constants.ALDSTAT_EVENT_NEAR_MONTH_TIME)) {
                 resultMap = query30DayDataBy(aldAdAnomalyDataVo);
             }
         }
@@ -109,6 +110,7 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
 
     /**
      * 获取今天的数据列表
+     *
      * @param aldAdAnomalyDataVo
      * @return
      */
@@ -120,6 +122,7 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
 
     /**
      * 获取昨天的数据列表
+     *
      * @param aldAdAnomalyDataVo
      * @return
      */
@@ -131,6 +134,7 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
 
     /**
      * 获取最近7天的数据
+     *
      * @param aldAdAnomalyDataVo
      * @return
      */
@@ -142,6 +146,7 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
 
     /**
      * 获取最近30天的数据
+     *
      * @param aldAdAnomalyDataVo
      * @return
      */
@@ -153,6 +158,7 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
 
     /**
      * 获取任意时间段的数据
+     *
      * @param aldAdAnomalyDataVo
      * @return
      */
@@ -165,6 +171,7 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
     /**
      * 反作弊图表
      * 折线图和总异常统计
+     *
      * @param aldAdAnomalyDataVo
      * @return
      */
@@ -174,7 +181,7 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
         List<AldAdAnomalyDataEntity> aldAdAnomalyDataEntityList = Lists.newArrayList();
         List<AldPreventCheat> aldPreventCheatList = aldPreventCheatMaterDao.seleteEntityBy(aldAdAnomalyDataVo.getAppKey());
         //图表
-        if(null != aldPreventCheatList && aldPreventCheatList.size() > 0) {
+        if (null != aldPreventCheatList && aldPreventCheatList.size() > 0) {
             aldAdAnomalyDataVo.setDiffTimeType(aldPreventCheatList.get(0).getDiffTimeType());
             aldAdAnomalyDataVo.setIpclkCountType(aldPreventCheatList.get(0).getIpclkCountType());
             aldAdAnomalyDataVo.setAuthTimes(aldPreventCheatList.get(0).getOauthCountType());
@@ -183,16 +190,16 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
             return resultMap;
         }
         //折线图信息
-        if(null != aldAdAnomalyDataVo) {
+        if (null != aldAdAnomalyDataVo) {
             String date = aldAdAnomalyDataVo.getDate();
-            if(date.contains(Constants.FLAG_01)) {
+            if (date.contains(Constants.FLAG_01)) {
                 date = date.replaceAll("\\s*", "");
                 String[] dates = StringUtils.splitPreserveAllTokens(date, Constants.FLAG_01);
                 //日期转换为数组
-                aldAdAnomalyDataVo.setList(DateUtil.getBetweenDates3(dates[0],dates[1]));
-                if(dates[0].equals(dates[1])) {
+                aldAdAnomalyDataVo.setList(DateUtil.getBetweenDates3(dates[0], dates[1]));
+                if (dates[0].equals(dates[1])) {
                     //不对今天数据做处理
-                    if(dates[0].equals(DateUtil.getTodayDate())) {
+                    if (dates[0].equals(DateUtil.getTodayDate())) {
                         resultMap.put("data", aldAdAnomalyDataEntityList);
                         return resultMap;
                     } else {
@@ -204,17 +211,17 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
                 } else {
                     aldAdAnomalyDataEntityList = this.queryAnyDaysAnomalyChartDataBy(aldAdAnomalyDataVo);
                 }
-            }else if(date.equals(Constants.ALDSTAT_EVENT_TODAY_TIME)) {
+            } else if (date.equals(Constants.ALDSTAT_EVENT_TODAY_TIME)) {
                 resultMap.put("data", aldAdAnomalyDataEntityList);
                 return resultMap;
-            } else if(date.equals(Constants.ALDSTAT_EVENT_YESTERDAY_TIME)) {
+            } else if (date.equals(Constants.ALDSTAT_EVENT_YESTERDAY_TIME)) {
                 List<String> dateList = Lists.newArrayList();
                 dateList.add(DateUtil.getYesterday());
                 aldAdAnomalyDataVo.setList(dateList);
                 aldAdAnomalyDataEntityList = this.queryAnyDaysAnomalyChartDataBy(aldAdAnomalyDataVo);
-            } else if(date.equals(Constants.ALDSTAT_EVENT_NEAR_WEEKDAY_TIME)) {
+            } else if (date.equals(Constants.ALDSTAT_EVENT_NEAR_WEEKDAY_TIME)) {
                 aldAdAnomalyDataEntityList = this.queryAnyDaysAnomalyChartDataBy(aldAdAnomalyDataVo);
-            } else if(date.equals(Constants.ALDSTAT_EVENT_NEAR_MONTH_TIME)) {
+            } else if (date.equals(Constants.ALDSTAT_EVENT_NEAR_MONTH_TIME)) {
                 aldAdAnomalyDataEntityList = queryAnyDaysAnomalyChartDataBy(aldAdAnomalyDataVo);
             }
         }
@@ -235,6 +242,7 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
 
     /**
      * 获取天 7天 30天
+     *
      * @param aldAdAnomalyDataVo
      * @return
      */
@@ -242,10 +250,10 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
         Map<String, Object> resultMap = Maps.newConcurrentMap();
         List<AldAdAnomalyDataEntity> aldAdAnomalyDataEntityList = Lists.newArrayList();
         Page<?> page = null;
-        if(isCluster(aldAdAnomalyDataVo)) {
+        if (isCluster(aldAdAnomalyDataVo)) {
             page = PageUtil.startPage(aldAdAnomalyDataVo.getCurrentPage(), aldAdAnomalyDataVo.getTotal(),
                     aldAdAnomalyDataVo.getIsDownload());
-            if(aldAdAnomalyDataVo.getModule().equals("1")) {
+            if (aldAdAnomalyDataVo.getModule().equals("1")) {
                 aldAdAnomalyDataEntityList = this.aldAdAnomalyDataClusterDao.queryDayAnomalyAllDataBy(aldAdAnomalyDataVo);
             } else {
                 aldAdAnomalyDataEntityList = this.aldAdAnomalyDataClusterDao.queryDayAnomalyTimeOrIpDataBy(aldAdAnomalyDataVo);
@@ -253,7 +261,7 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
         } else {
             page = PageUtil.startPage(aldAdAnomalyDataVo.getCurrentPage(), aldAdAnomalyDataVo.getTotal(),
                     aldAdAnomalyDataVo.getIsDownload());
-            if(aldAdAnomalyDataVo.getModule().equals("1")) {
+            if (aldAdAnomalyDataVo.getModule().equals("1")) {
                 //总览列表
                 aldAdAnomalyDataEntityList = this.aldAdAnomalyDataMasterDao.queryDayAnomalyAllDataBy(aldAdAnomalyDataVo);
             } else {
@@ -264,15 +272,16 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
 
 //        AldAdAnomalyDataEntity aldAdAnomalyDataEntity = this.aldAdAnomalyDataMasterDao.queryAnyDayAnomalyCountBy(aldAdAnomalyDataVo);
 
-        resultMap.put("data",  aldAdAnomalyDataEntityList);
+        resultMap.put("data", aldAdAnomalyDataEntityList);
         resultMap.put("count", page.getTotal());
-        LOG.info("总共有:"+page.getTotal()+"条数据,实际返回:"+aldAdAnomalyDataEntityList.size()+"条数据!");
+        LOG.info("总共有:" + page.getTotal() + "条数据,实际返回:" + aldAdAnomalyDataEntityList.size() + "条数据!");
         return resultMap;
     }
 
 
     /**
      * 获取指定天
+     *
      * @param aldAdAnomalyDataVo
      * @return
      */
@@ -280,18 +289,20 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
         Map<String, Object> resultMap = Maps.newConcurrentMap();
         List<AldAdAnomalyDataEntity> aldAdAnomalyDataEntityList = Lists.newArrayList();
         Page<?> page = null;
-        if(isCluster(aldAdAnomalyDataVo)) {
+        // 判斷是否為從庫（cluster或master），這裏重寫后默認為false。
+        if (isCluster(aldAdAnomalyDataVo)) {
             page = PageUtil.startPage(aldAdAnomalyDataVo.getCurrentPage(), aldAdAnomalyDataVo.getTotal(),
                     aldAdAnomalyDataVo.getIsDownload());
-            if(aldAdAnomalyDataVo.getModule().equals("1")) {
+            if (aldAdAnomalyDataVo.getModule().equals("1")) {
                 aldAdAnomalyDataEntityList = this.aldAdAnomalyDataClusterDao.queryAnyDaysAnomalyAllDataBy(aldAdAnomalyDataVo);
             } else {
                 aldAdAnomalyDataEntityList = this.aldAdAnomalyDataClusterDao.queryAnyDaysAnomalyTimeOrIpDataBy(aldAdAnomalyDataVo);
             }
         } else {
+            // 如果要下載，則默認導出一千萬條數據。
             page = PageUtil.startPage(aldAdAnomalyDataVo.getCurrentPage(), aldAdAnomalyDataVo.getTotal(),
                     aldAdAnomalyDataVo.getIsDownload());
-            if(aldAdAnomalyDataVo.getModule().equals("1")) {
+            if (aldAdAnomalyDataVo.getModule().equals("1")) {
                 //总览列表
                 aldAdAnomalyDataEntityList = this.aldAdAnomalyDataMasterDao.queryAnyDaysAnomalyAllDataBy(aldAdAnomalyDataVo);
             } else {
@@ -302,9 +313,9 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
 
 //        AldAdAnomalyDataEntity aldAdAnomalyDataEntity = this.aldAdAnomalyDataMasterDao.queryAnyDayAnomalyCountBy(aldAdAnomalyDataVo);
 
-        resultMap.put("data",  aldAdAnomalyDataEntityList);
+        resultMap.put("data", aldAdAnomalyDataEntityList);
         resultMap.put("count", page.getTotal());
-        LOG.info("总共有:"+page.getTotal()+"条数据,实际返回:"+aldAdAnomalyDataEntityList.size()+"条数据!");
+        LOG.info("总共有:" + page.getTotal() + "条数据,实际返回:" + aldAdAnomalyDataEntityList.size() + "条数据!");
         return resultMap;
     }
 
@@ -324,6 +335,9 @@ public class AldAdAnomalyDataServiceImpl implements AldAdAnomalyDataService {
         return null;
     }
 
+    /**
+     * 判斷是否为从库
+     */
     @Override
     public boolean isCluster(AldAdAnomalyDataVo aldAdAnomalyDataVo) {
         return false;

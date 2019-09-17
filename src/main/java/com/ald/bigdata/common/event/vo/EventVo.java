@@ -16,6 +16,7 @@ public class EventVo extends BaseVo {
     private String eventKey;
     private String eventName;
     private String isDownload;
+    // type：1-明细；2-列表
     private String type;
 
     // 平台类型，对应前端的part字段。wx：微信小程序；wg：微信小游戏。

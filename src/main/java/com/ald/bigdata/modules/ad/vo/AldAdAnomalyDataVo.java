@@ -7,6 +7,7 @@ public class AldAdAnomalyDataVo extends BaseVo {
 
     private String appKey;
     private String date;
+    // module： 1-縱覽列表；2-非總覽列表
     private String module;
     private String prop;
     private String order;

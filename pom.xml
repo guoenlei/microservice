@@ -24,7 +24,6 @@
         <mybatis-spring-boot>2.1.0</mybatis-spring-boot>
     </properties>
 
-    <!--    mvn打包-->
     <profiles>
         <profile>
             <id>prod</id>

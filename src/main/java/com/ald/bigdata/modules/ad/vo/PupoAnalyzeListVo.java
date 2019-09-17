@@ -15,7 +15,7 @@ public class PupoAnalyzeListVo extends BaseVo {
     private String scenceName;
     private String keyword;
     private String channelName;
-    private String typeId;
+    private String typeId; // 1活动名称 2.渠道名称 3场景值
     private String currentPage;
     private String total;
     private String prop;

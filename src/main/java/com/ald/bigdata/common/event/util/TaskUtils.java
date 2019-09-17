@@ -141,7 +141,7 @@ public class TaskUtils {
         String mySqlCount = null;
         String date = eventInfo.getDate();
         Map<String, Object> resultMap = Maps.newConcurrentMap();
-        //最近7天和30天，查询presto
+        //最近7天和30天或时间段，查询presto
         if (StringUtils.isNotBlank(date) && (date.contains(Constants.FLAG_01) || date.equals("3") || date.equals("4"))) {
             if (date.equals("3") || date.equals("4")) {
                 LOG.info("7day 30day data. Don't need join query, only need query hive's data!!!");
@@ -168,7 +168,7 @@ public class TaskUtils {
                     LOG.info("perstoSql {}", perstoSql);
                 }
             }
-            // 今日昨日 或者时间段，查MySQL
+            // 今日昨日 查MySQL
         } else {
             mySql = createMySql(eventInfo);
             mySqlCount = createMySqlCount(eventInfo);

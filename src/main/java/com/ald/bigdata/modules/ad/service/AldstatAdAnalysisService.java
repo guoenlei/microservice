@@ -12,6 +12,7 @@ import com.facebook.presto.jdbc.internal.spi.function.IsNull;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -414,7 +415,7 @@ public class    AldstatAdAnalysisService {
             vo.setDate(time);
             vo.setCurrentPage(currentPage);
             vo.setTotal(total);
-            if(prop!=null&&!prop.equals("")){
+            if(StringUtils.isNotBlank(prop)){
                 vo.setProp(prop);
             }
             if(order!=null&&!order.equals("")){
@@ -428,7 +429,7 @@ public class    AldstatAdAnalysisService {
                 if (keyword!=null&&!keyword.equals("")){
                     vo.setChannel(keyword);
                 }
-            }else if (typeId!=null&&typeId.equals("3")){//场景值
+            }else if (typeId!=null&&typeId.equals("3")){//3场景值
                 if (keyword!=null&&keyword.equals("公众号文章")){
                     vo.setScene("1058");
                 }else  if (keyword!=null&&keyword.equals("从另一个小程序返回")){

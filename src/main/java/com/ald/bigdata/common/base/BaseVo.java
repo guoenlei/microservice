@@ -11,9 +11,6 @@ public class BaseVo implements Serializable {
     protected String appKey;
     // 父vo默认值为微信小程序。
     private String platform="wx";
-
-
-
     //默认从第一个开始
     private String currentPage = "1";
     //每页显示20条数据

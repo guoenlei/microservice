@@ -43,6 +43,8 @@ public class WXMiniTrendService {
     
     public Map getTotalData(TrendQueryVo trendQueryVo) {
         String sql = TrendSQLHelper.totalSQL(trendQueryVo.getDateStart(), trendQueryVo.getDateEnd(), trendQueryVo.getAk());
+        // 改需求，统一查询的数据库表。如今日昨日查天表，7天30天查对应表。
+
         Map map = new HashMap();
         Map map2 = new HashMap();
         log.debug("sql:" + sql);
