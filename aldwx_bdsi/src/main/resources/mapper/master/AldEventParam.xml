@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aldwx.bigdata.modules.eventParam.dao.master.AldEventParamMasterDao">
+
+    <resultMap id="AldEventParamEntityMap" type="com.aldwx.bigdata.modules.eventParam.entity.AldEventParamEntity">
+        <result column="id" property="id" />
+        <result column="app_key" property="appKey" />
+        <result column="day" property="day" />
+        <result column="ev_Id" property="evId" />
+        <result column="event_Key" property="eventKey" />
+        <result column="ev_Paras_Name" property="evParasName" />
+        <result column="ev_Paras_Value" property="evParasValue" />
+        <result column="ev_Paras_Count" property="evParasCount" />
+        <result column="ev_Paras_Uv" property="evParasUv" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+		app_key, event_key, sum(ev_paras_uv) as ev_paras_uv, sum(ev_paras_count) as ev_paras_count
+	</sql>
+
+
+    <!--查询今天数据 type为1时 查询明细  2时 查询列表-->
+    <select id="queryTodayDataBy" resultMap="AldEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.eventParam.vo.AldEventParamVo">
+        select
+        <include refid="Base_Column_List" />
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+        FROM aldstat_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and `day` = CURDATE()
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName">
+                and ev_paras_name like CONCAT('%',#{eventName},'%')
+            </if>
+        </where>
+        GROUP BY app_key, event_key
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != prop">
+            order by #{prop}
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+
+
+    <!--查询昨天数据      and day = DATE_FORMAT(NOW(),'%Y-%m-%d')-->
+    <select id="queryYesterdayDataBy" resultMap="AldEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.eventParam.vo.AldEventParamVo">
+        select
+        <include refid="Base_Column_List" />
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+        from aldstat_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and `day` = date_sub(CURDATE(), interval 1 day)
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName">
+                and ev_paras_name like CONCAT('%',#{eventName},'%')
+            </if>
+        </where>
+        GROUP BY app_key, event_key
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != prop">
+            order by #{prop}
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+
+    <!--查询最近7天数据-->
+    <select id="query7DayDataBy" resultMap="AldEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.eventParam.vo.AldEventParamVo">
+        select
+        <include refid="Base_Column_List" />
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+        from aldstat_7days_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and `day` = CURDATE()
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName">
+                and ev_paras_name like CONCAT('%',#{eventName},'%')
+            </if>
+        </where>
+        GROUP BY app_key, event_key
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != prop">
+            order by #{prop}
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+
+
+    <!--查询最近30天数据-->
+    <select id="query30DayDataBy" resultMap="AldEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.eventParam.vo.AldEventParamVo">
+        select
+        <include refid="Base_Column_List" />
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+        from aldstat_30days_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and `day` = CURDATE()
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName">
+                and ev_paras_name like CONCAT('%',#{eventName},'%')
+            </if>
+        </where>
+        GROUP BY app_key, event_key
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != prop">
+            order by #{prop}
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+</mapper>

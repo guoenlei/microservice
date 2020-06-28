@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aldwx.bigdata.modules.city.dao.cluster.AldCityClusterDao">
+
+    <resultMap id="AldCityEntityMap" type="com.aldwx.bigdata.modules.city.entity.AldCityEntity">
+        <result column="id" property="id" />
+        <result column="app_key" property="appKey" />
+        <result column="day" property="day" />
+        <result column="city" property="city" />
+        <result column="new_user_count" property="newUserCount" />
+        <result column="visitor_count" property="visitorCount" />
+        <result column="open_count" property="openCount" />
+        <result column="page_count" property="pageCount" />
+        <result column="total_stay_time" property="totalStayTime" />
+        <result column="secondary_stay_time" property="secondaryStayTime" />
+        <result column="one_page_count" property="onePageCount" />
+        <result column="bounce_rate" property="bounceRate" />
+        <result column="update_at" property="updateAt" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+		app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+	</sql>
+
+
+
+
+
+
+</mapper>

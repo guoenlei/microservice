@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aldwx.app.modules.retain.dao.game.RetainGameDepthDAO">
+  <resultMap id="BaseResultMap" type="com.aldwx.app.modules.retain.entity.AldstatVisitDepth">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_key" jdbcType="VARCHAR" property="app_key" />
+    <result column="day" jdbcType="TIMESTAMP" property="day" />
+    <result column="visit_depth" jdbcType="INTEGER" property="visit_depth" />
+    <result column="visitor_count" jdbcType="INTEGER" property="visitor_count" />
+    <result column="visitor_ratio" jdbcType="DOUBLE" property="visitor_ratio" />
+    <result column="open_count" jdbcType="INTEGER" property="open_count" />
+    <result column="open_ratio" jdbcType="DOUBLE" property="open_ratio" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="update_at" />
+  </resultMap>
+  <select id="selectGameTotalByDepth" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+    SELECT app_key,visit_depth,sum(visitor_count) visitor_count,SUM(open_count) open_count
+    FROM aldstat_visit_depth
+    where app_key=#{appKey} and `day` &lt;=#{dateEnd} and `day` &gt;=#{dateStart} GROUP BY app_key,visit_depth
+  </select>
+  <select id="selectGameTotalByAk" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+    SELECT app_key,sum(visitor_count) visitor_count,SUM(open_count) open_count
+    FROM aldstat_visit_depth
+    where app_key=#{appKey} and `day` &lt;=#{dateEnd} and `day` &gt;=#{dateStart} GROUP BY app_key
+  </select>
+</mapper>

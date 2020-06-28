@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aldwx.app.modules.retain.dao.stat.RetainStayDAO">
+  <resultMap id="BaseResultMap" type="com.aldwx.app.modules.retain.entity.AldStayLogs">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_key" jdbcType="VARCHAR" property="app_key" />
+    <result column="day" jdbcType="DATE" property="day" />
+    <result column="day_after" jdbcType="INTEGER" property="day_after" />
+    <result column="new_people_left" jdbcType="INTEGER" property="new_people_left" />
+    <result column="people_left" jdbcType="INTEGER" property="people_left" />
+    <result column="new_people_ratio" jdbcType="REAL" property="new_people_ratio" />
+    <result column="active_people_ratio" jdbcType="REAL" property="active_people_ratio" />
+    <result column="source_key" jdbcType="VARCHAR" property="source_key" />
+    <result column="source_value" jdbcType="VARCHAR" property="source_value" />
+  </resultMap>
+  <select id="selectStayList" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+      SELECT day,day_after,new_people_left,people_left,new_people_ratio,active_people_ratio
+      from ald_stay_logs
+      where day &gt;=#{dateStart} and day &lt;=#{dateEnd} and app_key=#{appKey} and source_key='default' and source_value='default'
+  </select>
+  <select id="selectStayDetails" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+      SELECT day,day_after,new_people_left,people_left,new_people_ratio,active_people_ratio
+      from ald_stay_logs
+      where day &gt;=#{dateStart} and day &lt;=#{dateEnd} and app_key=#{appKey} and source_key='default' and source_value='default'
+  </select>
+</mapper>

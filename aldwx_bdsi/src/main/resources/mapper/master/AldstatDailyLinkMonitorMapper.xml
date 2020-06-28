@@ -1,0 +1,1259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aldwx.bigdata.modules.ad.dao.master.AldstatDailyLinkMonitorDao">
+
+  <resultMap id="BaseResultMap" type="com.aldwx.bigdata.modules.ad.entity.AldstatDailyLinkMonitor">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_key" jdbcType="VARCHAR" property="appKey" />
+    <result column="day" jdbcType="DATE" property="day" />
+    <result column="hour" jdbcType="VARCHAR" property="hour" />
+    <result column="wsr_query_ald_link_key" jdbcType="VARCHAR" property="wsrQueryAldLinkKey" />
+    <result column="wsr_query_ald_media_id" jdbcType="VARCHAR" property="wsrQueryAldMediaId" />
+    <result column="ag_ald_position_id" jdbcType="VARCHAR" property="agAldPositionId" />
+    <result column="visitor_count" jdbcType="INTEGER" property="visitorCount" />
+    <result column="authuser_count" jdbcType="INTEGER" property="authuserCount" />
+    <result column="open_count" jdbcType="INTEGER" property="openCount" />
+    <result column="total_page_count" jdbcType="INTEGER" property="totalPageCount" />
+    <result column="new_comer_count" jdbcType="INTEGER" property="newComerCount" />
+    <result column="total_stay_time" jdbcType="INTEGER" property="totalStayTime" />
+    <result column="secondary_avg_stay_time" jdbcType="REAL" property="secondaryAvgStayTime" />
+    <result column="one_page_count" jdbcType="INTEGER" property="onePageCount" />
+    <result column="bounce_rate" jdbcType="REAL" property="bounceRate" />
+    <result column="new_people_ratio" jdbcType="REAL" property="newPeopleRatio" />
+    <result column="authuser_people_ratio" jdbcType="REAL" property="authuserPeopleRatio" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="updateAt" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, app_key, day, hour, wsr_query_ald_link_key, wsr_query_ald_media_id, ag_ald_position_id, 
+    visitor_count, authuser_count, open_count, total_page_count, new_comer_count, total_stay_time, 
+    secondary_avg_stay_time, one_page_count, bounce_rate, new_people_ratio, authuser_people_ratio, 
+    update_at
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from aldstat_daily_link_monitor
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from aldstat_daily_link_monitor
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+
+  <insert id="insert" parameterType="com.aldwx.bigdata.modules.ad.entity.AldstatDailyLinkMonitor">
+    insert into aldstat_daily_link_monitor (id, app_key, day, 
+      hour, wsr_query_ald_link_key, wsr_query_ald_media_id, 
+      ag_ald_position_id, visitor_count, authuser_count, 
+      open_count, total_page_count, new_comer_count, 
+      total_stay_time, secondary_avg_stay_time, one_page_count, 
+      bounce_rate, new_people_ratio, authuser_people_ratio, 
+      update_at)
+    values (#{id,jdbcType=BIGINT}, #{appKey,jdbcType=VARCHAR}, #{day,jdbcType=DATE}, 
+      #{hour,jdbcType=VARCHAR}, #{wsrQueryAldLinkKey,jdbcType=VARCHAR}, #{wsrQueryAldMediaId,jdbcType=VARCHAR}, 
+      #{agAldPositionId,jdbcType=VARCHAR}, #{visitorCount,jdbcType=INTEGER}, #{authuserCount,jdbcType=INTEGER}, 
+      #{openCount,jdbcType=INTEGER}, #{totalPageCount,jdbcType=INTEGER}, #{newComerCount,jdbcType=INTEGER}, 
+      #{totalStayTime,jdbcType=INTEGER}, #{secondaryAvgStayTime,jdbcType=REAL}, #{onePageCount,jdbcType=INTEGER}, 
+      #{bounceRate,jdbcType=REAL}, #{newPeopleRatio,jdbcType=REAL}, #{authuserPeopleRatio,jdbcType=REAL}, 
+      #{updateAt,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.aldwx.bigdata.modules.ad.entity.AldstatDailyLinkMonitor">
+    insert into aldstat_daily_link_monitor
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="appKey != null">
+        app_key,
+      </if>
+      <if test="day != null">
+        day,
+      </if>
+      <if test="hour != null">
+        hour,
+      </if>
+      <if test="wsrQueryAldLinkKey != null">
+        wsr_query_ald_link_key,
+      </if>
+      <if test="wsrQueryAldMediaId != null">
+        wsr_query_ald_media_id,
+      </if>
+      <if test="agAldPositionId != null">
+        ag_ald_position_id,
+      </if>
+      <if test="visitorCount != null">
+        visitor_count,
+      </if>
+      <if test="authuserCount != null">
+        authuser_count,
+      </if>
+      <if test="openCount != null">
+        open_count,
+      </if>
+      <if test="totalPageCount != null">
+        total_page_count,
+      </if>
+      <if test="newComerCount != null">
+        new_comer_count,
+      </if>
+      <if test="totalStayTime != null">
+        total_stay_time,
+      </if>
+      <if test="secondaryAvgStayTime != null">
+        secondary_avg_stay_time,
+      </if>
+      <if test="onePageCount != null">
+        one_page_count,
+      </if>
+      <if test="bounceRate != null">
+        bounce_rate,
+      </if>
+      <if test="newPeopleRatio != null">
+        new_people_ratio,
+      </if>
+      <if test="authuserPeopleRatio != null">
+        authuser_people_ratio,
+      </if>
+      <if test="updateAt != null">
+        update_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="appKey != null">
+        #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="day != null">
+        #{day,jdbcType=DATE},
+      </if>
+      <if test="hour != null">
+        #{hour,jdbcType=VARCHAR},
+      </if>
+      <if test="wsrQueryAldLinkKey != null">
+        #{wsrQueryAldLinkKey,jdbcType=VARCHAR},
+      </if>
+      <if test="wsrQueryAldMediaId != null">
+        #{wsrQueryAldMediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="agAldPositionId != null">
+        #{agAldPositionId,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorCount != null">
+        #{visitorCount,jdbcType=INTEGER},
+      </if>
+      <if test="authuserCount != null">
+        #{authuserCount,jdbcType=INTEGER},
+      </if>
+      <if test="openCount != null">
+        #{openCount,jdbcType=INTEGER},
+      </if>
+      <if test="totalPageCount != null">
+        #{totalPageCount,jdbcType=INTEGER},
+      </if>
+      <if test="newComerCount != null">
+        #{newComerCount,jdbcType=INTEGER},
+      </if>
+      <if test="totalStayTime != null">
+        #{totalStayTime,jdbcType=INTEGER},
+      </if>
+      <if test="secondaryAvgStayTime != null">
+        #{secondaryAvgStayTime,jdbcType=REAL},
+      </if>
+      <if test="onePageCount != null">
+        #{onePageCount,jdbcType=INTEGER},
+      </if>
+      <if test="bounceRate != null">
+        #{bounceRate,jdbcType=REAL},
+      </if>
+      <if test="newPeopleRatio != null">
+        #{newPeopleRatio,jdbcType=REAL},
+      </if>
+      <if test="authuserPeopleRatio != null">
+        #{authuserPeopleRatio,jdbcType=REAL},
+      </if>
+      <if test="updateAt != null">
+        #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByExampleSelective" parameterType="map">
+    update aldstat_daily_link_monitor
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=BIGINT},
+      </if>
+      <if test="record.appKey != null">
+        app_key = #{record.appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.day != null">
+        day = #{record.day,jdbcType=DATE},
+      </if>
+      <if test="record.hour != null">
+        hour = #{record.hour,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wsrQueryAldLinkKey != null">
+        wsr_query_ald_link_key = #{record.wsrQueryAldLinkKey,jdbcType=VARCHAR},
+      </if>
+      <if test="record.wsrQueryAldMediaId != null">
+        wsr_query_ald_media_id = #{record.wsrQueryAldMediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.agAldPositionId != null">
+        ag_ald_position_id = #{record.agAldPositionId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.visitorCount != null">
+        visitor_count = #{record.visitorCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.authuserCount != null">
+        authuser_count = #{record.authuserCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.openCount != null">
+        open_count = #{record.openCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.totalPageCount != null">
+        total_page_count = #{record.totalPageCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.newComerCount != null">
+        new_comer_count = #{record.newComerCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.totalStayTime != null">
+        total_stay_time = #{record.totalStayTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.secondaryAvgStayTime != null">
+        secondary_avg_stay_time = #{record.secondaryAvgStayTime,jdbcType=REAL},
+      </if>
+      <if test="record.onePageCount != null">
+        one_page_count = #{record.onePageCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.bounceRate != null">
+        bounce_rate = #{record.bounceRate,jdbcType=REAL},
+      </if>
+      <if test="record.newPeopleRatio != null">
+        new_people_ratio = #{record.newPeopleRatio,jdbcType=REAL},
+      </if>
+      <if test="record.authuserPeopleRatio != null">
+        authuser_people_ratio = #{record.authuserPeopleRatio,jdbcType=REAL},
+      </if>
+      <if test="record.updateAt != null">
+        update_at = #{record.updateAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update aldstat_daily_link_monitor
+    set id = #{record.id,jdbcType=BIGINT},
+      app_key = #{record.appKey,jdbcType=VARCHAR},
+      day = #{record.day,jdbcType=DATE},
+      hour = #{record.hour,jdbcType=VARCHAR},
+      wsr_query_ald_link_key = #{record.wsrQueryAldLinkKey,jdbcType=VARCHAR},
+      wsr_query_ald_media_id = #{record.wsrQueryAldMediaId,jdbcType=VARCHAR},
+      ag_ald_position_id = #{record.agAldPositionId,jdbcType=VARCHAR},
+      visitor_count = #{record.visitorCount,jdbcType=INTEGER},
+      authuser_count = #{record.authuserCount,jdbcType=INTEGER},
+      open_count = #{record.openCount,jdbcType=INTEGER},
+      total_page_count = #{record.totalPageCount,jdbcType=INTEGER},
+      new_comer_count = #{record.newComerCount,jdbcType=INTEGER},
+      total_stay_time = #{record.totalStayTime,jdbcType=INTEGER},
+      secondary_avg_stay_time = #{record.secondaryAvgStayTime,jdbcType=REAL},
+      one_page_count = #{record.onePageCount,jdbcType=INTEGER},
+      bounce_rate = #{record.bounceRate,jdbcType=REAL},
+      new_people_ratio = #{record.newPeopleRatio,jdbcType=REAL},
+      authuser_people_ratio = #{record.authuserPeopleRatio,jdbcType=REAL},
+      update_at = #{record.updateAt,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+
+
+  <!-- 打开次数（天）-->
+  <select id="selectOpenPageCountByTodayAndYesterday" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.open_count AS total,ald.open_count AS extend ,ana.open_count-ald.open_count AS naturalquantity
+    FROM
+    (select app_key,open_count,day
+    from
+    aldstat_daily_link_monitor
+    where day = #{date}
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT open_count,app_key,day FROM aldstat_trend_analysis
+    WHERE day=#{date} and app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key AND ald.day=ana.day
+    WHERE ald.app_key=#{appkey} and ald.day= #{date}
+  </select>
+  <!--打开次数 （小时）-->
+  <select id="selectOpenPageCountByTodayAndYesterdayHour" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.hour,ana.app_key,ana.open_count AS total,ald.open_count AS extend ,ana.open_count-ald.open_count AS naturalquantity
+    FROM
+    (select app_key,open_count,`hour`
+    from
+    aldstat_daily_link_monitor
+    where day=#{date}
+    AND app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and `hour`!='all'
+    )  ald
+    INNER JOIN (
+    SELECT * FROM aldstat_hourly_trend_analysis
+    WHERE day=#{date}
+    AND app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key AND ald.hour=ana.hour
+  </select>
+  <!--访问人数 (天)-->
+  <select id="selectOpenUserCountByTodayAndYesterday" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.visitor_count AS total,ald.visitor_count AS extend,ana.visitor_count-ald.visitor_count AS naturalquantity
+    FROM
+    (select app_key,visitor_count,day
+    from
+    aldstat_daily_link_monitor
+    where day = #{date}
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT visitor_count,app_key,day FROM aldstat_trend_analysis
+    WHERE day=#{date} and app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key AND ald.day=ana.day
+    WHERE ald.app_key=#{appkey} and ald.day= #{date}
+  </select>
+  <!--访问人数 (小时)-->
+  <select id="selectOpenUserCountByTodayAndYesterdayHour" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.hour,ana.app_key,ana.visitor_count AS total,ald.visitor_count AS extend,ana.visitor_count-ald.visitor_count AS naturalquantity
+    FROM
+    (select app_key,visitor_count,`hour`
+    from
+    aldstat_daily_link_monitor
+    where day=#{date}
+    AND app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and `hour`!='all'
+    )  ald
+    INNER JOIN (
+    SELECT * FROM aldstat_hourly_trend_analysis
+    WHERE day=#{date}
+    AND app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key AND ald.hour=ana.hour
+  </select>
+  <!--新用户数(天)-->
+  <select id="selectNewUserCountByTodayAndYesterday" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.new_comer_count AS total,ald.new_comer_count AS extend,ana.new_comer_count-ald.new_comer_count AS naturalquantity
+    FROM
+    (select app_key,new_comer_count,day
+    from
+    aldstat_daily_link_monitor
+    where day = #{date}
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT new_comer_count,app_key,day FROM aldstat_trend_analysis
+    WHERE day=#{date} and app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key AND ald.day=ana.day
+    WHERE ald.app_key=#{appkey} and ald.day= #{date}
+  </select>
+  <!--新用户数（小时）-->
+  <select id="selectNewUserCountByTodayAndYesterdayHour" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.hour,ana.app_key,ana.new_comer_count AS total,ald.new_comer_count AS extend,ana.new_comer_count-ald.new_comer_count AS naturalquantity
+    FROM
+    (select app_key,new_comer_count,`hour`
+    from
+    aldstat_daily_link_monitor
+    where day=#{date}
+    AND app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and `hour`!='all'
+    )  ald
+    INNER JOIN (
+    SELECT * FROM aldstat_hourly_trend_analysis
+    WHERE day=#{date}
+    AND app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key AND ald.hour=ana.hour
+  </select>
+    <!--新授权（天）-->
+  <select id="selectNewAuthUserCountByTodayAndYesterday" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.authuser_count AS total,ald.authuser_count AS extend,ana.authuser_count-ald.authuser_count AS naturalquantity
+    FROM
+    (select app_key,authuser_count,day
+    from
+    aldstat_daily_link_monitor
+    where day = #{date}
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT authuser_count,app_key,day from aldstat_trend_analysis
+    WHERE day=#{date} and app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key AND ald.day=ana.day
+    WHERE ald.app_key=#{appkey} and ald.day= #{date}
+  </select>
+  <!--新授权（小时）-->
+  <select id="selectNewAuthUserCountByTodayAndYesterdayHour" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.hour,ana.app_key,ana.authuser_count AS total,ald.authuser_count AS extend,ana.authuser_count-ald.authuser_count AS naturalquantity
+    FROM
+    (select app_key,authuser_count,`hour`
+    from
+    aldstat_daily_link_monitor
+    where day=#{date}
+    AND app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and `hour`!='all'
+    )  ald
+    INNER JOIN (
+    SELECT * FROM aldstat_hourly_trend_analysis
+    WHERE day=#{date}
+    AND app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key AND ald.hour=ana.hour
+  </select>
+  <!--活动-->
+  <select id="selectPupoAnalyzeListByTodayAndYesterdayL" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT mo.*,ce.link_name FROM(select *
+    FROM
+    aldstat_daily_link_monitor
+    where `day`=#{date}
+      <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+    and wsr_query_ald_link_key != 'all'
+    and ag_ald_position_id = 'all'
+    and wsr_query_ald_media_id = 'all'
+    and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key and  mo.app_key=ce.app_key
+    <if test="activitiesName != null and activitiesName != ''"> where ce.link_name like CONCAT('%',#{activitiesName},'%')</if>
+    <choose>
+      <when test="prop != null and order != null">
+        order by mo.${prop} ${order}
+      </when>
+      <!--<otherwise>
+        order by menu_id desc
+      </otherwise>-->
+    </choose>
+  </select>
+  <select id="selectPupoAnalyzeListByHourL" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    select mo.* from
+    (select *
+    FROM
+    aldstat_daily_link_monitor
+    where `day`=#{date}
+      and app_key=#{appkey}
+    and wsr_query_ald_link_key != 'all'
+    and ag_ald_position_id = 'all'
+    and wsr_query_ald_media_id = 'all'
+    and hour!='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key and  mo.app_key=ce.app_key
+    <if test="activitiesName != null and activitiesName != ''"> where ce.link_name = #{activitiesName} </if>
+    order by mo.hour desc
+  </select>
+  <!--渠道-->
+  <select id="selectPupoAnalyzeListByTodayAndYesterdayC" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT mo.*,ce.media_name FROM(select *
+    FROM
+    aldstat_daily_link_monitor
+    where `day`=#{date}
+      <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+    and wsr_query_ald_link_key = 'all'
+    and ag_ald_position_id = 'all'
+    and wsr_query_ald_media_id != 'all'
+    and hour='all') mo INNER JOIN ald_media ce on mo.wsr_query_ald_media_id=ce.media_id and  mo.app_key=ce.app_key
+      <if test="channel != null and channel != ''"> where ce.media_name like CONCAT('%',#{channel},'%') </if>
+      <choose>
+          <when test="prop != null and order != null">
+              order by mo.${prop} ${order}
+          </when>
+          <!--<otherwise>
+            order by menu_id desc
+          </otherwise>-->
+      </choose>
+  </select>
+  <select id="selectPupoAnalyzeListByHourC" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT mo.* from
+    (select *
+    FROM
+    aldstat_daily_link_monitor
+    where `day`=#{date}
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key = 'all'
+    and ag_ald_position_id = 'all'
+    and wsr_query_ald_media_id != 'all'
+    and hour!='all') mo INNER JOIN ald_media ce on mo.wsr_query_ald_media_id=ce.media_id and  mo.app_key=ce.app_key
+    <if test="channel != null and channel != ''"> where ce.media_name = #{channel} </if>
+    order by mo.hour desc
+  </select>
+  <!--场景值-->
+  <select id="selectPupoAnalyzeListByTodayAndYesterdayS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+      select *
+      FROM
+      aldstat_daily_link_monitor
+      where `day`=#{date}
+      <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+      <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+      and wsr_query_ald_link_key = 'all'
+      and ag_ald_position_id != 'all'
+      and wsr_query_ald_media_id = 'all'
+      and hour='all'
+      <choose>
+          <when test="prop != null and order != null">
+              order by ${prop} ${order}
+          </when>
+          <!--<otherwise>
+            order by menu_id desc
+          </otherwise>-->
+      </choose>
+  </select>
+  <select id="selectPupoAnalyzeListByHourS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    select *
+    FROM
+    aldstat_daily_link_monitor
+    where `day`=#{date}
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key = 'all'
+    and ag_ald_position_id != 'all'
+    and wsr_query_ald_media_id = 'all'
+    <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+    and hour!='all'
+    order by hour desc
+  </select>
+  <!--活动&渠道-->
+  <select id="selectPupoAnalyzeListByTodayAndYesterdayLC" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT mo.*,ce.link_name,me.media_name FROM(select *
+    FROM
+      aldstat_daily_link_monitor
+      where `day`=#{date}
+      <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+      and wsr_query_ald_link_key != 'all'
+      and ag_ald_position_id = 'all'
+      and wsr_query_ald_media_id != 'all'
+    and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key and  mo.app_key=ce.app_key INNER JOIN ald_media me on mo.wsr_query_ald_media_id=me.media_id and  mo.app_key=me.app_key
+      <if test="channel != null and channel != ''"> where me.media_name like CONCAT('%',#{channel},'%') </if>
+      <if test="activitiesName != null and activitiesName != ''"> where ce.link_name like CONCAT('%',#{activitiesName},'%') </if>
+      <choose>
+          <when test="prop != null and order != null">
+              order by mo.${prop} ${order}
+          </when>
+          <!--<otherwise>
+            order by menu_id desc
+          </otherwise>-->
+      </choose>
+  </select>
+  <select id="selectPupoAnalyzeListByHourLC" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT mo.* from
+    ( select *
+    FROM
+    aldstat_daily_link_monitor
+    where `day`=#{date}
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key != 'all'
+    and ag_ald_position_id = 'all'
+    and wsr_query_ald_media_id != 'all'
+    and hour!='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key INNER JOIN ald_media me on mo.wsr_query_ald_media_id=me.media_id
+    <if test="channel != null and channel != ''"> where me.media_name = #{channel} </if>
+    <if test="activitiesName != null and activitiesName != ''"> where ce.link_name = #{activitiesName} </if>
+    order by mo.hour desc
+  </select>
+  <!--活动&场景值-->
+  <select id="selectPupoAnalyzeListByTodayAndYesterdayLS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+      SELECT mo.*,ce.link_name FROM(select *
+      FROM
+      aldstat_daily_link_monitor
+      where `day`=#{date}
+      <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+      and wsr_query_ald_link_key != 'all'
+    <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+      and ag_ald_position_id != 'all'
+      and wsr_query_ald_media_id = 'all'
+    and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key
+      <if test="activitiesName != null and activitiesName != ''"> where ce.link_name like CONCAT('%',#{activitiesName},'%') </if>
+      <choose>
+          <when test="prop != null and order != null">
+              order by mo.${prop} ${order}
+          </when>
+          <!--<otherwise>
+            order by menu_id desc
+          </otherwise>-->
+      </choose>
+  </select>
+  <select id="selectPupoAnalyzeListByHourLS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    select mo.* from(
+    select *
+    FROM
+    aldstat_daily_link_monitor
+    where `day`=#{date}
+    and app_key=#{appkey}
+    <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+    and wsr_query_ald_link_key != 'all'
+    and ag_ald_position_id != 'all'
+    and wsr_query_ald_media_id = 'all'
+    and hour!='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key
+    <if test="activitiesName != null and activitiesName != ''"> where ce.link_name = #{activitiesName} </if>
+    order by hour desc
+  </select>
+  <!--渠道&场景值-->
+  <select id="selectPupoAnalyzeListByTodayAndYesterdayCS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+      SELECT mo.*,ce.media_name FROM(select *
+      FROM
+      aldstat_daily_link_monitor
+      where `day`=#{date}
+      <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+      and wsr_query_ald_link_key = 'all'
+      and ag_ald_position_id != 'all'
+      <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+      and wsr_query_ald_media_id != 'all'
+      and hour='all') mo INNER JOIN ald_media ce on mo.wsr_query_ald_media_id=ce.media_id
+      <if test="channel != null and channel != ''"> where ce.media_name like  CONCAT('%',#{channel},'%') </if>
+      <choose>
+          <when test="prop != null and order != null">
+              order by mo.${prop} ${order}
+          </when>
+          <!--<otherwise>
+            order by menu_id desc
+          </otherwise>-->
+      </choose>
+  </select>
+  <select id="selectPupoAnalyzeListByHourCS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    select mo.* from(
+    select *
+    FROM
+    aldstat_daily_link_monitor
+    where `day`=#{date}
+    and app_key=#{appkey}
+    <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+    and wsr_query_ald_link_key = 'all'
+    and ag_ald_position_id != 'all'
+    and wsr_query_ald_media_id != 'all'
+    and hour!='all') mo INNER JOIN ald_media ce on mo.wsr_query_ald_media_id=ce.media_id
+    <if test="channel != null and channel != ''"> where ce.media_name = #{channel} </if>
+    order by mo.hour desc
+  </select>
+  <!--渠道&渠道&场景值-->
+  <select id="selectPupoAnalyzeListByTodayAndYesterdayLCS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+      SELECT mo.*,ce.link_name,me.media_name FROM(select *
+      FROM
+      aldstat_daily_link_monitor
+      where `day`=#{date}
+      <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+      and wsr_query_ald_link_key != 'all'
+      <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+      and ag_ald_position_id != 'all'
+      and wsr_query_ald_media_id != 'all'
+      and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key INNER JOIN ald_media me on mo.wsr_query_ald_media_id=me.media_id
+      <if test="channel != null and channel != ''"> where me.media_name like CONCAT('%',#{channel},'%') </if>
+      <if test="activitiesName != null and activitiesName != ''"> where ce.link_name like CONCAT('%',#{activitiesName},'%') </if>
+      <choose>
+          <when test="prop != null and order != null">
+              order by mo.${prop} ${order}
+          </when>
+          <!--<otherwise>
+            order by menu_id desc
+          </otherwise>-->
+      </choose>
+  </select>
+  <select id="selectPupoAnalyzeListByHourLCS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    select mo.* from
+    (select *
+    FROM
+    aldstat_daily_link_monitor
+    where `day`=#{date}
+    and app_key=#{appkey}
+    <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+    and wsr_query_ald_link_key != 'all'
+    and ag_ald_position_id != 'all'
+    and wsr_query_ald_media_id != 'all'
+    and hour!='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key INNER JOIN ald_media me on mo.wsr_query_ald_media_id=me.media_id
+    <if test="channel != null and channel != ''"> where me.media_name = #{channel} </if>
+    <if test="activitiesName != null and activitiesName != ''"> where ce.link_name = #{activitiesName} </if>
+    order by mo.hour desc
+  </select>
+
+  <select id="selectOpenPageCountByTimeInterval" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.open_count AS total,ald.open_count AS extend,ana.open_count-ald.open_count AS naturalquantity
+    FROM
+    (select app_key,SUM(open_count) AS open_count,day
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT SUM(open_count) AS open_count,app_key,day FROM aldstat_trend_analysis
+    WHERE  day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key
+  </select>
+  <select id="selectOpenPageCountDayList" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ald.day,ana.open_count AS total,ald.open_count AS extend,ana.open_count-ald.open_count AS naturalquantity
+    FROM
+    (select app_key,open_count,day
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT open_count,app_key,day FROM aldstat_trend_analysis
+    WHERE  day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key and ald.day=ana.day
+  </select>
+  <select id="select0penUserCountByTimeInterval" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.visitor_count AS total,ald.visitor_count AS extend,ana.visitor_count-ald.visitor_count AS naturalquantity
+    FROM
+    (select app_key,SUM(visitor_count) AS visitor_count,day
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT SUM(visitor_count) AS visitor_count,app_key,day FROM aldstat_trend_analysis
+    WHERE  day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key
+  </select>
+  <select id="selectOpenUserCountDayList" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ald.day,ana.visitor_count AS total,ald.visitor_count AS extend,ana.visitor_count-ald.visitor_count AS naturalquantity
+    FROM
+    (select app_key,visitor_count,day
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT visitor_count,app_key,day FROM aldstat_trend_analysis
+    WHERE  day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    ) ana
+    ON  ald.app_key=ana.app_key and ald.day=ana.day
+  </select>
+  <select id="selectNewUserCountByTimeInterval" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.new_comer_count AS total,ald.new_comer_count AS extend,ana.new_comer_count-ald.new_comer_count AS naturalquantity
+    FROM
+    (select app_key,SUM(new_comer_count) AS new_comer_count,day
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT SUM(new_comer_count) AS new_comer_count,app_key,day FROM aldstat_trend_analysis
+    WHERE  day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key
+  </select>
+  <select id="selectNewUserCountDayList" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ald.day,ana.new_comer_count AS total,ald.new_comer_count AS extend,ana.new_comer_count-ald.new_comer_count AS naturalquantity
+    FROM
+    (select app_key,new_comer_count,day
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT new_comer_count,app_key,day FROM aldstat_trend_analysis
+    WHERE  day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key and ald.day=ana.day
+  </select>
+    <!--新授权-->
+    <select id="selectNewAuthUserCountByTimeInterval" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ana.authuser_count AS total,ald.authuser_count AS extend,ana.authuser_count-ald.authuser_count AS naturalquantity
+    FROM
+    (select app_key,SUM(authuser_count) AS authuser_count,day
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+      and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT SUM(authuser_count) AS authuser_count,app_key,day FROM aldstat_trend_analysis
+    WHERE  day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key
+  </select>
+  <select id="selectNewAuthUserCountDayList" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT ald.day,ana.authuser_count AS total,ald.authuser_count AS extend,ana.authuser_count-ald.authuser_count AS naturalquantity
+    FROM
+    (select app_key,authuser_count,day
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all'
+    )  ald
+    INNER JOIN (
+    SELECT authuser_count,app_key,day FROM aldstat_trend_analysis
+    WHERE  day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    ) ana
+    ON ald.app_key=ana.app_key and ald.day=ana.day
+  </select>
+    <!--活动-->
+    <select id="selectPupoAnalyzeListByTimeIntervalL" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+        SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.new_people_ratio) AS new_people_ratio,SUM(mo.authuser_people_ratio) AS authuser_people_ratio,mo.app_key,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,ce.link_name FROM (select *
+        FROM
+        aldstat_daily_link_monitor
+        where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+        <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+        and wsr_query_ald_link_key != 'all'
+        and ag_ald_position_id = 'all'
+        and wsr_query_ald_media_id = 'all'
+        and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key
+        <if test="activitiesName != null and activitiesName != ''"> where ce.link_name like CONCAT('%',#{activitiesName},'%') </if>
+        group by mo.app_key,mo.wsr_query_ald_link_key
+        <choose>
+            <when test="prop != null and order != null">
+                order by mo.${prop} ${order}
+            </when>
+            <!--<otherwise>
+              order by menu_id desc
+            </otherwise>-->
+        </choose>
+    </select>
+  <select id="selectPupoAnalyzeListByDayL" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,mo.day FROM (
+    select *
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key !='all'
+    and wsr_query_ald_media_id='all'
+    and ag_ald_position_id='all'
+    and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key
+    <if test="activitiesName != null and activitiesName != ''"> where ce.link_name = #{activitiesName} </if>
+    group by mo.day order by mo.day desc
+    </select>
+    <!--渠道-->
+    <select id="selectPupoAnalyzeListByTimeIntervalC" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+
+      SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.new_people_ratio) AS new_people_ratio,SUM(mo.authuser_people_ratio) AS authuser_people_ratio,mo.app_key,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,ce.media_name FROM(select *
+        FROM
+        aldstat_daily_link_monitor
+        where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+        <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+        and wsr_query_ald_link_key = 'all'
+        and ag_ald_position_id = 'all'
+        and wsr_query_ald_media_id != 'all'
+        and hour='all') mo INNER JOIN ald_media ce on mo.wsr_query_ald_media_id=ce.media_id
+        <if test="channel != null and channel != ''"> where ce.media_name like CONCAT('%',#{channel},'%') </if>
+        group by mo.app_key,mo.wsr_query_ald_media_id
+        <choose>
+            <when test="prop != null and order != null">
+                order by mo.${prop} ${order}
+            </when>
+            <!--<otherwise>
+              order by menu_id desc
+            </otherwise>-->
+        </choose>
+    </select>
+  <select id="selectPupoAnalyzeListByDayC" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.new_people_ratio) AS new_people_ratio,SUM(mo.authuser_people_ratio) AS authuser_people_ratio,mo.app_key,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,mo.day FROM
+    (select *
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key ='all'
+    and wsr_query_ald_media_id!='all'
+    and ag_ald_position_id ='all'
+    and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key
+    <if test="activitiesName != null and activitiesName != ''"> where ce.link_name = #{activitiesName} </if>
+    group by mo.day
+    </select>
+    <!--场景值-->
+    <select id="selectPupoAnalyzeListByTimeIntervalS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+        select SUM(visitor_count) AS visitor_count,SUM(authuser_count) AS authuser_count,SUM(open_count) AS open_count,SUM(new_comer_count) AS new_comer_count,SUM(total_page_count) AS total_page_count,SUM(new_people_ratio) AS new_people_ratio,SUM(authuser_people_ratio) AS authuser_people_ratio,SUM(total_stay_time)/SUM(total_page_count) AS secondary_avg_stay_time,SUM(one_page_count)/SUM(total_page_count) AS bounce_rate,app_key,ag_ald_position_id
+        FROM
+        aldstat_daily_link_monitor
+        where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+        <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+      <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+        and wsr_query_ald_link_key = 'all'
+        and ag_ald_position_id != 'all'
+        and wsr_query_ald_media_id = 'all'
+        and hour='all'
+        group by app_key,mo.ag_ald_position_id
+        <choose>
+            <when test="prop != null and order != null">
+                order by mo.${prop} ${order}
+            </when>
+            <!--<otherwise>
+              order by menu_id desc
+            </otherwise>-->
+        </choose>
+    </select>
+    <select id="selectPupoAnalyzeListByDayS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+        select SUM(visitor_count) AS visitor_count,SUM(authuser_count) AS authuser_count,SUM(open_count) AS open_count,SUM(new_comer_count) AS new_comer_count,SUM(total_page_count) AS total_page_count,SUM(total_stay_time)/SUM(total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,day
+        from
+        aldstat_daily_link_monitor
+        where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+        and app_key=#{appkey}
+        <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+        and wsr_query_ald_link_key ='all'
+        and wsr_query_ald_media_id ='all'
+        and ag_ald_position_id !='all'
+        and hour ='all'
+        group by mo.day order by mo.day
+    </select>
+    <!--活动&渠道-->
+    <select id="selectPupoAnalyzeListByTimeIntervalLC" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+        SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.new_people_ratio) AS new_people_ratio,SUM(mo.authuser_people_ratio) AS authuser_people_ratio,mo.app_key,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,ce.link_name,me.media_name FROM(select *
+        FROM
+        aldstat_daily_link_monitor
+        where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+        <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+        and wsr_query_ald_link_key != 'all'
+        and ag_ald_position_id = 'all'
+        and wsr_query_ald_media_id != 'all'
+        and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key INNER JOIN ald_media me on mo.wsr_query_ald_media_id=me.media_id
+        <if test="activitiesName != null and activitiesName != ''"> where ce.link_name like CONCAT('%',#{activitiesName},'%') </if>
+        group by mo.app_key,mo.wsr_query_ald_link_key,mo.wsr_query_ald_media_id
+        <choose>
+            <when test="prop != null and order != null">
+                order by mo.${prop} ${order}
+            </when>
+            <!--<otherwise>
+              order by menu_id desc
+            </otherwise>-->
+        </choose>
+    </select>
+  <select id="selectPupoAnalyzeListByDayLC" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,mo.day FROM (
+    select *
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    and wsr_query_ald_link_key !='all'
+    and wsr_query_ald_media_id !='all'
+    and ag_ald_position_id ='all'
+    and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key INNER JOIN ald_media me on mo.wsr_query_ald_media_id=me.media_id
+    <if test="channel != null and channel != ''"> where me.media_name = #{channel} </if>
+    <if test="activitiesName != null and activitiesName != ''"> where ce.link_name = #{activitiesName} </if>
+    group by mo.day order by mo.day
+    </select>
+    <!--活动&场景值-->
+    <select id="selectPupoAnalyzeListByTimeIntervalLS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+        SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.new_people_ratio) AS new_people_ratio,SUM(mo.authuser_people_ratio) AS authuser_people_ratio,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,mo.app_key,mo.ag_ald_position_id,ce.link_name FROM(select *
+        FROM
+        aldstat_daily_link_monitor
+        where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+        <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+      <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+        and wsr_query_ald_link_key != 'all'
+        and ag_ald_position_id != 'all'
+        and wsr_query_ald_media_id = 'all'
+      and hour='all' ) mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key
+        <if test="activitiesName != null and activitiesName != ''"> where ce.link_name like CONCAT('%',#{activitiesName},'%') </if>
+        group by mo.app_key,mo.wsr_query_ald_link_key,mo.ag_ald_position_id
+        <choose>
+            <when test="prop != null and order != null">
+                order by mo.${prop} ${order}
+            </when>
+            <!--<otherwise>
+              order by menu_id desc
+            </otherwise>-->
+        </choose>
+    </select>
+  <select id="selectPupoAnalyzeListByDayLS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,mo.day FROM (
+    select *
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+    and wsr_query_ald_link_key !='all'
+    and wsr_query_ald_media_id ='all'
+    and ag_ald_position_id !='all'
+    and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key
+    <if test="activitiesName != null and activitiesName != ''"> where ce.link_name = #{activitiesName} </if>
+    group by mo.day order by mo.day desc
+    </select>
+    <!--渠道&场景值-->
+    <select id="selectPupoAnalyzeListByTimeIntervalCS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+        SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.new_people_ratio) AS new_people_ratio,SUM(mo.authuser_people_ratio) AS authuser_people_ratio,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,mo.app_key,mo.ag_ald_position_id,ce.media_name FROM(select *
+        FROM
+        aldstat_daily_link_monitor
+        where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+        <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+        <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+        and wsr_query_ald_link_key = 'all'
+        and ag_ald_position_id != 'all'
+        and wsr_query_ald_media_id != 'all'
+        and hour='all') mo INNER JOIN ald_media ce on mo.wsr_query_ald_media_id=ce.media_id
+        <if test="channel != null and channel != ''"> and ce.media_name like CONCAT('%',#{channel},'%') </if>
+        group by mo.app_key,mo.ag_ald_position_id,mo.wsr_query_ald_media_id
+        <choose>
+            <when test="prop != null and order != null">
+                order by mo.${prop} ${order}
+            </when>
+            <!--<otherwise>
+              order by menu_id desc
+            </otherwise>-->
+        </choose>
+    </select>
+  <select id="selectPupoAnalyzeListByDayCS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,mo.day FROM (
+    select *
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+    and wsr_query_ald_link_key ='all'
+    and wsr_query_ald_media_id !='all'
+    and ag_ald_position_id !='all'
+    and hour='all') mo INNER JOIN ald_media ce on mo.wsr_query_ald_media_id=ce.media_id
+    <if test="channel != null and channel != ''"> and ce.media_name = #{channel} </if>
+    group by mo.day order by mo.day desc
+    </select>
+    <!--渠道&渠道&场景值-->
+    <select id="selectPupoAnalyzeListByTimeIntervalLCS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+        SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.new_people_ratio) AS new_people_ratio,SUM(mo.authuser_people_ratio) AS authuser_people_ratio,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,mo.app_key,mo.ag_ald_position_id,ce.link_name,me.media_name FROM(select *
+        FROM
+        aldstat_daily_link_monitor
+        where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+        <if test="appkey != null and appkey != ''"> and app_key=#{appkey} </if>
+        <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+        and wsr_query_ald_link_key != 'all'
+        and ag_ald_position_id != 'all'
+        and wsr_query_ald_media_id != 'all'
+        and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key INNER JOIN ald_media me on mo.wsr_query_ald_media_id=me.media_id
+        <if test="channel != null and channel != ''"> where me.media_name like CONCAT('%',#{channel},'%') </if>
+        <if test="activitiesName != null and activitiesName != ''"> where ce.link_name like CONCAT('%',#{activitiesName},'%') </if>
+        group by mo.app_key,mo.wsr_query_ald_link_key,mo.ag_ald_position_id,mo.wsr_query_ald_media_id
+        <choose>
+            <when test="prop != null and order != null">
+                order by mo.${prop} ${order}
+            </when>
+            <!--<otherwise>
+              order by menu_id desc
+            </otherwise>-->
+        </choose>
+    </select>
+  <select id="selectPupoAnalyzeListByDayLCS" parameterType="com.aldwx.bigdata.modules.ad.vo.AldAdParamVo" resultType="java.util.HashMap">
+    SELECT SUM(mo.visitor_count) AS visitor_count,SUM(mo.authuser_count) AS authuser_count,SUM(mo.open_count) AS open_count,SUM(mo.new_comer_count) AS new_comer_count,SUM(mo.total_page_count) AS total_page_count,SUM(mo.total_stay_time)/SUM(mo.total_page_count) AS secondary_avg_stay_time,SUM(mo.one_page_count)/SUM(mo.total_page_count) AS bounce_rate,mo.day FROM (
+    select *
+    from
+    aldstat_daily_link_monitor
+    where day &gt;= str_to_date(#{dateStart}, '%Y-%m-%d') and  day &lt;= str_to_date(#{dateEnd}, '%Y-%m-%d')
+    and app_key=#{appkey}
+    <if test="scene != null and scene != ''"> and ag_ald_position_id=#{scene} </if>
+    and wsr_query_ald_link_key !='all'
+    and wsr_query_ald_media_id !='all'
+    and ag_ald_position_id !='all'
+    and hour='all') mo INNER JOIN ald_link_trace ce on mo.wsr_query_ald_link_key=ce.link_key INNER JOIN ald_media me on mo.wsr_query_ald_media_id=me.media_id
+    <if test="channel != null and channel != ''"> where me.media_name = #{channel} </if>
+    <if test="activitiesName != null and activitiesName != ''"> where ce.link_name = #{activitiesName} </if>
+    group by mo.day order by mo.day desc
+    </select>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aldwx.bigdata.modules.ad.entity.AldstatDailyLinkMonitor">
+    update aldstat_daily_link_monitor
+    <set>
+      <if test="appKey != null">
+        app_key = #{appKey,jdbcType=VARCHAR},
+      </if>
+      <if test="day != null">
+        day = #{day,jdbcType=DATE},
+      </if>
+      <if test="hour != null">
+        hour = #{hour,jdbcType=VARCHAR},
+      </if>
+      <if test="wsrQueryAldLinkKey != null">
+        wsr_query_ald_link_key = #{wsrQueryAldLinkKey,jdbcType=VARCHAR},
+      </if>
+      <if test="wsrQueryAldMediaId != null">
+        wsr_query_ald_media_id = #{wsrQueryAldMediaId,jdbcType=VARCHAR},
+      </if>
+      <if test="agAldPositionId != null">
+        ag_ald_position_id = #{agAldPositionId,jdbcType=VARCHAR},
+      </if>
+      <if test="visitorCount != null">
+        visitor_count = #{visitorCount,jdbcType=INTEGER},
+      </if>
+      <if test="authuserCount != null">
+        authuser_count = #{authuserCount,jdbcType=INTEGER},
+      </if>
+      <if test="openCount != null">
+        open_count = #{openCount,jdbcType=INTEGER},
+      </if>
+      <if test="totalPageCount != null">
+        total_page_count = #{totalPageCount,jdbcType=INTEGER},
+      </if>
+      <if test="newComerCount != null">
+        new_comer_count = #{newComerCount,jdbcType=INTEGER},
+      </if>
+      <if test="totalStayTime != null">
+        total_stay_time = #{totalStayTime,jdbcType=INTEGER},
+      </if>
+      <if test="secondaryAvgStayTime != null">
+        secondary_avg_stay_time = #{secondaryAvgStayTime,jdbcType=REAL},
+      </if>
+      <if test="onePageCount != null">
+        one_page_count = #{onePageCount,jdbcType=INTEGER},
+      </if>
+      <if test="bounceRate != null">
+        bounce_rate = #{bounceRate,jdbcType=REAL},
+      </if>
+      <if test="newPeopleRatio != null">
+        new_people_ratio = #{newPeopleRatio,jdbcType=REAL},
+      </if>
+      <if test="authuserPeopleRatio != null">
+        authuser_people_ratio = #{authuserPeopleRatio,jdbcType=REAL},
+      </if>
+      <if test="updateAt != null">
+        update_at = #{updateAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aldwx.bigdata.modules.ad.entity.AldstatDailyLinkMonitor">
+    update aldstat_daily_link_monitor
+    set app_key = #{appKey,jdbcType=VARCHAR},
+      day = #{day,jdbcType=DATE},
+      hour = #{hour,jdbcType=VARCHAR},
+      wsr_query_ald_link_key = #{wsrQueryAldLinkKey,jdbcType=VARCHAR},
+      wsr_query_ald_media_id = #{wsrQueryAldMediaId,jdbcType=VARCHAR},
+      ag_ald_position_id = #{agAldPositionId,jdbcType=VARCHAR},
+      visitor_count = #{visitorCount,jdbcType=INTEGER},
+      authuser_count = #{authuserCount,jdbcType=INTEGER},
+      open_count = #{openCount,jdbcType=INTEGER},
+      total_page_count = #{totalPageCount,jdbcType=INTEGER},
+      new_comer_count = #{newComerCount,jdbcType=INTEGER},
+      total_stay_time = #{totalStayTime,jdbcType=INTEGER},
+      secondary_avg_stay_time = #{secondaryAvgStayTime,jdbcType=REAL},
+      one_page_count = #{onePageCount,jdbcType=INTEGER},
+      bounce_rate = #{bounceRate,jdbcType=REAL},
+      new_people_ratio = #{newPeopleRatio,jdbcType=REAL},
+      authuser_people_ratio = #{authuserPeopleRatio,jdbcType=REAL},
+      update_at = #{updateAt,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>

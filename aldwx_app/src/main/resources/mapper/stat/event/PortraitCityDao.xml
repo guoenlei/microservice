@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aldwx.app.modules.portrait.dao.stat.PortraitCityDao">
+  <resultMap id="BaseResultMap" type="com.aldwx.app.modules.portrait.entity.AldstatCityStatistics">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="app_key" jdbcType="VARCHAR" property="app_key" />
+    <result column="day" jdbcType="TIMESTAMP" property="day" />
+    <result column="city" jdbcType="VARCHAR" property="city" />
+    <result column="new_user_count" jdbcType="INTEGER" property="new_user_count" />
+    <result column="visitor_count" jdbcType="INTEGER" property="visitor_count" />
+    <result column="open_count" jdbcType="INTEGER" property="open_count" />
+    <result column="page_count" jdbcType="INTEGER" property="page_count" />
+    <result column="total_stay_time" jdbcType="BIGINT" property="total_stay_time" />
+    <result column="secondary_stay_time" jdbcType="DOUBLE" property="secondary_stay_time" />
+    <result column="one_page_count" jdbcType="INTEGER" property="one_page_count" />
+    <result column="bounce_rate" jdbcType="DOUBLE" property="bounce_rate" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="update_at" />
+  </resultMap>
+
+  <select id="selectCityList" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+      SELECT city,SUM(new_user_count) new_user_count,sum(visitor_count) visitor_count
+      from aldstat_city_statistics
+      where app_key=#{appKey} and `day` &lt;=#{dateEnd} and `day` &gt;=#{dateStart}
+      GROUP BY app_key,city
+
+      <if test="dataType =='1'.toString()">
+          order by new_user_count desc
+      </if>
+      <if test="dataType =='2'.toString()">
+          order by visitor_count desc
+      </if>
+      <if test="null != isTop and isTop=='yes'">
+          LIMIT 10
+      </if>
+
+  </select>
+    <select id="selectCityTotal" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+      SELECT SUM(new_user_count) new_user_count,sum(visitor_count) visitor_count
+      from aldstat_city_statistics
+      where app_key=#{appKey} and `day` &lt;=#{dateEnd} and `day` &gt;=#{dateStart}
+      GROUP BY app_key
+  </select>
+<!--  <select id="selectCityDetail" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+      SELECT city,SUM(new_user_count) new_user_count,sum(visitor_count) visitor_count
+      from aldstat_city_statistics
+      where app_key=#{appKey} and `day` &lt;=#{dayEnd} and `day` &gt;=#{dayStart}
+      GROUP BY app_key,city order by new_user_count desc, visitor_count desc
+  </select>-->
+
+</mapper>

@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.aldwx.app</groupId>
+    <artifactId>com.aldwx.app</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <name>com.aldwx.app</name>
+    <url>http://www.example.com</url>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.6.RELEASE</version>
+        <relativePath/>
+    </parent>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <jdbc.pool.init>1</jdbc.pool.init>
+        <jdbc.pool.minIdle>3</jdbc.pool.minIdle>
+        <jdbc.pool.maxActive>10</jdbc.pool.maxActive>
+        <mybatis-spring-boot>2.1.0</mybatis-spring-boot>
+        <mysql-connector>5.1.39</mysql-connector>
+        <druid>1.0.18</druid>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>lyj</id>
+            <properties>
+                <mysql.datasource.driverClassName>com.mysql.jdbc.Driver</mysql.datasource.driverClassName>
+                <!--测试小程序库-->
+<!--                <stat.app.datasource.url>jdbc:mysql://127.0.0.1:3309/ald_xinen?useUnicode=true&amp;characterEncoding=utf-8</stat.app.datasource.url>-->
+<!--                <stat.app.datasource.username>aldstat_read</stat.app.datasource.username>-->
+<!--                <stat.app.datasource.password>cMX6VdsnAKR2</stat.app.datasource.password>-->
+                <stat.app.datasource.url>
+                    jdbc:mysql://127.0.0.1:3316/tongji_test?useUnicode=true&amp;characterEncoding=utf-8
+                </stat.app.datasource.url>
+                <stat.app.datasource.username>tongjitest</stat.app.datasource.username>
+                <stat.app.datasource.password>ookun7Ee</stat.app.datasource.password>
+                <!--测试小游戏库-->
+                <stat.game.datasource.url>jdbc:mysql://127.0.0.1:3315/ald_game?useUnicode=true&amp;characterEncoding=utf-8</stat.game.datasource.url>
+                <stat.game.datasource.username>game_read</stat.game.datasource.username>
+                <stat.game.datasource.password>q7y8uexhJCG2</stat.game.datasource.password>
+                <!--测试presto连接-->
+                <presto.jdbc.url>jdbc:mysql://127.0.0.1:3315/ald_game?useUnicode=true&amp;characterEncoding=utf-8
+                </presto.jdbc.url>
+                <presto.jdbc.username>game_read</presto.jdbc.username>
+                <presto.jdbc.password>phu6laip[a4x</presto.jdbc.password>
+            </properties>
+        </profile>
+
+        <!--測試-->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <mysql.datasource.driverClassName>com.mysql.jdbc.Driver</mysql.datasource.driverClassName>
+                <!--测试小程序库（外网链接地址~~~最新版本）-->
+               <!-- <manage.app.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/service_bus_test?useUnicode=true&amp;characterEncoding=utf-8</manage.app.datasource.url>
+                <manage.app.datasource.username>tongjitest</manage.app.datasource.username>
+                <manage.app.datasource.password>ookun7Ee</manage.app.datasource.password>
+
+                <stat.app.datasource.url>
+                    jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/tongji_test?useUnicode=true&amp;characterEncoding=utf-8
+                </stat.app.datasource.url>
+                <stat.app.datasource.username>tongjitest</stat.app.datasource.username>
+                <stat.app.datasource.password>ookun7Ee</stat.app.datasource.password>
+
+                <stat.game.datasource.url>jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/ald_game_test?useUnicode=true&amp;characterEncoding=utf-8</stat.game.datasource.url>
+                <stat.game.datasource.username>gametest</stat.game.datasource.username>
+                <stat.game.datasource.password>ookun7Ee</stat.game.datasource.password>-->
+
+               <!-- <stat.app.datasource.url>
+                    jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/tongji_test?useUnicode=true&amp;characterEncoding=utf-8
+                </stat.app.datasource.url>
+                <stat.app.datasource.username>tongjitest</stat.app.datasource.username>
+                <stat.app.datasource.password>Aa4iep5ne~uv</stat.app.datasource.password>-->
+                <!--測試小程序庫（内網數據庫連接）-->
+                <!--管理表的配置-->
+                <manage.app.datasource.url>jdbc:mysql://10.0.220.36:3306/service_bus_test?useUnicode=true&amp;characterEncoding=utf-8</manage.app.datasource.url>
+                <manage.app.datasource.username>tongjitest</manage.app.datasource.username>
+                <manage.app.datasource.password>ookun7Ee</manage.app.datasource.password>
+
+                <stat.app.datasource.url>jdbc:mysql://10.0.220.36:3306/ald_wx_test?useUnicode=true&amp;characterEncoding=utf-8</stat.app.datasource.url>
+                <stat.app.datasource.username>tongjitest</stat.app.datasource.username>
+                <stat.app.datasource.password>ookun7Ee</stat.app.datasource.password>
+                <!--测试小游戏库-->
+                <stat.game.datasource.url>jdbc:mysql://10.0.0.123:3306/ald_game_test?useUnicode=true&amp;characterEncoding=utf-8</stat.game.datasource.url>
+                <stat.game.datasource.username>gametest</stat.game.datasource.username>
+                <stat.game.datasource.password>ookun7Ee</stat.game.datasource.password>
+
+                <!--测试presto连接-->
+                <presto.jdbc.url>jdbc:mysql://10.0.221.7:3306/ald_game?useUnicode=true&amp;characterEncoding=utf-8
+                </presto.jdbc.url>
+                <presto.jdbc.username>aldgame</presto.jdbc.username>
+                <presto.jdbc.password>phu6laip[a4x</presto.jdbc.password>
+            </properties>
+        </profile>
+
+
+        <profile>
+            <id>wangziyu</id>
+            <properties>
+                <mysql.datasource.driverClassName>com.mysql.jdbc.Driver</mysql.datasource.driverClassName>
+                <!--测试小程序库（外网链接地址~~~最新版本）-->
+                 <manage.app.datasource.url>jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/service_bus_test?useUnicode=true&amp;characterEncoding=utf-8</manage.app.datasource.url>
+                 <manage.app.datasource.username>tongjitest</manage.app.datasource.username>
+                 <manage.app.datasource.password>ookun7Ee</manage.app.datasource.password>
+
+                 <stat.app.datasource.url>
+                     jdbc:mysql://sh-cdb-9pywbxic.sql.tencentcdb.com:62790/ald_wx_test?useUnicode=true&amp;characterEncoding=utf-8
+                 </stat.app.datasource.url>
+                 <stat.app.datasource.username>tongjitest</stat.app.datasource.username>
+                 <stat.app.datasource.password>ookun7Ee</stat.app.datasource.password>
+
+                 <stat.game.datasource.url>jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/ald_game_test?useUnicode=true&amp;characterEncoding=utf-8</stat.game.datasource.url>
+                 <stat.game.datasource.username>gametest</stat.game.datasource.username>
+                 <stat.game.datasource.password>ookun7Ee</stat.game.datasource.password>
+
+                <!-- <stat.app.datasource.url>
+                     jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/tongji_test?useUnicode=true&amp;characterEncoding=utf-8
+                 </stat.app.datasource.url>
+                 <stat.app.datasource.username>tongjitest</stat.app.datasource.username>
+                 <stat.app.datasource.password>Aa4iep5ne~uv</stat.app.datasource.password>-->
+            </properties>
+        </profile>
+
+        <!--生產-->
+        <profile>
+            <id>prod</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <mysql.datasource.driverClassName>com.mysql.jdbc.Driver</mysql.datasource.driverClassName>
+
+                <!--分库管理表-->
+                <manage.app.datasource.url>jdbc:mysql://10.0.1.10:3306/ald_service_bus?useUnicode=true&amp;characterEncoding=utf-8</manage.app.datasource.url>
+                <manage.app.datasource.username>servicebus_read</manage.app.datasource.username>
+                <manage.app.datasource.password>RPVcFnn2C73f</manage.app.datasource.password>
+                <!--生产小程序库-->
+                <stat.app.datasource.url>jdbc:mysql://10.0.0.179:3306/ald_xinen?useUnicode=true&amp;characterEncoding=utf-8</stat.app.datasource.url>
+                <stat.app.datasource.username>aldstat_read</stat.app.datasource.username>
+                <stat.app.datasource.password>cMX6VdsnAKR2</stat.app.datasource.password>
+                <!--生产小游戏库-->
+                <stat.game.datasource.url>jdbc:mysql://10.0.221.7:3306/ald_game?useUnicode=true&amp;characterEncoding=utf-8</stat.game.datasource.url>
+                <stat.game.datasource.username>game_read</stat.game.datasource.username>
+                <stat.game.datasource.password>q7y8uexhJCG2</stat.game.datasource.password>
+                <!--测试presto连接-->
+                <presto.jdbc.url>jdbc:mysql://10.0.221.7:3306/ald_game?useUnicode=true&amp;characterEncoding=utf-8
+                </presto.jdbc.url>
+                <presto.jdbc.username>game_read</presto.jdbc.username>
+                <presto.jdbc.password>q7y8uexhJCG2</presto.jdbc.password>
+            </properties>
+        </profile>
+    </profiles>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jdbc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.1.36</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.facebook.presto</groupId>
+            <artifactId>presto-jdbc</artifactId>
+            <version>0.212</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-connector}</version>
+        </dependency>
+
+        <!-- Spring Boot Mybatis 依赖 -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>${mybatis-spring-boot}</version>
+        </dependency>
+
+        <!-- Druid 数据连接池依赖 -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>${druid}</version>
+        </dependency>
+
+        <!--分页插件-->
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.2.0</version>
+        </dependency>
+
+        <!-- 引入aop -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.20</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <finalName>aldwx-app</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+</project>

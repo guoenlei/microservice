@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aldwx.bigdata.modules.trend.dao.master.AldstatHourlyTrendAnalysisDAO">
+  <resultMap id="BaseResultMap" type="com.aldwx.bigdata.modules.trend.entity.AldstatHourlyTrendAnalysis">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_key" jdbcType="VARCHAR" property="app_key" />
+    <result column="day" jdbcType="TIMESTAMP" property="day" />
+    <result column="hour" jdbcType="TINYINT" property="hour" />
+    <result column="new_comer_count" jdbcType="INTEGER" property="new_comer_count" />
+    <result column="visitor_count" jdbcType="INTEGER" property="visitor_count" />
+    <result column="open_count" jdbcType="INTEGER" property="open_count" />
+    <result column="total_page_count" jdbcType="INTEGER" property="total_page_count" />
+    <result column="avg_stay_time" jdbcType="DOUBLE" property="avg_stay_time" />
+    <result column="secondary_avg_stay_time" jdbcType="DOUBLE" property="secondary_avg_stay_time" />
+    <result column="avg_refresh_count" jdbcType="DOUBLE" property="avg_refresh_count" />
+    <result column="total_stay_time" jdbcType="BIGINT" property="total_stay_time" />
+    <result column="daily_share_count" jdbcType="INTEGER" property="daily_share_count" />
+    <result column="one_page_count" jdbcType="INTEGER" property="one_page_count" />
+    <result column="bounce_rate" jdbcType="REAL" property="bounce_rate" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="update_at" />
+    <result column="daily_refresh_count" jdbcType="INTEGER" property="daily_refresh_count" />
+    <result column="reach_bottom_count" jdbcType="INTEGER" property="reach_bottom_count" />
+    <result column="avg_reach_bottom_count" jdbcType="DOUBLE" property="avg_reach_bottom_count" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, app_key, `day`, `hour`, new_comer_count, visitor_count, open_count, total_page_count, 
+    avg_stay_time, secondary_avg_stay_time, avg_refresh_count, total_stay_time, daily_share_count, 
+    one_page_count, bounce_rate, update_at, daily_refresh_count, reach_bottom_count, 
+    avg_reach_bottom_count
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from aldstat_hourly_trend_analysis
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from aldstat_hourly_trend_analysis
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.aldwx.bigdata.modules.trend.entity.AldstatHourlyTrendAnalysis">
+    insert into aldstat_hourly_trend_analysis (id, app_key, `day`, 
+      `hour`, new_comer_count, visitor_count, 
+      open_count, total_page_count, avg_stay_time, 
+      secondary_avg_stay_time, avg_refresh_count, 
+      total_stay_time, daily_share_count, one_page_count, 
+      bounce_rate, update_at, daily_refresh_count, 
+      reach_bottom_count, avg_reach_bottom_count
+      )
+    values (#{id,jdbcType=BIGINT}, #{app_key,jdbcType=VARCHAR}, #{day,jdbcType=TIMESTAMP}, 
+      #{hour,jdbcType=TINYINT}, #{new_comer_count,jdbcType=INTEGER}, #{visitor_count,jdbcType=INTEGER}, 
+      #{open_count,jdbcType=INTEGER}, #{total_page_count,jdbcType=INTEGER}, #{avg_stay_time,jdbcType=DOUBLE}, 
+      #{secondary_avg_stay_time,jdbcType=DOUBLE}, #{avg_refresh_count,jdbcType=DOUBLE}, 
+      #{total_stay_time,jdbcType=BIGINT}, #{daily_share_count,jdbcType=INTEGER}, #{one_page_count,jdbcType=INTEGER}, 
+      #{bounce_rate,jdbcType=REAL}, #{update_at,jdbcType=TIMESTAMP}, #{daily_refresh_count,jdbcType=INTEGER}, 
+      #{reach_bottom_count,jdbcType=INTEGER}, #{avg_reach_bottom_count,jdbcType=DOUBLE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.aldwx.bigdata.modules.trend.entity.AldstatHourlyTrendAnalysis">
+    insert into aldstat_hourly_trend_analysis
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="app_key != null">
+        app_key,
+      </if>
+      <if test="day != null">
+        `day`,
+      </if>
+      <if test="hour != null">
+        `hour`,
+      </if>
+      <if test="new_comer_count != null">
+        new_comer_count,
+      </if>
+      <if test="visitor_count != null">
+        visitor_count,
+      </if>
+      <if test="open_count != null">
+        open_count,
+      </if>
+      <if test="total_page_count != null">
+        total_page_count,
+      </if>
+      <if test="avg_stay_time != null">
+        avg_stay_time,
+      </if>
+      <if test="secondary_avg_stay_time != null">
+        secondary_avg_stay_time,
+      </if>
+      <if test="avg_refresh_count != null">
+        avg_refresh_count,
+      </if>
+      <if test="total_stay_time != null">
+        total_stay_time,
+      </if>
+      <if test="daily_share_count != null">
+        daily_share_count,
+      </if>
+      <if test="one_page_count != null">
+        one_page_count,
+      </if>
+      <if test="bounce_rate != null">
+        bounce_rate,
+      </if>
+      <if test="update_at != null">
+        update_at,
+      </if>
+      <if test="daily_refresh_count != null">
+        daily_refresh_count,
+      </if>
+      <if test="reach_bottom_count != null">
+        reach_bottom_count,
+      </if>
+      <if test="avg_reach_bottom_count != null">
+        avg_reach_bottom_count,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="app_key != null">
+        #{app_key,jdbcType=VARCHAR},
+      </if>
+      <if test="day != null">
+        #{day,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hour != null">
+        #{hour,jdbcType=TINYINT},
+      </if>
+      <if test="new_comer_count != null">
+        #{new_comer_count,jdbcType=INTEGER},
+      </if>
+      <if test="visitor_count != null">
+        #{visitor_count,jdbcType=INTEGER},
+      </if>
+      <if test="open_count != null">
+        #{open_count,jdbcType=INTEGER},
+      </if>
+      <if test="total_page_count != null">
+        #{total_page_count,jdbcType=INTEGER},
+      </if>
+      <if test="avg_stay_time != null">
+        #{avg_stay_time,jdbcType=DOUBLE},
+      </if>
+      <if test="secondary_avg_stay_time != null">
+        #{secondary_avg_stay_time,jdbcType=DOUBLE},
+      </if>
+      <if test="avg_refresh_count != null">
+        #{avg_refresh_count,jdbcType=DOUBLE},
+      </if>
+      <if test="total_stay_time != null">
+        #{total_stay_time,jdbcType=BIGINT},
+      </if>
+      <if test="daily_share_count != null">
+        #{daily_share_count,jdbcType=INTEGER},
+      </if>
+      <if test="one_page_count != null">
+        #{one_page_count,jdbcType=INTEGER},
+      </if>
+      <if test="bounce_rate != null">
+        #{bounce_rate,jdbcType=REAL},
+      </if>
+      <if test="update_at != null">
+        #{update_at,jdbcType=TIMESTAMP},
+      </if>
+      <if test="daily_refresh_count != null">
+        #{daily_refresh_count,jdbcType=INTEGER},
+      </if>
+      <if test="reach_bottom_count != null">
+        #{reach_bottom_count,jdbcType=INTEGER},
+      </if>
+      <if test="avg_reach_bottom_count != null">
+        #{avg_reach_bottom_count,jdbcType=DOUBLE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.aldwx.bigdata.modules.trend.entity.AldstatHourlyTrendAnalysis">
+    update aldstat_hourly_trend_analysis
+    <set>
+      <if test="app_key != null">
+        app_key = #{app_key,jdbcType=VARCHAR},
+      </if>
+      <if test="day != null">
+        `day` = #{day,jdbcType=TIMESTAMP},
+      </if>
+      <if test="hour != null">
+        `hour` = #{hour,jdbcType=TINYINT},
+      </if>
+      <if test="new_comer_count != null">
+        new_comer_count = #{new_comer_count,jdbcType=INTEGER},
+      </if>
+      <if test="visitor_count != null">
+        visitor_count = #{visitor_count,jdbcType=INTEGER},
+      </if>
+      <if test="open_count != null">
+        open_count = #{open_count,jdbcType=INTEGER},
+      </if>
+      <if test="total_page_count != null">
+        total_page_count = #{total_page_count,jdbcType=INTEGER},
+      </if>
+      <if test="avg_stay_time != null">
+        avg_stay_time = #{avg_stay_time,jdbcType=DOUBLE},
+      </if>
+      <if test="secondary_avg_stay_time != null">
+        secondary_avg_stay_time = #{secondary_avg_stay_time,jdbcType=DOUBLE},
+      </if>
+      <if test="avg_refresh_count != null">
+        avg_refresh_count = #{avg_refresh_count,jdbcType=DOUBLE},
+      </if>
+      <if test="total_stay_time != null">
+        total_stay_time = #{total_stay_time,jdbcType=BIGINT},
+      </if>
+      <if test="daily_share_count != null">
+        daily_share_count = #{daily_share_count,jdbcType=INTEGER},
+      </if>
+      <if test="one_page_count != null">
+        one_page_count = #{one_page_count,jdbcType=INTEGER},
+      </if>
+      <if test="bounce_rate != null">
+        bounce_rate = #{bounce_rate,jdbcType=REAL},
+      </if>
+      <if test="update_at != null">
+        update_at = #{update_at,jdbcType=TIMESTAMP},
+      </if>
+      <if test="daily_refresh_count != null">
+        daily_refresh_count = #{daily_refresh_count,jdbcType=INTEGER},
+      </if>
+      <if test="reach_bottom_count != null">
+        reach_bottom_count = #{reach_bottom_count,jdbcType=INTEGER},
+      </if>
+      <if test="avg_reach_bottom_count != null">
+        avg_reach_bottom_count = #{avg_reach_bottom_count,jdbcType=DOUBLE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.aldwx.bigdata.modules.trend.entity.AldstatHourlyTrendAnalysis">
+    update aldstat_hourly_trend_analysis
+    set app_key = #{app_key,jdbcType=VARCHAR},
+      `day` = #{day,jdbcType=TIMESTAMP},
+      `hour` = #{hour,jdbcType=TINYINT},
+      new_comer_count = #{new_comer_count,jdbcType=INTEGER},
+      visitor_count = #{visitor_count,jdbcType=INTEGER},
+      open_count = #{open_count,jdbcType=INTEGER},
+      total_page_count = #{total_page_count,jdbcType=INTEGER},
+      avg_stay_time = #{avg_stay_time,jdbcType=DOUBLE},
+      secondary_avg_stay_time = #{secondary_avg_stay_time,jdbcType=DOUBLE},
+      avg_refresh_count = #{avg_refresh_count,jdbcType=DOUBLE},
+      total_stay_time = #{total_stay_time,jdbcType=BIGINT},
+      daily_share_count = #{daily_share_count,jdbcType=INTEGER},
+      one_page_count = #{one_page_count,jdbcType=INTEGER},
+      bounce_rate = #{bounce_rate,jdbcType=REAL},
+      update_at = #{update_at,jdbcType=TIMESTAMP},
+      daily_refresh_count = #{daily_refresh_count,jdbcType=INTEGER},
+      reach_bottom_count = #{reach_bottom_count,jdbcType=INTEGER},
+      avg_reach_bottom_count = #{avg_reach_bottom_count,jdbcType=DOUBLE}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <!--查询今天的小程序的指标，汇总-->
+  <select id="selectTrendAnalysisHourByDayAndAk" resultMap="BaseResultMap" parameterType="com.aldwx.bigdata.modules.trend.vo.TrendQueryVo">
+      SELECT app_key,sum(new_comer_count) new_comer_count,sum(visitor_count) visitor_count,sum(total_page_count) total_page_count,sum(open_count) open_count,sum(total_stay_time)/sum(open_count) secondary_avg_stay_time,sum(one_page_count)/sum(open_count) bounce_rate from aldstat_hourly_trend_analysis
+      WHERE day =#{day}
+      and app_key=#{ak} group by app_key
+  </select>
+</mapper>

@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aldwx.bigdata.modules.share.dao.master.AldUserShareMasterDao">
+
+    <resultMap id="AldUserShareEntityMap" type="com.aldwx.bigdata.modules.share.entity.AldUserShareEntity">
+        <result column="app_key" property="appKey" />
+        <result column="sharer_uuid" property="shareUuid" />
+        <result column="uuid" property="uuid" />
+        <result column="nickname" property="nickName" />
+        <result column="avatar_url" property="avatarUrl" />
+        <result column="user_remark" property="userRemark" />
+        <result column="new_count" property="newCount" />
+        <result column="share_count" property="shareCount" />
+        <result column="share_open_count" property="shareOpenCount" />
+        <result column="share_open_user_count" property="shareOpenUserCount" />
+        <result column="share_reflux_ratio" property="shareRefluxRatio" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+		app_key, uuid, nickname, avatar_url, user_remark, new_count, share_count,
+		share_open_count, share_open_user_count, share_reflux_ratio
+	</sql>
+
+
+
+    <!--查询今天数据-->
+    <select id="queryTodayDataBy" resultMap="AldUserShareEntityMap" parameterType="com.aldwx.bigdata.modules.share.vo.AldUserShareVo">
+        select a.*, b.* from (
+        select uuid, nickname, avatar_url, user_remark
+        from ald_wechat_user_bind
+        where uuid is not null
+        and uuid in (select sharer_uuid
+        from aldstat_dailyshare_user
+        where 1=1
+        <if test="null != date">
+            and `day` = CURDATE()
+        </if>
+        <if test="null != appKey">
+            and app_key=#{appKey}
+        </if>
+        )
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                and nickname like CONCAT('%',#{keyword},'%')
+            </when>
+            <when test="null != type and '2'.toString == type">
+                and user_remark like CONCAT('%',#{keyword},'%')
+            </when>
+        </choose>
+        ) a
+        join
+        (select sharer_uuid, app_key, new_count, share_count, share_open_count, share_open_user_count, share_reflux_ratio
+        from aldstat_dailyshare_user
+        where 1=1
+        <if test="null != date">
+            and `day` = CURDATE()
+        </if>
+        <if test="null != appKey">
+            and app_key=#{appKey}
+        </if>
+        ) b
+        on
+        a.uuid=b.sharer_uuid
+        <if test="null != order and null != prop">
+            order by b.${prop} ${order}
+        </if>
+    </select>
+
+
+    <!--查询昨天数据-->
+    <select id="queryYesterdayDataBy" resultMap="AldUserShareEntityMap" parameterType="com.aldwx.bigdata.modules.share.vo.AldUserShareVo">
+        select a.*,b.* from (
+        select uuid, nickname, avatar_url, user_remark
+        from ald_wechat_user_bind
+        where uuid is not null
+        and uuid in (select sharer_uuid
+        from aldstat_dailyshare_user
+        where 1=1
+        <if test="null != date">
+            and `day` = date_sub(CURDATE(), interval 1 day)
+        </if>
+        <if test="null != appKey">
+            and app_key=#{appKey}
+        </if>
+        )
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                and nickname like CONCAT('%',#{keyword},'%')
+            </when>
+            <when test="null != type and '2'.toString == type">
+                and user_remark like CONCAT('%',#{keyword},'%')
+            </when>
+        </choose>
+        ) a
+        join
+        (select app_key, sharer_uuid, new_count, share_count, share_open_count, share_open_user_count, share_reflux_ratio
+        from aldstat_dailyshare_user
+        where 1=1
+        <if test="null != date">
+            and `day` = date_sub(CURDATE(), interval 1 day)
+        </if>
+        <if test="null != appKey">
+            and app_key=#{appKey}
+        </if>
+        ) b
+        on
+        a.uuid=b.sharer_uuid
+        <if test="null != order and null != prop">
+            order by b.${prop} ${order}
+        </if>
+    </select>
+
+
+    <!--查询最近7天的数据-->
+    <select id="query7DayDataBy" resultMap="AldUserShareEntityMap" parameterType="com.aldwx.bigdata.modules.share.vo.AldUserShareVo">
+        select a.*,b.* from (
+        select uuid, nickname, avatar_url, user_remark
+        from ald_wechat_user_bind
+        where uuid is not null
+        and uuid in ( select sharer_uuid
+        from aldstat_dailyshare_user
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key=#{appKey}
+        </if>
+        )
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                and nickname like CONCAT('%',#{keyword},'%')
+            </when>
+            <when test="null != type and '2'.toString == type">
+                and user_remark like CONCAT('%',#{keyword},'%')
+            </when>
+        </choose>
+        ) a
+        join
+        (select sharer_uuid, app_key,
+        sum(new_count) as new_count,
+        sum(share_count) as share_count,
+        sum(share_open_count) as share_open_count,
+        sum(share_open_user_count) as share_open_user_count,
+        sum(share_reflux_ratio) as share_reflux_ratio
+        from aldstat_dailyshare_user
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list2">
+                #{list2}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key=#{appKey}
+        </if>
+        group by app_key, sharer_uuid
+        ) b
+        on
+        a.uuid=b.sharer_uuid
+        <if test="null != order and null != prop">
+            order by b.${prop} ${order}
+        </if>
+    </select>
+
+
+    <!--查询最近30天的数据-->
+    <select id="query30DayDataBy" resultMap="AldUserShareEntityMap" parameterType="com.aldwx.bigdata.modules.share.vo.AldUserShareVo">
+        select a.*,b.* from (
+        select uuid, nickname, avatar_url, user_remark
+        from ald_wechat_user_bind
+        where uuid is not null
+        and uuid in ( select sharer_uuid
+        from aldstat_dailyshare_user
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key=#{appKey}
+        </if>
+        )
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                and nickname like CONCAT('%',#{keyword},'%')
+            </when>
+            <when test="null != type and '2'.toString == type">
+                and user_remark like CONCAT('%',#{keyword},'%')
+            </when>
+        </choose>
+        ) a
+        join
+        (select app_key, sharer_uuid,
+        sum(new_count) as new_count,
+        sum(share_count) as share_count,
+        sum(share_open_count) as share_open_count,
+        sum(share_open_user_count) as share_open_user_count,
+        sum(share_reflux_ratio) as share_reflux_ratio
+        from aldstat_dailyshare_user
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list2">
+                #{list2}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key=#{appKey}
+        </if>
+        group by app_key, sharer_uuid
+        ) b
+        on
+        a.uuid=b.sharer_uuid
+        <if test="null != order and null != prop">
+            order by b.${prop} ${order}
+        </if>
+    </select>
+
+
+
+    <!--查询指定日期的数据-->
+    <select id="queryDaysDataBy" resultMap="AldUserShareEntityMap" parameterType="com.aldwx.bigdata.modules.share.vo.AldUserShareVo">
+        select a.*,b.* from (
+        select uuid, nickname, avatar_url, user_remark
+        from ald_wechat_user_bind
+        where uuid is not null
+        and uuid in ( select sharer_uuid
+        from aldstat_dailyshare_user
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key=#{appKey}
+        </if>
+        )
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                and nickname like CONCAT('%',#{keyword},'%')
+            </when>
+            <when test="null != type and '2'.toString == type">
+                and user_remark like CONCAT('%',#{keyword},'%')
+            </when>
+        </choose>
+        ) a
+        join
+        (select app_key, sharer_uuid,
+        sum(new_count) as new_count,
+        sum(share_count) as share_count,
+        sum(share_open_count) as share_open_count,
+        sum(share_open_user_count) as share_open_user_count,
+        sum(share_reflux_ratio) as share_reflux_ratio
+        from aldstat_dailyshare_user
+        where 1=1
+        <if test="null != list">
+            and `day` in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list2">
+                #{list2}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key=#{appKey}
+        </if>
+        group by app_key, sharer_uuid
+        ) b
+        on
+        a.uuid=b.sharer_uuid
+        <if test="null != order and null != prop">
+            order by b.${prop} ${order}
+        </if>
+    </select>
+
+</mapper>

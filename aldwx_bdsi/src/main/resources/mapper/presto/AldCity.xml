@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aldwx.bigdata.modules.city.dao.presto.AldCityPrestoDao">
+
+    <resultMap id="AldCityEntityMap" type="com.aldwx.bigdata.modules.city.entity.AldCityEntity">
+        <result column="id" property="id" />
+        <result column="app_key" property="appKey" />
+        <result column="day" property="day" />
+        <result column="city" property="city" />
+        <result column="new_user_count" property="newUserCount" />
+        <result column="visitor_count" property="visitorCount" />
+        <result column="open_count" property="openCount" />
+        <result column="page_count" property="pageCount" />
+        <result column="total_stay_time" property="totalStayTime" />
+        <result column="secondary_stay_time" property="secondaryStayTime" />
+        <result column="one_page_count" property="onePageCount" />
+        <result column="bounce_rate" property="bounceRate" />
+        <result column="update_at" property="updateAt" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+		app_key, event_key, ev_paras_uv, ev_paras_value, ev_paras_count
+	</sql>
+
+
+    <!--获取TopN start-->
+    <!--获取最近7天的数据 Top N-->
+    <select id="query7DayDataTop" resultMap="AldCityEntityMap" parameterType="com.aldwx.bigdata.modules.city.vo.AldCityVo">
+        select city
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                ,new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                ,visitor_count
+            </when>
+            <otherwise>
+                ,page_count
+            </otherwise>
+        </choose>
+        from aldstat_7days_city_statistics
+        where 1=1
+        <if test="null != list">
+            and day_time in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        order by
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                visitor_count
+            </when>
+            <otherwise>
+                page_count
+            </otherwise>
+        </choose>
+        desc
+        limit 5
+    </select>
+
+    <select id="query7DayDataSumTop" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.city.vo.AldCityVo">
+        select
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                sum(new_user_count) as new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                sum(visitor_count) as visitor_count
+            </when>
+            <otherwise>
+                sum(page_count) as page_count
+            </otherwise>
+        </choose>
+        from aldstat_7days_city_statistics
+        where 1=1
+        <if test="null != list">
+            and day_time in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+    </select>
+
+    <!--获取最近30天的数据 Top N-->
+    <select id="query30DayDataTop" resultMap="AldCityEntityMap" parameterType="com.aldwx.bigdata.modules.city.vo.AldCityVo">
+        select city
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                ,new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                ,visitor_count
+            </when>
+            <otherwise>
+                ,page_count
+            </otherwise>
+        </choose>
+        from aldstat_30days_city_statistics
+        where 1=1
+        <if test="null != list">
+            and day_time in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        order by
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                visitor_count
+            </when>
+            <otherwise>
+                page_count
+            </otherwise>
+        </choose>
+        desc
+        limit 5
+    </select>
+
+    <select id="query30DayDataSumTop" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.city.vo.AldCityVo">
+        select
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                sum(new_user_count) as new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                sum(visitor_count) as visitor_count
+            </when>
+            <otherwise>
+                sum(page_count) as page_count
+            </otherwise>
+        </choose>
+        from aldstat_30days_city_statistics
+        where 1=1
+        <if test="null != list">
+            and day_time in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+    </select>
+
+    <!--获取指定日期的数据 Top N-->
+    <select id="queryDaysDataTop" resultMap="AldCityEntityMap" parameterType="com.aldwx.bigdata.modules.city.vo.AldCityVo">
+        select city
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                ,sum(new_user_count) as new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                ,sum(visitor_count) as visitor_count
+            </when>
+            <otherwise>
+                ,sum(page_count) as page_count
+            </otherwise>
+        </choose>
+        from aldstat_30days_city_statistics
+        where 1=1
+        <if test="null != list">
+            and day_time in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        group by city
+        order by
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                visitor_count
+            </when>
+            <otherwise>
+                page_count
+            </otherwise>
+        </choose>
+        desc
+        limit 5
+    </select>
+
+    <select id="queryDaysDataSumTop" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.city.vo.AldCityVo">
+        select
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                sum(new_user_count) as new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                sum(visitor_count) as visitor_count
+            </when>
+            <otherwise>
+                sum(page_count) as page_count
+            </otherwise>
+        </choose>
+        from aldstat_30days_city_statistics
+        where 1=1
+        <if test="null != list">
+            and day_time in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+    </select>
+    <!--获取TopN end-->
+
+
+    <!--获取Chart start-->
+    <!--获取最近7天数据 chart-->
+    <select id="query7DayDataChart" resultMap="AldCityEntityMap" parameterType="com.aldwx.bigdata.modules.city.vo.AldCityVo">
+        select city
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                ,new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                ,visitor_count
+            </when>
+            <otherwise>
+                ,page_count
+            </otherwise>
+        </choose>
+        from aldstat_7days_city_statistics
+        where 1=1
+        <if test="null != list">
+            and day_time in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+    </select>
+
+    <!--获取最近30天数据 chart-->
+    <select id="query30DayDataChart" resultMap="AldCityEntityMap" parameterType="com.aldwx.bigdata.modules.city.vo.AldCityVo">
+        select city
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                ,new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                ,visitor_count
+            </when>
+            <otherwise>
+                ,page_count
+            </otherwise>
+        </choose>
+        from aldstat_30days_city_statistics
+        where 1=1
+        <if test="null != list">
+            and day_time in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+    </select>
+
+    <!--获取指定区间的 chart-->
+    <select id="queryDaysDataChart" resultMap="AldCityEntityMap" parameterType="com.aldwx.bigdata.modules.city.vo.AldCityVo">
+        select city
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                ,sum(new_user_count) as new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                ,sum(visitor_count) as visitor_count
+            </when>
+            <otherwise>
+                ,sum(page_count) as page_count
+            </otherwise>
+        </choose>
+        from aldstat_city_statistics
+        where 1=1
+        <if test="null != list">
+            and day_time in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        group by city
+    </select>
+
+    <!--获取chart end-->
+
+
+</mapper>

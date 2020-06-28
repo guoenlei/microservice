@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aldwx.bigdata.modules.province.dao.cluster.AldProvinceMasterDao">
+
+    <resultMap id="AldProvinceEntityMap" type="com.aldwx.bigdata.modules.province.entity.AldProvinceEntity">
+        <result column="id" property="id" />
+        <result column="app_key" property="appKey" />
+        <result column="day" property="day" />
+        <result column="province" property="province" />
+        <result column="new_user_count" property="newUserCount" />
+        <result column="visitor_count" property="visitorCount" />
+        <result column="open_count" property="openCount" />
+        <result column="page_count" property="pageCount" />
+        <result column="total_stay_time" property="totalStayTime" />
+        <result column="secondary_stay_time" property="secondaryStayTime" />
+        <result column="one_page_count" property="onePageCount" />
+        <result column="bounce_rate" property="bounceRate" />
+        <result column="update_at" property="updateAt" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+		app_key, province, new_user_count, visitor_count, open_count, page_count, secondary_stay_time, bounce_rate
+	</sql>
+
+    <!--获取list 列表数据 start-->
+    <!--查询今天数据-->
+    <select id="queryTodayDataBy" resultMap="AldProvinceEntityMap" parameterType="com.aldwx.bigdata.modules.province.vo.AldProvinceVo">
+        select
+        <include refid="Base_Column_List" />
+        from aldstat_region_statistics
+        where 1=1
+        <if test="null != date">
+            and `day` = CURDATE()
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        <if test="null != prop and null != order">
+            order by #{prop} #{order}
+        </if>
+    </select>
+
+    <!--查询昨天数据-->
+    <select id="queryYesterdayDataBy" resultMap="AldProvinceEntityMap" parameterType="com.aldwx.bigdata.modules.province.vo.AldProvinceVo">
+        select
+        <include refid="Base_Column_List" />
+        from aldstat_region_statistics
+        where 1=1
+        <if test="null != date">
+            and `day` = date_sub(CURDATE(), interval 1 day)
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        <if test="null != prop and null != order">
+            order by #{prop} #{order}
+        </if>
+    </select>
+
+
+    <!--获取list 列表数据 end-->
+
+
+    <!--查询今天数据 topN start-->
+    <!--获取TopN-->
+    <select id="queryTodayDataTop" resultMap="AldProvinceEntityMap" parameterType="com.aldwx.bigdata.modules.province.vo.AldProvinceVo">
+        select city
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                ,new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                ,visitor_count
+            </when>
+            <otherwise>
+                ,page_count
+            </otherwise>
+        </choose>
+        from aldstat_region_statistics
+        where 1=1
+        <if test="null != date">
+            and `day` = CURDATE()
+        </if>
+
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        order by
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                visitor_count
+            </when>
+            <otherwise>
+                page_count
+            </otherwise>
+        </choose>
+        desc
+        limit 5
+    </select>
+
+    <select id="queryTodayDataSumTop" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.province.vo.AldProvinceVo">
+        select
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                sum(new_user_count) as new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                sum(visitor_count) as visitor_count
+            </when>
+            <otherwise>
+                sum(page_count) as page_count
+            </otherwise>
+        </choose>
+        from aldstat_region_statistics
+        where 1=1
+        <if test="null != date">
+            and `day` = CURDATE()
+        </if>
+
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+    </select>
+    <!--查询今天数据 end-->
+
+
+    <!--查询昨天数据 start-->
+    <!--获取TopN-->
+    <select id="queryYesterdayDataTop" resultMap="AldProvinceEntityMap" parameterType="com.aldwx.bigdata.modules.province.vo.AldProvinceVo">
+        select province
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                ,new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                ,visitor_count
+            </when>
+            <otherwise>
+                ,page_count
+            </otherwise>
+        </choose>
+        from aldstat_region_statistics
+        where 1=1
+        <if test="null != date">
+            and `day` = date_sub(CURDATE(), interval 1 day)
+        </if>
+
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        order by
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                visitor_count
+            </when>
+            <otherwise>
+                page_count
+            </otherwise>
+        </choose>
+        desc
+        limit 5
+    </select>
+
+    <select id="queryYesterdayDataSumTop" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.province.vo.AldProvinceVo">
+        select
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                sum(new_user_count) as new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                sum(visitor_count) as visitor_count
+            </when>
+            <otherwise>
+                sum(page_count) as page_count
+            </otherwise>
+        </choose>
+        from aldstat_city_statistics
+        where 1=1
+        <if test="null != date">
+            and `day` = date_sub(CURDATE(), interval 1 day)
+        </if>
+
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+    </select>
+
+
+    <!--获取城市city chart-->
+    <!--获取今天chart-->
+    <select id="queryTodayDataChart" resultMap="AldProvinceEntityMap" parameterType="com.aldwx.bigdata.modules.province.vo.AldProvinceVo">
+        select city
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                ,new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                ,visitor_count
+            </when>
+            <otherwise>
+                ,page_count
+            </otherwise>
+        </choose>
+        from aldstat_city_statistics
+        where 1=1
+        <if test="null != date">
+            and `day` = CURDATE()
+        </if>
+
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+    </select>
+
+    <!--获取昨天chart-->
+    <select id="queryYesterdayDataChart" resultMap="AldProvinceEntityMap" parameterType="com.aldwx.bigdata.modules.province.vo.AldProvinceVo">
+        select city
+        <choose>
+            <when test="null != type and '1'.toString == type">
+                ,new_user_count
+            </when>
+            <when test="null != type and '2'.toString == type">
+                ,visitor_count
+            </when>
+            <otherwise>
+                ,page_count
+            </otherwise>
+        </choose>
+        from aldstat_city_statistics
+        where 1=1
+        <if test="null != date">
+            and `day` = date_sub(CURDATE(), interval 1 day)
+        </if>
+
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+    </select>
+
+
+</mapper>

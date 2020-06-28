@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aldwx.bigdata.modules.gameEvent.dao.master.AldGameEventParamMasterDao">
+
+    <resultMap id="AldGameEventParamEntityMap" type="com.aldwx.bigdata.modules.gameEvent.entity.AldGameEventParamEntity">
+        <result column="id" property="id" />
+        <result column="app_key" property="appKey" />
+        <result column="day" property="day" />
+        <result column="ev_Id" property="evId" />
+        <result column="event_Key" property="eventKey" />
+        <result column="ev_Paras_Name" property="evParasName" />
+        <result column="ev_Paras_Value" property="evParasValue" />
+        <result column="ev_Paras_Count" property="evParasCount" />
+        <result column="ev_Paras_Uv" property="evParasUv" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+		app_key, event_key, ev_paras_uv, ev_paras_count
+	</sql>
+
+
+    <!--事件明细查询  start -->
+
+    <!--查询今天数据 -->
+    <select id="queryEventParamDetailTodayBy" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select app_key, event_key, ev_paras_value, ev_paras_count, ev_paras_uv
+        FROM aldstat_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and `day` = #{date}
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+        <if test="null != prop">
+            order by ${prop}
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!--查询昨天明细数据 and ev_paras_name like CONCAT('%',#{eventName},'%') -->
+    <select id="queryEventParamDetailYesterdayBy" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select app_key, event_key, ev_paras_value, ev_paras_count, ev_paras_uv
+        FROM aldstat_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and `day` = #{date}
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+        <if test="null != prop">
+            order by ${prop}
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+    <!--事件明细查询  end-->
+
+
+    <!--列表查询 start-->
+    <!--获取mysql今天列表数据-->
+    <select id="queryEventParamListTodayBy" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select app_key, event_key, ev_paras_name, sum(ev_paras_count) as ev_paras_count
+        from aldstat_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and `day` = #{date}
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+        </where>
+        GROUP BY app_key, event_key, ev_paras_name
+    </select>
+
+
+    <!--获取mysql昨天列表数据-->
+    <select id="queryEventParamListYesterdayBy" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select app_key, event_key, ev_paras_name, sum(ev_paras_count) as ev_paras_count
+        from aldstat_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and `day` = #{date}
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+        </where>
+        GROUP BY app_key, event_key, ev_paras_name
+    </select>
+
+    <!--列表查询 end-->
+
+
+
+</mapper>

@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.aldwx.bigdata</groupId>
+  <artifactId>aldwx-bdsi</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <name>aldwx</name>
+  <url>http://www.example.com</url>
+
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>1.5.4.RELEASE</version>
+    <relativePath/>
+  </parent>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
+
+    <!-- project configuration -->
+    <mysql.jdbc.url></mysql.jdbc.url>
+    <mysql.jdbc.username></mysql.jdbc.username>
+    <mysql.jdbc.password></mysql.jdbc.password>
+
+    <hive.jdbc.url></hive.jdbc.url>
+    <hive.jdbc.username></hive.jdbc.username>
+    <hive.jdbc.password></hive.jdbc.password>
+
+    <presto.jdbc.url></presto.jdbc.url>
+    <presto.jdbc.username></presto.jdbc.username>
+    <presto.jdbc.password></presto.jdbc.password>
+
+    <jdbc.pool.init>1</jdbc.pool.init>
+    <jdbc.pool.minIdle>3</jdbc.pool.minIdle>
+    <jdbc.pool.maxActive>10</jdbc.pool.maxActive>
+    <!--<template.js.path></template.js.path>-->
+
+    <mybatis-spring-boot>1.2.0</mybatis-spring-boot>
+    <mysql-connector>5.1.39</mysql-connector>
+    <druid>1.0.18</druid>
+
+  </properties>
+  <profiles>
+    <profile>
+      <id>prod</id>
+      <properties>
+        <master.datasource.url>jdbc:mysql://10.0.0.179:3306/ald_xinen?useUnicode=true&amp;characterEncoding=utf-8</master.datasource.url>
+        <master.datasource.username>aldstat_read</master.datasource.username>
+        <master.datasource.password>cMX6VdsnAKR2</master.datasource.password>
+        <mysql.datasource.driverClassName>com.mysql.jdbc.Driver</mysql.datasource.driverClassName>
+
+
+        <bus.datasource.url>jdbc:mysql://10.0.1.10:3306/ald_service_bus?useUnicode=true&amp;characterEncoding=utf-8</bus.datasource.url>
+        <bus.datasource.username>servicebus_read</bus.datasource.username>
+        <bus.datasource.password>RPVcFnn2C73f</bus.datasource.password>
+
+        <game.datasource.url>jdbc:mysql://10.0.221.7:3306/ald_game?useUnicode=true&amp;characterEncoding=utf-8</game.datasource.url>
+        <game.datasource.username>game_read</game.datasource.username>
+        <game.datasource.password>q7y8uexhJCG2</game.datasource.password>
+      </properties>
+    </profile>
+
+    <profile>
+      <id>dev</id>
+      <activation><activeByDefault>true</activeByDefault></activation>
+      <properties>
+        <master.datasource.url>jdbc:mysql://sh-cdb-ncocuxkf.sql.tencentcdb.com:63196/tongji_test?useUnicode=true&amp;characterEncoding=utf-8</master.datasource.url>
+        <master.datasource.username>tongjitest</master.datasource.username>
+        <master.datasource.password>Aa4iep5ne~uv</master.datasource.password>
+        <mysql.datasource.driverClassName>com.mysql.jdbc.Driver</mysql.datasource.driverClassName>
+
+
+        <bus.datasource.url>jdbc:mysql://127.0.0.1:3310/ald_service_bus?useUnicode=true&amp;characterEncoding=utf-8</bus.datasource.url>
+        <bus.datasource.username>servicebus_read</bus.datasource.username>
+        <bus.datasource.password>RPVcFnn2C73f</bus.datasource.password>
+
+        <game.datasource.url>jdbc:mysql://127.0.0.1:3315/ald_game?useUnicode=true&amp;characterEncoding=utf-8</game.datasource.url>
+        <game.datasource.username>game_read</game.datasource.username>
+        <game.datasource.password>q7y8uexhJCG2</game.datasource.password>
+
+
+        <hive.jdbc.url></hive.jdbc.url>
+        <hive.jdbc.username></hive.jdbc.username>
+        <hive.jdbc.password></hive.jdbc.password>
+
+        <presto.jdbc.url></presto.jdbc.url>
+        <presto.jdbc.username></presto.jdbc.username>
+        <presto.jdbc.password></presto.jdbc.password>
+      </properties>
+    </profile>
+  </profiles>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-redis</artifactId>
+      <version>1.5.4.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-tomcat</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+      <version>2.5</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.5</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.1.36</version>
+    </dependency>
+
+    <!--<dependency>-->
+    <!--<groupId>org.spark-project.hive</groupId>-->
+    <!--<artifactId>hive-jdbc</artifactId>-->
+    <!--<version>1.2.1.spark2</version>-->
+    <!--</dependency>-->
+
+    <dependency>
+      <groupId>com.facebook.presto</groupId>
+      <artifactId>presto-jdbc</artifactId>
+      <version>0.212</version>
+    </dependency>
+
+
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql-connector}</version>
+    </dependency>
+
+    <!-- Spring Boot Mybatis 依赖 -->
+    <dependency>
+      <groupId>org.mybatis.spring.boot</groupId>
+      <artifactId>mybatis-spring-boot-starter</artifactId>
+      <version>${mybatis-spring-boot}</version>
+    </dependency>
+    <!-- Druid 数据连接池依赖 -->
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid</artifactId>
+      <version>${druid}</version>
+    </dependency>
+    <!--分页插件-->
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper-spring-boot-starter</artifactId>
+      <version>1.2.3</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-devtools</artifactId>
+      <optional>true</optional>
+    </dependency>
+
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>5.2.0</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>aldwx-bdsi</finalName>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>

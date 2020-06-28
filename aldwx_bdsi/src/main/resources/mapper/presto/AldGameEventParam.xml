@@ -1,0 +1,871 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aldwx.bigdata.modules.gameEvent.dao.presto.AldGameEventParamPrestoDao">
+
+    <resultMap id="AldGameEventParamEntityMap" type="com.aldwx.bigdata.modules.gameEvent.entity.AldGameEventParamEntity">
+        <result column="id" property="id" />
+        <result column="app_key" property="appKey" />
+        <result column="day" property="day" />
+        <result column="ev_Id" property="evId" />
+        <result column="event_Key" property="eventKey" />
+        <result column="ev_Paras_Name" property="evParasName" />
+        <result column="ev_Paras_Value" property="evParasValue" />
+        <result column="ev_Paras_Count" property="evParasCount" />
+        <result column="ev_Paras_Uv" property="evParasUv" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+		app_key, event_key, ev_paras_uv, ev_paras_value, ev_paras_count
+	</sql>
+
+
+    <!--事件明细查询  start -->
+
+    <!--查询今天数据 -->
+    <select id="queryEventParamDetailTodayBy" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_uv, ev_paras_value, ev_paras_count
+        from (select row_number() over (partition by app_key, event_key order by
+        <if test="null != prop and '' != prop">
+            a.${prop}
+        </if>
+        <if test="null == prop">
+            a.ev_paras_uv
+        </if>
+        <if test="'' == prop">
+            a.ev_paras_uv
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        )as sort_field, a.* from (
+        select app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        FROM
+        aldstat_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and day_time = #{date}
+            </if>
+            <if test="null != appKey and '' != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey and '' != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+        <if test="null != prop and '' != prop">
+            order by ${prop}
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != endRow and null != currentPage and '' != currentPage and 10 >= currentPage">
+            limit ${endRow}
+        </if>
+        ) a ) b
+        <if test="null != startRow and null != endRow">
+            where b.sort_field between #{startRow} and #{endRow}
+        </if>
+    </select>
+
+    <!--queryEventParamDetailCountTodayBy-->
+    <select id="queryEventParamDetailCountTodayBy" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select count(app_key)
+        FROM
+        aldstat_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and day_time = #{date}
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+    </select>
+
+
+    <!--查询昨天明细数据 and ev_paras_name like CONCAT('%',#{eventName},'%') -->
+    <select id="queryEventParamDetailYesterdayBy" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_uv, ev_paras_value, ev_paras_count
+        from (select row_number() over (partition by app_key, event_key order by
+        <if test="null != prop and '' != prop">
+            a.${prop}
+        </if>
+        <if test="null == prop">
+            a.ev_paras_uv
+        </if>
+        <if test="'' == prop">
+            a.ev_paras_uv
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        )as sort_field, a.* from (
+        select app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        FROM
+        aldstat_event_paras
+        <where>
+            <if test="null != date">
+                and day_time = #{date}
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+        <if test="null != prop and '' != prop">
+            order by ${prop}
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != endRow and null != currentPage and '' != currentPage and 10  >=  currentPage">
+            limit ${endRow}
+        </if>
+        ) a ) b
+        <if test="null != startRow and null != endRow">
+            where b.sort_field between #{startRow} and #{endRow}
+        </if>
+    </select>
+
+
+    <!--queryEventParamDetailCountYesterdayBy-->
+    <select id="queryEventParamDetailCountYesterdayBy" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select count(app_key)
+        FROM aldstat_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and day_time = #{date}
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+    </select>
+
+    <!--事件明细查询  end-->
+
+
+    <!--列表查询 start-->
+    <!--获取presto今天列表数据-->
+    <select id="queryEventParamListTodayBy" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select app_key, event_key, ev_paras_name, sum(ev_paras_count) as ev_paras_count
+        from aldstat_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and day_time = #{date}
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+        </where>
+        GROUP BY app_key, event_key, ev_paras_name
+    </select>
+
+
+    <!--获取presto昨天列表数据-->
+    <select id="queryEventParamListYesterdayBy" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select app_key, event_key, ev_paras_name, sum(ev_paras_count) as ev_paras_count
+        from aldstat_event_paras
+        <where>
+            <if test="null != date and '' != date">
+                and day_time = #{date}
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+        </where>
+        GROUP BY app_key, event_key, ev_paras_name
+    </select>
+
+    <!--列表查询 end-->
+
+
+    <!--查询最近7天表 基于消息数据排序 -->
+    <select id="queryPresto7DaysDataOrderByParamCount" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_uv, ev_paras_value, ev_paras_count
+        from (select row_number() over (partition by app_key, event_key order by a.ev_paras_count
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        )as sort_field, a.* from (
+        select app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        FROM
+        aldstat_7days_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+        <if test="null != prop and '' != prop">
+            order by ev_paras_count
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != endRow and null != currentPage and '' != currentPage and 10  >=  currentPage">
+            limit ${endRow}
+        </if>
+        ) a ) b
+        <if test="null != startRow and null != endRow">
+            where b.sort_field between #{startRow} and #{endRow}
+        </if>
+    </select>
+
+    <!--查询最近7天表 基于UV数据排序 -->
+    <select id="queryPresto7DaysDataOrderByUvCount" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_uv, ev_paras_value, ev_paras_count
+        from (select row_number() over (partition by app_key, event_key order by a.ev_paras_uv
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        )as sort_field, a.* from (
+        select app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        FROM
+        aldstat_7days_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+        <if test="null != prop and '' != prop">
+            order by ev_paras_uv
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != endRow and null != currentPage and '' != currentPage and 10  >=  currentPage">
+            limit ${endRow}
+        </if>
+        ) a ) b
+        <if test="null != startRow and null != endRow">
+            where b.sort_field between #{startRow} and #{endRow}
+        </if>
+    </select>
+
+
+    <!--查询最近7天数据 默认排序 -->
+    <select id="queryPresto7DaysDataOrderByDefault" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        FROM (select row_number() over (partition by app_key, event_key order by a.ev_paras_uv ASC)as sort_field, a.*
+        FROM ( select app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        FROM aldstat_7days_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+            order by ev_paras_uv ASC
+        <if test="null != endRow and null != currentPage and '' != currentPage and 10 >=  currentPage">
+            limit ${endRow}
+        </if>
+        ) a ) b
+        <if test="null != startRow and null != endRow">
+            where b.sort_field between #{startRow} and #{endRow}
+        </if>
+    </select>
+
+    <!--获取7天总数-->
+    <select id="query7DayCountDataBy" resultType="java.lang.Long"  parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        COUNT(app_key)
+        from aldstat_7days_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+    </select>
+
+
+    <!--查询最近30天数据 基于消息总数排序 -->
+    <select id="queryPresto30DaysDataOrderByParamCount" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_uv, ev_paras_value, ev_paras_count
+        from (select row_number() over (partition by app_key, event_key order by a.ev_paras_count
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        )as sort_field, a.* from (
+        select app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        FROM
+        aldstat_30days_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+        <if test="null != prop and '' != prop">
+            order by ev_paras_count
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != endRow and null != currentPage and '' != currentPage and 10 >= currentPage">
+            limit ${endRow}
+        </if>
+        ) a ) b
+        <if test="null != startRow and null != endRow">
+            where b.sort_field between #{startRow} and #{endRow}
+        </if>
+    </select>
+
+
+    <!--查询最近30天数据 基于UV排序 -->
+    <select id="queryPresto30DaysDataOrderByUvCount" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_uv, ev_paras_value, ev_paras_count
+        from (select row_number() over (partition by app_key, event_key order by a.ev_paras_uv
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        )as sort_field, a.* from (
+        select app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        FROM
+        aldstat_30days_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+        <if test="null != prop and '' != prop">
+            order by ev_paras_uv
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != endRow and null != currentPage and '' != currentPage and 10 >= currentPage">
+            limit ${endRow}
+        </if>
+        ) a ) b
+        <if test="null != startRow and null != endRow">
+            where b.sort_field between #{startRow} and #{endRow}
+        </if>
+    </select>
+
+
+    <!--查询最近30天数据总数-->
+    <select id="query30DayCountDataBy" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        COUNT(app_key)
+        from aldstat_30days_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+    </select>
+
+
+
+    <!--查询最近30天数据 默认排序-->
+    <select id="queryPresto30DaysDataOrderByDefault" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        from (select row_number() over (partition by app_key, event_key
+        order by a.ev_paras_uv ASC) as sort_field, a.* from (
+        select app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        FROM
+        aldstat_30days_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+        </where>
+            order by ev_paras_uv ASC
+        <if test="null != endRow and null != currentPage and '' != currentPage and 10 >= currentPage">
+            limit ${endRow}
+        </if>
+        ) a ) b
+        <if test="null != startRow and null != endRow">
+            where b.sort_field between #{startRow} and #{endRow}
+        </if>
+    </select>
+
+
+
+    <!--指定时间段的明细查询操作-->
+
+    <!--按事件消息总数排序-->
+    <select id="queryPrestoDaysDataOrderByParamCount" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        from (select row_number() over (partition by app_key, event_key order by a.ev_paras_count
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        )as sort_field, a.* from (
+        select
+        app_key,
+        event_key,
+        ev_paras_value,
+        sum(ev_paras_uv) as ev_paras_uv,
+        sum(ev_paras_count) as ev_paras_count
+        FROM
+        aldstat_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+            GROUP BY app_key, event_key, ev_paras_value
+        </where>
+        <if test="null != prop">
+            order by ev_paras_count
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != endRow and null != currentPage and '' != currentPage and 10 >= currentPage">
+            limit ${endRow}
+        </if>
+        ) a ) b
+        <if test="null != startRow and null != endRow">
+            where b.sort_field between #{startRow} and #{endRow}
+        </if>
+    </select>
+
+    <!--按UV排序-->
+    <select id="queryPrestoDaysDataOrderByUvCount" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        from (select row_number() over (partition by app_key, event_key order by a.ev_paras_uv
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        )as sort_field, a.* from (
+        select
+        app_key,
+        event_key,
+        ev_paras_value,
+        sum(ev_paras_uv) as ev_paras_uv,
+        sum(ev_paras_count) as ev_paras_count
+        FROM
+        aldstat_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+            GROUP BY app_key, event_key, ev_paras_value
+        </where>
+        <if test="null != prop and '' != prop">
+            order by ev_paras_uv
+        </if>
+        <if test="null != order and '' != order">
+            <choose>
+                <when test="'DESC' == order">
+                    DESC
+                </when>
+                <otherwise>
+                    ASC
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != endRow and null != currentPage and '' != currentPage and 10 >= currentPage">
+            limit ${endRow}
+        </if>
+        ) a ) b
+        <if test="null != startRow and null != endRow">
+            where b.sort_field between #{startRow} and #{endRow}
+        </if>
+    </select>
+
+    <!--按默认排序-->
+    <select id="queryPrestoDaysDataOrderByDefault" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_value, ev_paras_uv, ev_paras_count
+        from (select row_number() over (partition by app_key, event_key order by a.ev_paras_uv ASC) as sort_field, a.* from (
+        select
+        app_key,
+        event_key,
+        ev_paras_value,
+        sum(ev_paras_uv) as ev_paras_uv,
+        sum(ev_paras_count) as ev_paras_count
+        FROM
+        aldstat_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            <if test="null != eventName and '' != eventName">
+                and ev_paras_name = #{eventName}
+            </if>
+            GROUP BY app_key, event_key, ev_paras_value
+        </where>
+            order by ev_paras_uv ASC
+        <if test="null != endRow and null != currentPage and '' != currentPage and 10 >= currentPage">
+            limit ${endRow}
+        </if>
+        ) a ) b
+        <if test="null != startRow and null != endRow">
+            where b.sort_field between #{startRow} and #{endRow}
+        </if>
+    </select>
+
+
+    <!-- 获取指定时间段内的数据明细总数 -->
+    <select id="queryDaysCountDataBy" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select COUNT(a.app_key)
+        from (
+        select app_key
+        from aldstat_event_paras
+        where 1=1
+        <if test="null != list">
+            and day_time in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        <if test="null != eventKey">
+            and event_Key = #{eventKey}
+        </if>
+        <if test="null != eventName and '' != eventName">
+            and ev_paras_name = #{eventName}
+        </if>
+        GROUP BY app_key, event_key, ev_paras_value) a
+    </select>
+
+
+
+
+    <!--获取列表start 不需要分页处理-->
+
+    <!--最近7天表-->
+    <select id="queryEventParamList7DaysDataBy" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_name, sum(ev_paras_count) as ev_paras_count
+        from aldstat_7days_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            GROUP BY app_key, event_key, ev_paras_name
+        </where>
+    </select>
+
+
+    <!--最近30天表-->
+    <select id="queryEventParamList30DaysDataBy" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_name, sum(ev_paras_count) as ev_paras_count
+        from aldstat_30days_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            GROUP BY app_key, event_key, ev_paras_name
+        </where>
+    </select>
+
+
+    <!--指定时间区间的 列表查询queryEventParamListDaysDataBy-->
+    <select id="queryEventParamListDaysDataBy" resultMap="AldGameEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.gameEvent.vo.AldGameEventParamVo">
+        select
+        app_key, event_key, ev_paras_name, sum(ev_paras_count) as ev_paras_count
+        from aldstat_event_paras
+        <where>
+            <if test="null != list">
+                and day_time in
+                <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                    #{list}
+                </foreach>
+            </if>
+            <if test="null != appKey">
+                and app_key = #{appKey}
+            </if>
+            <if test="null != eventKey">
+                and event_Key = #{eventKey}
+            </if>
+            group by app_key, event_key, ev_paras_name
+        </where>
+    </select>
+
+    <!--获取列表end -->
+
+
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aldwx.app.modules.retain.dao.stat.RetainActivityDAO">
+  <resultMap id="BaseResultMap" type="com.aldwx.app.modules.retain.entity.AldstatUserActivity">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_key" jdbcType="VARCHAR" property="app_key" />
+    <result column="day" jdbcType="TIMESTAMP" property="day" />
+    <result column="dau" jdbcType="INTEGER" property="dau" />
+    <result column="wau" jdbcType="INTEGER" property="wau" />
+    <result column="dau_wau_ratio" jdbcType="DOUBLE" property="dau_wau_ratio" />
+    <result column="mau" jdbcType="INTEGER" property="mau" />
+    <result column="dau_mau_ratio" jdbcType="DOUBLE" property="dau_mau_ratio" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="update_at" />
+  </resultMap>
+  <select id="selectActiveList" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+    SELECT dau,wau,dau_wau_ratio,mau,dau_mau_ratio,day
+    from aldstat_user_activity
+    where app_key = #{appKey} and `day` &lt;=#{dateEnd} and `day` &gt;=#{dateStart}
+    order by day desc
+  </select>
+</mapper>

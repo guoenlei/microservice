@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aldwx.bigdata.modules.eventParam.dao.presto.AldEventParamPrestoDao">
+
+    <resultMap id="AldEventParamEntityMap" type="com.aldwx.bigdata.modules.eventParam.entity.AldEventParamEntity">
+        <result column="id" property="id" />
+        <result column="app_key" property="appKey" />
+        <result column="day" property="day" />
+        <result column="ev_Id" property="evId" />
+        <result column="event_Key" property="eventKey" />
+        <result column="ev_Paras_Name" property="evParasName" />
+        <result column="ev_Paras_Value" property="evParasValue" />
+        <result column="ev_Paras_Count" property="evParasCount" />
+        <result column="ev_Paras_Uv" property="evParasUv" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+		app_key, event_key, sum(ev_paras_uv) as ev_paras_uv, sum(ev_paras_count) as ev_paras_count
+	</sql>
+
+
+    <select id="queryByAk" resultMap="AldEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.eventParam.vo.AldEventParamVo">
+        select c.* from(
+        select row_number() over (order by b.paras_uv DESC ) as sort_field, b.*
+        from (
+        select a.app_key, a.event_key, a.ev_paras_name, a.paras_uv, a.paras_count
+        FROM  (
+        select app_key, event_key, ev_paras_name, sum(ev_paras_uv) as paras_uv, sum(ev_paras_count) as paras_count
+        FROM
+        aldstat_event_paras_partition
+        where 1=1
+        AND parti_day in ('2018-08-01','2018-08-02','2018-08-03','2018-08-04','2018-08-05','2018-08-06','2018-08-07','2018-08-08',
+        '2018-08-09','2018-08-10','2018-08-11','2018-08-12','2018-08-13','2018-08-14','2018-08-15','2018-08-16','2018-08-17',
+        '2018-08-18','2018-08-19','2018-08-20')
+        AND app_key='d7f6a04fc559a0a9ff02bd1c3e227f61'
+        AND event_key='0103e03c91740e936921ffa454460ece'
+        GROUP BY app_key, event_key, ev_paras_name
+        order by paras_uv  DESC
+        ) a
+        ) b
+        where 1=1) c
+        where c.sort_field between 1 and 20
+    </select>
+
+
+    <!--查询指定区间内数据 presto中禁止使用反引号标识-->
+    <select id="queryDaysDataByPresto" resultMap="AldEventParamEntityMap" parameterType="com.aldwx.bigdata.modules.eventParam.vo.AldEventParamVo">
+        select
+        app_key, event_key, ev_paras_uv, ev_paras_count
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+        from
+        <if test="null != type and '' != type">
+            ( select row_number() over (order by
+            <choose>
+                <when test="'1'.toString() == type">
+                    b.paras_uv DESC
+                    ,ev_paras_name
+                </when>
+                <when test="">
+
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+            DESC ) as sort_field, b.*
+        </if>
+        select
+        <include refid="Base_Column_List"/>
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+        from aldstat_event_paras_partition
+        where 1=1
+        <if test="null != list">
+            and parti_day in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        <if test="null != eventKey">
+            and event_Key = #{eventKey}
+        </if>
+        <if test="null != eventName">
+            and ev_paras_name like CONCAT('%',#{eventName},'%')
+        </if>
+        GROUP BY app_key, event_key
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+        <if test="null != prop">
+            order by #{prop}
+            <if test="null != order and '' != order">
+                <choose>
+                    <when test="'DESC' == order">
+                        DESC
+                    </when>
+                    <otherwise>
+                        ASC
+                    </otherwise>
+                </choose>
+            </if>
+        </if>
+        )a )b
+        where b.sort_field between 1 and 20
+    </select>
+
+
+    <!--获取总数-->
+    <select id="queryCountDataByPresto" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.eventParam.vo.AldEventParamVo">
+        select COUNT(app_key)
+        from aldstat_event_paras_partition
+        where 1=1
+        <if test="null != list">
+            and parti_day in
+            <foreach collection="list" index="index" open="(" separator="," close=")" item="list">
+                #{list}
+            </foreach>
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        <if test="null != eventKey">
+            and event_Key = #{eventKey}
+        </if>
+        <if test="null != eventName">
+            and ev_paras_name like  CONCAT('%',#{eventName},'%')
+        </if>
+        GROUP BY app_key, event_key
+        <if test="null != type and '' != type">
+            <choose>
+                <when test="'1'.toString() == type">
+                    ,ev_paras_name
+                </when>
+                <otherwise>
+                    ,ev_paras_value
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+
+</mapper>

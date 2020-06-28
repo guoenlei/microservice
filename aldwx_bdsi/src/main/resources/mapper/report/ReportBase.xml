@@ -1,0 +1,535 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aldwx.bigdata.common.base.report.ReportDao">
+
+    <resultMap id="AldReportEntityMap" type="com.aldwx.bigdata.modules.report.entity.AldReportEntity">
+        <result column="id" property="id" />
+        <result column="count" property="count" />
+        <result column="bus_type" property="busType" />
+        <result column="app_num" property="appNum" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        id, `count`
+	</sql>
+
+    <!-- 统计平台 - 总创建小程序和小游戏的数量 不包含第三方-->
+    <select id="appCount" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(app_key) as appCount
+        from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+    </select>
+
+
+    <!-- 统计平台 - 新用户 and third_id is null-->
+    <select id="newUserCount" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(distinct aladdi_id) as newUserCount
+        from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        and aladdi_id not in (select aladdi_id from user_apps where 1=1 and <![CDATA[ created <= #{startTime}]]>
+        group by aladdi_id)
+    </select>
+
+
+    <!-- 统计平台 - 老用户 and third_id is null-->
+    <select id="oldUserCount" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(distinct aladdi_id) as oldUserCount
+        from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        and aladdi_id in (select aladdi_id from user_apps where 1=1 and <![CDATA[ created <= #{startTime}]]>
+        group by aladdi_id)
+    </select>
+
+
+
+
+    <!-- 根据service_bus获取注册用户 and third_id is null 判断是否为新的用户创建小程序 新用户判断主要基于时间，判断用户是否存在于小于当前查询时间之前，已经创建过小程序-->
+    <select id="appCountByNewUser" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(app_key) as appCountByNewUser
+        from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        and aladdi_id not in (select aladdi_id from user_apps where 1=1 and <![CDATA[ created <= #{startTime}]]>
+        group by aladdi_id)
+    </select>
+
+
+    <!-- 根据service_bus获取注册用户  and third_id is null判断是否为老用户创建小程序 -->
+    <select id="appCountByOldUser" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(app_key) as appCountByOldUser
+        from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        and aladdi_id in (select aladdi_id from user_apps where 1=1 and <![CDATA[ created <= #{startTime}]]>
+        group by aladdi_id)
+    </select>
+
+
+    <!--总集成SDK数 创建了小程序 -> 有数据上报记为集成SDK 总的新增上报小程序数
+    <select id="reportSDKCount" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(distinct app_key)
+        from aldstat_trend_analysis
+        where 1=1
+        <if test="null != dateList and dateList.size() > 0">
+            and day in
+            <foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        and app_key in (
+        select app_key
+        from user_apps
+        where 1=1
+        and third_id is null
+        )
+    </select>-->
+
+    <select id="reportSDKCount" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(a.app_key) from
+        (select app_key
+        from aldstat_trend_analysis
+        where 1=1
+        <if test="null != dateList and dateList.size() > 0">
+            and day in
+            <foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        group by app_key) a
+        where a.app_key in
+        (select app_key
+        from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        )
+    </select>
+    <!--相同客户创建的多余一个小程序的数量-->
+    <select id="appCreatedSumByVOL" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select sum(a.cvs) from (
+        select a.aladdi_id,count( distinct a.app_key) cvs
+        from user_apps a,aldstat_trend_analysis b where  a.app_key=b.app_key
+        and <![CDATA[ a.created >= #{startTime}]]>
+        and <![CDATA[ a.created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        group by a.aladdi_id having cvs > 1) a
+    </select>
+
+    <!--新用户集成SDK数 创建了小程序 -> 有数据上报记为集成SDK
+    <select id="reportSDKCountByNewUser" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(distinct c.app_key) as reportSDKCountByNewUSer
+        from
+        (
+        select a.app_key, b.aladdi_id from
+        (
+        select app_key from
+        aldstat_trend_analysis
+        where 1=1
+        <if test="null != dateList and dateList.size() > 0">
+            and day in
+            <foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        group by app_key) a
+        left join (
+        select aladdi_id, app_key, third_id from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        and third_id is null
+        and aladdi_id not in (
+        select aladdi_id from user_apps where 1=1
+        and <![CDATA[ created <= #{startTime}]]>
+        and third_id is null
+        group by aladdi_id)
+        ) b
+        ON a.app_key=b.app_key
+        ) c
+        where 1=1
+        and c.aladdi_id is not null
+    </select>
+-->
+
+    <!--新用户 上报-->
+    <select id="reportSDKCountByNewUser" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(a.app_key) from
+        (select app_key
+        from aldstat_trend_analysis
+        where 1=1
+        <if test="null != dateList and dateList.size() > 0">
+            and day in
+            <foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        group by app_key
+        ) a
+        where a.app_key in
+        (select app_key from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        and aladdi_id not in
+        (select aladdi_id from user_apps where 1=1 and <![CDATA[ created <= #{startTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        group by aladdi_id))
+    </select>
+    <!--老用户集成SDK数 创建了小程序 -> 有数据上报记为集成SDK reportSDKCountByOldUser
+    <select id="reportSDKCountByOldUser" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(distinct c.app_key) as reportSDKCountByNewUSer
+        from
+        (
+        select a.app_key, b.aladdi_id from
+        (
+        select app_key from
+        aldstat_trend_analysis
+        where 1=1
+        <if test="null != dateList and dateList.size() > 0">
+            and day in
+            <foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        group by app_key) a
+        left join (
+        select aladdi_id, app_key, third_id from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        and third_id is null
+        and aladdi_id not in (
+        select aladdi_id from user_apps where 1=1
+        and <![CDATA[ created <= #{startTime}]]>
+        and third_id is null
+        group by aladdi_id)
+        ) b
+        ON a.app_key=b.app_key
+        ) c
+        where 1=1
+        and c.aladdi_id is null
+    </select>
+    -->
+    <!--老用户上报-->
+    <select id="reportSDKCountByOldUser" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(a.app_key) from
+        (select app_key
+        from aldstat_trend_analysis
+        where 1=1
+        <if test="null != dateList and dateList.size() > 0">
+            and day in
+            <foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        group by app_key
+        ) a
+        where a.app_key in
+        (select app_key from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        and aladdi_id in
+        (select aladdi_id from user_apps where 1=1 and <![CDATA[ created <= #{startTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        group by aladdi_id))
+    </select>
+
+    <!--统计后台每天登陆数
+    <select id="loginCount" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(id) from ald_user
+        where 1=1
+        and <![CDATA[ last_at >= #{startTime}]]>
+        and <![CDATA[ last_at <= #{endTime}]]>
+    </select>
+    -->
+
+    <!--集成SDK后7日流失率-->
+    <select id="reportSDKDrain" resultType="java.lang.Double" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+
+    </select>
+
+
+    <!--统计后台事件SDK上报 基于这段时间的用户上报-->
+    <select id="activeEventFunSDKProp" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(DISTINCT app_key) as event_sdk_count
+        from aldstat_daily_event
+        where 1=1
+        <if test="null != dateList and dateList.size() > 0">
+            and day in
+            <foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        and app_key in (select app_key from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        )
+    </select>
+
+
+    <!--统计后台广告SDK上报-->
+    <select id="activeAdFunSDKProp" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(DISTINCT app_key) as ad_sdk_count
+        from aldstat_daily_link
+        where 1=1
+        <if test="null != dateList and dateList.size() > 0">
+            and day in
+            <foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        and app_key in (select app_key from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        )
+    </select>
+
+
+    <!--统计后台用户分群SDK上报-->
+    <select id="activeUserFunSDKProp" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(DISTINCT app_key) as user_sdk_count
+        from user_group_funnel_daily
+        where 1=1
+        <if test="null != dateList and dateList.size() > 0">
+            and day in
+            <foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        and app_key in (select app_key from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        )
+    </select>
+
+
+    <!--统计后台智能外链SDK上报-->
+    <select id="activeLinkFunSDKProp" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(DISTINCT app_key) as link_sdk_count
+        from aldstat_daily_link
+        where 1=1
+        <if test="null != dateList and dateList.size() > 0">
+            and day in
+            <foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        and app_key in (select app_key from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        )
+    </select>
+
+
+    <!--统计后台二维码SDK上报-->
+    <select id="activeBarCodeFunSDKProp" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(DISTINCT app_key) as code_sdk_count
+        from aldstat_qr_code_statistics
+        where 1=1
+        <if test="null != dateList and dateList.size() > 0">
+            and day in
+            <foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">
+                #{list1}
+            </foreach>
+        </if>
+        and app_key in (select app_key from user_apps
+        where 1=1
+        and <![CDATA[ created >= #{startTime}]]>
+        and <![CDATA[ created <= #{endTime}]]>
+        <choose>
+            <when test="isPartner">
+                and third_id is not null
+            </when>
+            <otherwise>
+                and third_id is null
+            </otherwise>
+        </choose>
+        )
+    </select>
+
+
+    <!--UV在1万以上的小程序的 行业分布-->
+    <!--<select id="registBusTop" resultMap="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">-->
+        <!--select b.fenlei, b.fl_count-->
+        <!--from (-->
+        <!--select a.fenlei, count(a.fenlei) as fl_count-->
+        <!--from (-->
+        <!--select c1.app_key,-->
+        <!--case when c1.app_category='1'  then  '金融业'-->
+        <!--when c1.app_category='2'  then  '商业服务'-->
+        <!--when c1.app_category='3'  then  '公益'-->
+        <!--when c1.app_category='4'  then  '快递业与邮政'-->
+        <!--when c1.app_category='5'  then  '教育'-->
+        <!--when c1.app_category='6'  then  '富媒体'-->
+        <!--when c1.app_category='7'  then  '工具'-->
+        <!--when c1.app_category='8'  then  '出行与交通'-->
+        <!--when c1.app_category='9'  then  '房地产'-->
+        <!--when c1.app_category='10' then  '生活服务'-->
+        <!--when c1.app_category='11' then  'IT科技'-->
+        <!--when c1.app_category='12' then  '餐饮'-->
+        <!--when c1.app_category='13' then  '旅游'-->
+        <!--when c1.app_category='14' then  '体育'-->
+        <!--when c1.app_category='15' then  '电商平台'-->
+        <!--when c1.app_category='16' then  '医疗'-->
+        <!--when c1.app_category='17' then  '政务民生'-->
+        <!--when c1.app_category='19' then  '社交'-->
+        <!--when c1.app_category='20' then  '商家自营'-->
+        <!--else  '其他'  end as fenlei-->
+        <!--from (select a1.app_key, a1.visitor_count, b1.app_name, b1.app_category-->
+        <!--from-->
+        <!--(select a.app_key, a.visitor_count-->
+        <!--from-->
+        <!--(-->
+        <!--select app_key, sum(visitor_count)/#{dateNum} as visitor_count-->
+        <!--from aldstat_trend_analysis-->
+        <!--where 1=1-->
+        <!--<if test="null != dateList and dateList.size() > 0">-->
+            <!--and day in-->
+            <!--<foreach collection="dateList" index="index" open="(" separator="," close=")" item="list1">-->
+                <!--#{list1}-->
+            <!--</foreach>-->
+        <!--</if>-->
+        <!--group by app_key-->
+        <!--) a-->
+        <!--where a.visitor_count > 10000) a1-->
+        <!--join-->
+        <!--(select app_key, app_name, app_category from user_apps where third_id is null) b1-->
+        <!--on a1.app_key=b1.app_key) c1) a-->
+        <!--group by a.fenlei-->
+        <!--) b-->
+        <!--order by b.fl_count desc-->
+    <!--</select>-->
+
+
+</mapper>

@@ -1,0 +1,60 @@
+# 获取用户分享列表信息
+select a.*,b.* from (
+select app_key, uuid, nickname, avatar_url, user_remark
+from ald_wechat_user_bind
+where uuid is not null
+and uuid in (select sharer_uuid
+from aldstat_dailyshare_user
+where 1=1
+and day='2018-10-10'
+and app_key='552af432dd74a066c9d34f3bb1a24cb6'
+)
+and nickname like '%wang%'
+) a
+join
+(select sharer_uuid, new_count, share_count, share_open_count,
+share_open_user_count, share_reflux_ratio
+-- ,b.nickname, b.avatar_url, b.user_remark
+from aldstat_dailyshare_user
+where 1=1
+and day='2018-10-10'
+and app_key='552af432dd74a066c9d34f3bb1a24cb6') b
+on
+a.uuid=b.sharer_uuid
+order by b.share_count desc
+
+
+
+
+###
+select a.*,b.* from (
+select app_key, uuid, nickname, avatar_url, user_remark
+from ald_wechat_user_bind
+where
+uuid is not null
+and uuid in (select sharer_uuid
+from aldstat_dailyshare_user
+where 1=1
+and day='2018-10-10'
+and app_key='552af432dd74a066c9d34f3bb1a24cb6'
+)
+and nickname like '%wang%'
+) a
+join
+(select sharer_uuid,
+sum(new_count) as new_count,
+sum(share_count) as share_count,
+sum(share_open_count) as share_open_count,
+sum(share_open_user_count) as share_open_user_count,
+sum(share_reflux_ratio) as share_reflux_ratio
+-- ,b.nickname, b.avatar_url, b.user_remark
+from aldstat_dailyshare_user
+where 1=1
+and day='2018-10-10'
+and app_key='552af432dd74a066c9d34f3bb1a24cb6'
+group by sharer_uuid
+) b
+on
+a.uuid=b.sharer_uuid
+order by b.share_count desc
+

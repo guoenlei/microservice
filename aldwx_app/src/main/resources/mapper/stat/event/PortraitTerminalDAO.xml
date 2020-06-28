@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.aldwx.app.modules.portrait.dao.stat.PortraitTerminalDAO">
+  <resultMap id="BaseResultMap" type="com.aldwx.app.modules.portrait.entity.AldstatTerminalAnalysis">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="app_key" jdbcType="VARCHAR" property="app_key" />
+    <result column="day" jdbcType="TIMESTAMP" property="day" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="type_values" jdbcType="VARCHAR" property="type_values" />
+    <result column="new_comer_count" jdbcType="INTEGER" property="new_comer_count" />
+    <result column="visitor_count" jdbcType="INTEGER" property="visitor_count" />
+    <result column="open_count" jdbcType="INTEGER" property="open_count" />
+    <result column="total_page_count" jdbcType="INTEGER" property="total_page_count" />
+    <result column="avg_stay_time" jdbcType="DOUBLE" property="avg_stay_time" />
+    <result column="bounce_rate" jdbcType="REAL" property="bounce_rate" />
+    <result column="update_at" jdbcType="TIMESTAMP" property="update_at" />
+    <result column="total_stay_time" jdbcType="BIGINT" property="total_stay_time" />
+    <result column="one_page_count" jdbcType="INTEGER" property="one_page_count" />
+  </resultMap>
+  <select id="selectTerminalList" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+      SELECT
+      CASE
+      WHEN type_value = 'ios' THEN
+      'ios'
+      WHEN type_value = 'android' THEN
+      'android'
+      WHEN type_value = 'devtools' THEN
+      'devtools'
+      ELSE
+      '其他'
+      END type_values,
+      SUM(new_comer_count) new_comer_count,
+      sum(visitor_count) visitor_count
+      FROM
+      aldstat_terminal_analysis
+      WHERE
+      app_key = #{appKey} and `day` &lt;=#{dateEnd} and `day` &gt;=#{dateStart}
+      AND type = 'wvv'
+      GROUP BY
+      app_key,
+      type_values
+
+      <if test="dataType =='1'.toString()">
+          order by new_comer_count desc
+      </if>
+      <if test="dataType =='2'.toString()">
+          order by visitor_count desc
+      </if>
+
+      <if test="null != isTop and isTop=='yes'">
+        LIMIT 10
+      </if>
+
+  </select>
+  <select id="selectTerminalTotal" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+    SELECT
+      SUM(new_comer_count) new_comer_count,
+      sum(visitor_count) visitor_count
+    FROM
+	  aldstat_terminal_analysis
+    WHERE
+	  app_key = #{appKey} and `day` &lt;=#{dateEnd} and `day` &gt;=#{dateStart}
+    AND type = 'wvv'
+    GROUP BY
+	app_key
+  </select>
+  <select id="selectNetList" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+      SELECT
+      CASE
+      WHEN type_value = 'wifi' THEN
+      'wifi'
+      WHEN type_value = '4g' THEN
+      '4g'
+      WHEN type_value = '3g' THEN
+      '3g'
+      WHEN type_value = '2g' THEN
+      '2g'
+      ELSE
+      '其他'
+      END type_values,
+      SUM(new_comer_count) new_comer_count,
+      sum(visitor_count) visitor_count
+      FROM
+      aldstat_terminal_analysis
+      WHERE
+      app_key = #{appKey} and `day` &lt;=#{dateEnd} and `day` &gt;=#{dateStart}
+      AND type = 'nt'
+      GROUP BY
+      app_key,
+      type_values
+      <if test="dataType =='1'.toString()">
+          order by new_comer_count desc
+      </if>
+      <if test="dataType =='2'.toString()">
+          order by visitor_count desc
+      </if>
+    <if test="null != isTop and isTop=='yes'">
+      LIMIT 10
+    </if>
+
+  </select>
+  <select id="selectNetTotal" resultMap="BaseResultMap" parameterType="com.aldwx.app.modules.portrait.vo.PortraitVo">
+     SELECT
+      SUM(new_comer_count) new_comer_count,
+      sum(visitor_count) visitor_count
+    FROM
+	  aldstat_terminal_analysis
+    WHERE
+	  app_key = #{appKey} and `day` &lt;=#{dateEnd} and `day` &gt;=#{dateStart}
+    AND type = 'nt'
+    GROUP BY
+	  app_key
+  </select>
+</mapper>

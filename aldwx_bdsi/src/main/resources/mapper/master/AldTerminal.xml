@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aldwx.bigdata.modules.terminal.dao.master.AldTerminalMasterDao">
+
+    <resultMap id="TerminalEntityMap" type="com.aldwx.bigdata.modules.terminal.entity.TerminalEntity">
+        <result column="id" property="id" />
+        <result column="app_key" property="appKey" />
+        <result column="type" property="type" />
+        <result column="type_value" property="typeValue" />
+        <result column="new_comer_count" property="newComerCount" />
+        <result column="visitor_count" property="visitorCount" />
+        <result column="open_count" property="openCount" />
+        <result column="total_page_count" property="totalPageCount" />
+        <result column="avg_stay_time" property="avgStayTime" />
+        <result column="bounce_rate" property="bounceRate" />
+        <result column="total_stay_time" property="totalStayTime" />
+        <result column="one_page_count" property="onePageCount" />
+    </resultMap>
+   <!-- <parameterMap id="TerminalVoMap" type="com.aldwx.bigdata.modules.terminal.vo.AldTerminalVolVo"/>-->
+
+
+    <sql id="Base_Column_List">
+		app_key, type, type_value, new_comer_count, visitor_count, open_count, total_page_count,
+		avg_stay_time, bounce_rate, total_stay_time, one_page_count
+	</sql>
+
+
+    <!--查询今天数据-->
+    <select id="queryTodayDataBy" resultMap="TerminalEntityMap" parameterType="com.aldwx.bigdata.modules.terminal.vo.AldTerminalVo">
+        select
+        <include refid="Base_Column_List" />
+        from aldstat_terminal_analysis
+        where 1=1
+        <if test="null != date">
+            and `day` = CURDATE()
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        <if test="null != module">
+            and `type` = #{module}
+        </if>
+
+    </select>
+
+
+    <!--查询昨天数据-->
+    <select id="queryYesterdayDataBy" resultMap="TerminalEntityMap" parameterType="com.aldwx.bigdata.modules.terminal.vo.AldTerminalVo">
+        select
+        <include refid="Base_Column_List" />
+        from aldstat_terminal_analysis
+        where 1=1
+        <if test="null != date">
+            and `day` = date_sub(CURDATE(), interval 1 day)
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        <if test="null != module">
+            and `type` = #{module}
+        </if>
+    </select>
+
+
+    <!--查询最近7天数据-->
+    <select id="query7DayDataBy" resultMap="TerminalEntityMap" parameterType="com.aldwx.bigdata.modules.terminal.vo.AldTerminalVo">
+        select
+        <include refid="Base_Column_List" />
+        from aldstat_7days_terminal_analysis
+        where 1=1
+        <if test="null != date">
+            and `day` = date_sub(CURDATE(), interval 1 day)
+        </if>
+        <if test="null != appKey">
+            and app_key = #{appKey}
+        </if>
+        <if test="null != module">
+            and `type` = #{module}
+        </if>
+
+    </select>
+
+
+
+    <!--查询最近30天数据-->
+    <select id="query30DayDataBy" resultMap="TerminalEntityMap" parameterType="com.aldwx.bigdata.modules.terminal.vo.AldTerminalVo">
+        select
+        <include refid="Base_Column_List" />
+        from aldstat_30days_terminal_analysis
+        where 1=1
+        <if test="null != #{date}">
+            and day = date_sub(CURDATE(), interval 1 day)
+        </if>
+        <if test="null != #{appKey}">
+            and `app_key` = #{appKey}
+        </if>
+        <if test="null != #{type}">
+            and `type` = #{module}
+        </if>
+
+    </select>
+
+
+</mapper>

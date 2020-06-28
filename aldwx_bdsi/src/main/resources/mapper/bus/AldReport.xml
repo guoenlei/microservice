@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aldwx.bigdata.modules.report.dao.bus.AldBusReportDao">
+
+    <resultMap id="AldReportEntityMap" type="com.aldwx.bigdata.modules.report.entity.AldReportEntity">
+        <result column="id" property="id" />
+        <result column="count" property="count" />
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+        id, `count`
+	</sql>
+
+
+    <!-- 统计平台 - 注册id service_bus -->
+    <select id="registUser" resultType="java.util.List" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select id as registUser
+        from ald_user
+        where 1=1
+        and <![CDATA[ create_time >= #{startDate}]]>
+        and <![CDATA[ create_time <= #{endDate}]]>
+        <choose>
+            <when test="null != platform and '1'.toString == platform">
+                and platform=1 and third_id is null
+            </when>
+            <when test="null != platform and '2'.toString == platform">
+                and third_id is not null
+            </when>
+            <when test="null != platform and '3'.toString == platform">
+                and platform=3 and third_id is null
+            </when>
+            <when test="null != platform and '4'.toString == platform">
+                and platform=4 and third_id is null
+            </when>
+        </choose>
+    </select>
+
+
+    <!-- 统计平台 - 注册量 service_bus 平台：1-统计，2-指数，3-小神推，4-小程序，5-小码 -->
+    <select id="registCount" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(id) as registCount
+        from ald_user
+        where 1=1
+        and <![CDATA[ create_time >= #{startDate}]]>
+        and <![CDATA[ create_time <= #{endDate}]]>
+        <choose>
+            <when test="null != platform and '1'.toString == platform">
+                and platform=1
+                <choose>
+                    <when test="isPartner">
+                        and third_id is not null
+                    </when>
+                    <otherwise>
+                        and third_id is null
+                    </otherwise>
+                </choose>
+            </when>
+            <when test="null != platform and '2'.toString == platform">
+                and third_id is not null
+            </when>
+            <when test="null != platform and '3'.toString == platform">
+                and platform=3
+                <choose>
+                    <when test="isPartner">
+                        and third_id is not null
+                    </when>
+                    <otherwise>
+                        and third_id is null
+                    </otherwise>
+                </choose>
+            </when>
+            <when test="null != platform and '4'.toString == platform">
+                and platform=4
+                <choose>
+                    <when test="isPartner">
+                        and third_id is not null
+                    </when>
+                    <otherwise>
+                        and third_id is null
+                    </otherwise>
+                </choose>
+            </when>
+        </choose>
+    </select>
+
+    <!--统计后台每天登陆数-->
+    <select id="loginCount" resultType="java.lang.Long" parameterType="com.aldwx.bigdata.modules.report.vo.AldReportVo">
+        select count(id) from ald_user
+        where 1=1
+        and <![CDATA[ last_at >= #{startDate}]]>
+        and <![CDATA[ last_at <= #{endDate}]]>
+        <choose>
+            <when test="null != platform and '1'.toString == platform">
+                and platform=1
+                <choose>
+                <when test="isPartner">
+                    and third_id is not null
+                </when>
+                <otherwise>
+                    and third_id is null
+                </otherwise>
+            </choose>
+            </when>
+            <when test="null != platform and '2'.toString == platform">
+                and third_id is not null
+            </when>
+            <when test="null != platform and '3'.toString == platform">
+                and platform=3
+                <choose>
+                    <when test="isPartner">
+                        and third_id is not null
+                    </when>
+                    <otherwise>
+                        and third_id is null
+                    </otherwise>
+                </choose>
+            </when>
+            <when test="null != platform and '4'.toString == platform">
+                and platform=4
+                <choose>
+                    <when test="isPartner">
+                        and third_id is not null
+                    </when>
+                    <otherwise>
+                        and third_id is null
+                    </otherwise>
+                </choose>
+            </when>
+        </choose>
+    </select>
+
+</mapper>
